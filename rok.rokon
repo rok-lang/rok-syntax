@@ -1,0 +1,9 @@
+// description: "Tokenizer and HTML highlighter for rok and RokON"
+// license: "MIT OR Apache-2.0"
+// repository: "https://github.com/rok-lang/rok-syntax"
+// (the manifest has no fields for these yet)
+Package {
+    name: "rok-syntax",
+    version: "0.1.0",
+    deps: {},
+}
