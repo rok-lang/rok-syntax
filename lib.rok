@@ -1,4 +1,4 @@
-// Tokenizer and HTML highlighter for rok and RokON: keywords, types,
+// Tokenizer and HTML highlighter for rok and ROKON: keywords, types,
 // strings (f-string holes as code, nested), chars, numbers, comments
 // and attributes.
 
@@ -57,7 +57,7 @@ const TYPES: [str; 19] = [
 /// Tokens of rok source.
 pub fn tokens(src: str) -> List<Token> { lex(src, false) }
 
-/// Tokens of RokON source: as rok, but only `true` / `false` / `none`
+/// Tokens of ROKON source: as rok, but only `true` / `false` / `none`
 /// are keywords.
 pub fn tokens_rokon(src: str) -> List<Token> { lex(src, true) }
 
@@ -65,7 +65,7 @@ pub fn tokens_rokon(src: str) -> List<Token> { lex(src, true) }
 /// `Kind::class`), `&` / `<` / `>` escaped. Goes inside `<pre><code>`.
 pub fn highlight_rok(src: str) -> str { to_html(tokens(src)) }
 
-/// RokON source as HTML, as `highlight_rok`.
+/// ROKON source as HTML, as `highlight_rok`.
 pub fn highlight_rokon(src: str) -> str { to_html(tokens_rokon(src)) }
 
 /// Tokens as HTML, as `highlight_rok`.
