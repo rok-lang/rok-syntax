@@ -58,8 +58,6 @@ Not yet published to rokstones.io. For now rok-lang.org and rokstones.io use it 
 2. Preview the index line with `rok publish`, commit it with `rok publish --index <checkout> --commit` in a [rokstones.io-index](https://github.com/rok-lang/rokstones.io-index) checkout, and send a pull request.
 3. Once merged, change both sites' dependency to `"rok-syntax": "0.1"`.
 
-The manifest has no `description` / `license` / `repository` fields yet, so they are noted in the header comment of `rok.rokon`. Move them once the fields exist.
-
 ## License
 
 Licensed under either of [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
