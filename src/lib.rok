@@ -324,8 +324,6 @@ fn is_type(w: str) -> bool {
     c.is_uppercase()
 }
 
-// ---- tests ----
-
 #[cfg(test)]
 fn expect(ok: bool, what: str) {
     if !ok { panic(f"check failed: {what}"); }
