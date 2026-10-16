@@ -1,6 +1,6 @@
 # rok-syntax
 
-A tokenizer and HTML highlighter for rok and ROKON source. It distinguishes keywords, types, strings, characters, numbers, comments, and attributes, and treats the inside of f-string holes (`{..}`) as code (reusing the same quote or nesting f-strings inside a hole is fine). [rok-lang.org](https://rok-lang.org) and [rokstones.io](https://rokstones.io) use it for code blocks.
+A tokenizer and HTML highlighter for rok and ROKON source. It distinguishes keywords, types, strings, characters, numbers, comments, and attributes, and treats the inside of f-string holes (`{..}`) as code (reusing the same quote or nesting f-strings inside a hole is fine). [docs.rok-lang.org](https://docs.rok-lang.org) and [rokstones.io](https://rokstones.io) use it for code blocks.
 
 ## Usage
 
