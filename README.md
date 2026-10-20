@@ -46,6 +46,7 @@ Example CSS:
 
 ```bash
 rok test        # tests
+rok bench       # benchmarks
 rok fmt --check
 rok doc         # API docs in target/doc/
 ```
