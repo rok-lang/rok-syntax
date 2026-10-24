@@ -1,6 +1,6 @@
 # rok-syntax
 
-A tokenizer and HTML highlighter for rok and ROKON source. It distinguishes keywords, types, strings, characters, numbers, comments, and attributes, and treats the inside of f-string holes (`{..}`) as code (reusing the same quote or nesting f-strings inside a hole is fine). [docs.rok-lang.org](https://docs.rok-lang.org) and [rokstones.io](https://rokstones.io) use it for code blocks.
+A tokenizer and HTML highlighter for rok and ROKON source. It distinguishes keywords, types, strings, numbers, comments, and attributes, and treats the inside of f-string holes (`{..}`) as code (reusing the same quote or nesting f-strings inside a hole is fine). [docs.rok-lang.org](https://docs.rok-lang.org) and [rokstones.io](https://rokstones.io) use it for code blocks.
 
 ## Usage
 
@@ -50,14 +50,6 @@ rok bench       # benchmarks
 rok fmt --check
 rok doc         # API docs in target/doc/
 ```
-
-## Publishing
-
-Not yet published to rokstones.io. For now rok-lang.org and rokstones.io use it as a path dependency (`"rok-syntax": Dep::path("../stones/rok-syntax")`). To publish:
-
-1. Push this repository to `https://github.com/rok-lang/rok-syntax`.
-2. Preview the index line with `rok publish`, commit it with `rok publish --index <checkout> --commit` in a [rokstones.io-index](https://github.com/rok-lang/rokstones.io-index) checkout, and send a pull request.
-3. Once merged, change both sites' dependency to `"rok-syntax": "0.1"`.
 
 ## License
 
