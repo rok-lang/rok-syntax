@@ -1,0 +1,279 @@
+==================
+If, match and loops
+==================
+
+'outer: for i in 0..10 {
+    if i % 2 == 0 { continue 'outer; } else if i > 7 { break 'outer; }
+    while let x: i32 = next() { x; }
+    loop { break; }
+}
+match shape {
+    Shape::Circle(r) if r > 1.0 => print(r),
+    Shape::Rect { w, h: height } => { w * height }
+    n: i32 | i64 => 0,
+    1..=5 | -1 => 2,
+    (a, _, ..) => a,
+    _ => return 1,
+}
+
+---
+
+(source_file
+  (expression_statement
+    (for_expression
+      (label)
+      (identifier)
+      (range_expression
+        (integer_literal)
+        (integer_literal))
+      (block
+        (expression_statement
+          (if_expression
+            (binary_expression
+              (binary_expression
+                (identifier)
+                (integer_literal))
+              (integer_literal))
+            (block
+              (expression_statement
+                (continue_expression
+                  (label))))
+            (else_clause
+              (if_expression
+                (binary_expression
+                  (identifier)
+                  (integer_literal))
+                (block
+                  (expression_statement
+                    (break_expression
+                      (label))))))))
+        (expression_statement
+          (while_expression
+            (let_condition
+              (identifier)
+              (type_identifier)
+              (call_expression
+                (identifier)
+                (arguments)))
+            (block
+              (expression_statement
+                (identifier)))))
+        (expression_statement
+          (loop_expression
+            (block
+              (expression_statement
+                (break_expression))))))))
+  (expression_statement
+    (match_expression
+      (identifier)
+      (match_block
+        (match_arm
+          (match_pattern
+            (tuple_struct_pattern
+              (scoped_identifier
+                (identifier)
+                (identifier))
+              (identifier))
+            (binary_expression
+              (identifier)
+              (float_literal)))
+          (call_expression
+            (identifier)
+            (arguments
+              (identifier))))
+        (match_arm
+          (match_pattern
+            (struct_pattern
+              (scoped_identifier
+                (identifier)
+                (identifier))
+              (field_pattern
+                (field_identifier))
+              (field_pattern
+                (field_identifier)
+                (identifier))))
+          (block
+            (binary_expression
+              (identifier)
+              (identifier))))
+        (match_arm
+          (match_pattern
+            (type_check_pattern
+              (identifier)
+              (sum_type
+                (type_identifier)
+                (type_identifier))))
+          (integer_literal))
+        (match_arm
+          (match_pattern
+            (or_pattern
+              (range_pattern
+                (integer_literal)
+                (integer_literal))
+              (negative_literal
+                (integer_literal))))
+          (integer_literal))
+        (match_arm
+          (match_pattern
+            (tuple_pattern
+              (identifier)
+              (wildcard_pattern)
+              (remaining_field_pattern)))
+          (identifier))
+        (match_arm
+          (match_pattern
+            (wildcard_pattern))
+          (return_expression
+            (integer_literal)))))))
+
+==================
+Let forms
+==================
+
+let (a, b) = pair;
+let (first, ..rest) = xs;
+let Point { x, .. } = p;
+let Some(v) = opt else { return; };
+let n: i32 = 0;
+let w @ 1..=9 = d
+
+---
+
+(source_file
+  (let_declaration
+    (tuple_pattern
+      (identifier)
+      (identifier))
+    (identifier))
+  (let_declaration
+    (tuple_pattern
+      (identifier)
+      (rest_pattern
+        (identifier)))
+    (identifier))
+  (let_declaration
+    (struct_pattern
+      (identifier)
+      (field_pattern
+        (field_identifier))
+      (remaining_field_pattern))
+    (identifier))
+  (let_declaration
+    (tuple_struct_pattern
+      (identifier)
+      (identifier))
+    (identifier)
+    (block
+      (expression_statement
+        (return_expression))))
+  (let_declaration
+    (identifier)
+    (type_identifier)
+    (integer_literal))
+  (let_declaration
+    (captured_pattern
+      (identifier)
+      (range_pattern
+        (integer_literal)
+        (integer_literal)))
+    (identifier)))
+
+==================
+Using and unsafe blocks
+==================
+
+using f = open(path), g = other() {
+    f.read();
+}
+unsafe { ptr.write(1) }
+let s = async { await x };
+
+---
+
+(source_file
+  (expression_statement
+    (using_expression
+      (using_binding
+        (identifier)
+        (call_expression
+          (identifier)
+          (arguments
+            (identifier))))
+      (using_binding
+        (identifier)
+        (call_expression
+          (identifier)
+          (arguments)))
+      (block
+        (expression_statement
+          (call_expression
+            (field_expression
+              (identifier)
+              (field_identifier))
+            (arguments))))))
+  (expression_statement
+    (unsafe_block
+      (block
+        (call_expression
+          (field_expression
+            (identifier)
+            (field_identifier))
+          (arguments
+            (integer_literal))))))
+  (let_declaration
+    (identifier)
+    (async_block
+      (block
+        (await_expression
+          (identifier))))))
+
+==================
+Statements ending in blocks
+==================
+
+if a { b(); }
+-x;
+match v { _ => 1 }.len();
+x += 1;
+x <<= 2;
+{ y = 1 }
+
+---
+
+(source_file
+  (expression_statement
+    (if_expression
+      (identifier)
+      (block
+        (expression_statement
+          (call_expression
+            (identifier)
+            (arguments))))))
+  (expression_statement
+    (unary_expression
+      (identifier)))
+  (expression_statement
+    (call_expression
+      (field_expression
+        (match_expression
+          (identifier)
+          (match_block
+            (match_arm
+              (match_pattern
+                (wildcard_pattern))
+              (integer_literal))))
+        (field_identifier))
+      (arguments)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (integer_literal)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (integer_literal)))
+  (expression_statement
+    (block
+      (assignment_expression
+        (identifier)
+        (integer_literal)))))

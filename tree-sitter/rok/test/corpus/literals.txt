@@ -1,0 +1,188 @@
+==================
+Strings and escapes
+==================
+
+let a = "tab\there \u{1F600} \x41";
+let b = r#"raw "quoted""#;
+let c = b"\x7FELF";
+let d = "multi
+line";
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (string_literal
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)))
+  (let_declaration
+    (identifier)
+    (raw_string_literal))
+  (let_declaration
+    (identifier)
+    (byte_string_literal
+      (escape_sequence)
+      (string_content)))
+  (let_declaration
+    (identifier)
+    (string_literal
+      (string_content))))
+
+==================
+Format strings
+==================
+
+let a = f"x = {x:>8.2f} {{literal}}";
+let b = f"{v:?} {w:{width}} {x:>${n}.${p}f}";
+let c = f"{d["k"]} {f"{nested}"}";
+let e = f"""
+  name: "{name}"
+"""
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (format_string
+      (string_content)
+      (interpolation
+        (identifier)
+        (format_specifier
+          (format_text)))
+      (string_content)))
+  (let_declaration
+    (identifier)
+    (format_string
+      (interpolation
+        (identifier)
+        (format_specifier
+          (format_text)))
+      (string_content)
+      (interpolation
+        (identifier)
+        (format_specifier
+          (interpolation
+            (identifier))))
+      (string_content)
+      (interpolation
+        (identifier)
+        (format_specifier
+          (format_text)
+          (interpolation
+            (identifier))
+          (format_text)
+          (interpolation
+            (identifier))
+          (format_text)))))
+  (let_declaration
+    (identifier)
+    (format_string
+      (interpolation
+        (index_expression
+          (identifier)
+          (string_literal
+            (string_content))))
+      (string_content)
+      (interpolation
+        (format_string
+          (interpolation
+            (identifier))))))
+  (let_declaration
+    (identifier)
+    (format_string
+      (string_content)
+      (interpolation
+        (identifier))
+      (string_content))))
+
+==================
+Numbers and chars
+==================
+
+let a = 1_000_000i64 + 0xFFu8 + 0b1010 + 0o755;
+let b = 3.14f32 + 2e10 + 1.5e-3;
+let c = 'a';
+let d = c'\n';
+let e = '\u{1F600}';
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (binary_expression
+          (integer_literal)
+          (integer_literal))
+        (integer_literal))
+      (integer_literal)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (float_literal)
+        (float_literal))
+      (float_literal)))
+  (let_declaration
+    (identifier)
+    (char_literal))
+  (let_declaration
+    (identifier)
+    (char_literal))
+  (let_declaration
+    (identifier)
+    (char_literal)))
+
+==================
+Comments
+==================
+
+/// Doc comment.
+// Plain comment.
+/* block /* nested */ still */
+/** block doc */
+fn f() {}
+
+---
+
+(source_file
+  (line_comment)
+  (line_comment)
+  (block_comment)
+  (block_comment)
+  (function_item
+    (identifier)
+    (parameters)
+    (block)))
+
+==================
+Identifiers
+==================
+
+let σ² = Δt * x₀ + f′;
+let r#match = r#type;
+let 변수 = 1;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (identifier))
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (identifier))
+  (let_declaration
+    (identifier)
+    (integer_literal)))

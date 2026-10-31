@@ -1,0 +1,504 @@
+==================
+Binary precedence
+==================
+
+let a = 1 + 2 * 3 << 1 == x && y || z ?? w;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (integer_literal)
+              (binary_expression
+                (integer_literal)
+                (binary_expression
+                  (integer_literal)
+                  (integer_literal))))
+            (identifier))
+          (identifier))
+        (identifier))
+      (identifier))))
+
+==================
+Broadcast and unicode operators
+==================
+
+let b = xs .+ ys .* 2 ∪ s ∩ t;
+let c = a × b ⋅ c;
+let d = √x;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (binary_expression
+          (identifier)
+          (integer_literal)))
+      (binary_expression
+        (identifier)
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (identifier))
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (unary_expression
+      (identifier))))
+
+==================
+Casts, type tests and ranges
+==================
+
+let a = -x as i64;
+let b = v is MutexGuard<i32> && n < 3;
+let r = 0..n;
+let s = ..=10;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (cast_expression
+      (unary_expression
+        (identifier))
+      (type_identifier)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (type_test_expression
+        (identifier)
+        (generic_type
+          (type_identifier)
+          (type_arguments
+            (type_identifier))))
+      (binary_expression
+        (identifier)
+        (integer_literal))))
+  (let_declaration
+    (identifier)
+    (range_expression
+      (integer_literal)
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (range_expression
+      (integer_literal))))
+
+==================
+Calls, fields and indexing
+==================
+
+let a = obj.method::<i32>(1, name: 2, ref buf, ..rest).field.0;
+let b = m[i, j] + xs[1:5:2] + ys[::2];
+let c = user?.name?.len();
+let d = f.(xs);
+let e = parse(s)?;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (field_expression
+      (field_expression
+        (call_expression
+          (generic_function
+            (field_expression
+              (identifier)
+              (field_identifier))
+            (type_arguments
+              (type_identifier)))
+          (arguments
+            (integer_literal)
+            (named_argument
+              (field_identifier)
+              (integer_literal))
+            (ref_argument
+              (identifier))
+            (range_expression
+              (identifier))))
+        (field_identifier))
+      (integer_literal)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (index_expression
+          (identifier)
+          (identifier)
+          (identifier))
+        (index_expression
+          (identifier)
+          (slice
+            (integer_literal)
+            (integer_literal)
+            (integer_literal))))
+      (index_expression
+        (identifier)
+        (slice
+          (integer_literal)))))
+  (let_declaration
+    (identifier)
+    (call_expression
+      (field_expression
+        (field_expression
+          (identifier)
+          (field_identifier))
+        (field_identifier))
+      (arguments)))
+  (let_declaration
+    (identifier)
+    (broadcast_call_expression
+      (identifier)
+      (arguments
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (propagate_expression
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier))))))
+
+==================
+Paths
+==================
+
+let a = Self::new();
+let b = <Sq as Shape>::SIDES;
+let c = size_of::<usize>();
+let d = Allocation::<u32>::new(10);
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (call_expression
+      (scoped_identifier
+        (self_type)
+        (identifier))
+      (arguments)))
+  (let_declaration
+    (identifier)
+    (scoped_identifier
+      (bracketed_type
+        (type_identifier)
+        (type_identifier))
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (call_expression
+      (generic_function
+        (identifier)
+        (type_arguments
+          (type_identifier)))
+      (arguments)))
+  (let_declaration
+    (identifier)
+    (call_expression
+      (scoped_identifier
+        (generic_function
+          (identifier)
+          (type_arguments
+            (type_identifier)))
+        (identifier))
+      (arguments
+        (integer_literal)))))
+
+==================
+Collections and structs
+==================
+
+let p = Point { x: 1, y, ..base };
+let l = [1, 2, 3];
+let r = [0; 8];
+let s = {1, 2, 3};
+let m = {"a": 1, "b": 2};
+let t = (1, "two");
+let u = ();
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (struct_expression
+      (identifier)
+      (field_initializer_list
+        (field_initializer
+          (field_identifier)
+          (integer_literal))
+        (shorthand_field_initializer
+          (identifier))
+        (base_field_initializer
+          (identifier)))))
+  (let_declaration
+    (identifier)
+    (array_expression
+      (integer_literal)
+      (integer_literal)
+      (integer_literal)))
+  (let_declaration
+    (identifier)
+    (array_expression
+      (integer_literal)
+      (integer_literal)))
+  (let_declaration
+    (identifier)
+    (set_expression
+      (integer_literal)
+      (integer_literal)
+      (integer_literal)))
+  (let_declaration
+    (identifier)
+    (dict_expression
+      (dict_entry
+        (string_literal
+          (string_content))
+        (integer_literal))
+      (dict_entry
+        (string_literal
+          (string_content))
+        (integer_literal))))
+  (let_declaration
+    (identifier)
+    (tuple_expression
+      (integer_literal)
+      (string_literal
+        (string_content))))
+  (let_declaration
+    (identifier)
+    (unit_expression)))
+
+==================
+Closures
+==================
+
+let f = |a, b: i32| a + b;
+let g = [ref total, n] |v: i32| -> i32 { total += v; n };
+let h = async || fetch();
+let k = yield |x| { yield x; };
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (closure_parameters
+        (closure_parameter
+          (identifier))
+        (closure_parameter
+          (identifier)
+          (type_identifier)))
+      (binary_expression
+        (identifier)
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (capture_list
+        (identifier)
+        (identifier))
+      (closure_parameters
+        (closure_parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (block
+        (expression_statement
+          (compound_assignment_expr
+            (identifier)
+            (identifier)))
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (closure_modifiers)
+      (closure_parameters)
+      (call_expression
+        (identifier)
+        (arguments))))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (closure_modifiers)
+      (closure_parameters
+        (closure_parameter
+          (identifier)))
+      (block
+        (expression_statement
+          (yield_expression
+            (identifier)))))))
+
+==================
+Trailing closures
+==================
+
+retry(3) {
+    attempt();
+}
+xs.iter().for_each |x| { print(x); }
+each(xs) |x| {
+    print(x);
+}
+guarded { run(); }
+let y = a | b;
+
+---
+
+(source_file
+  (expression_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (integer_literal))
+      (block
+        (expression_statement
+          (call_expression
+            (identifier)
+            (arguments))))))
+  (expression_statement
+    (call_expression
+      (field_expression
+        (call_expression
+          (field_expression
+            (identifier)
+            (field_identifier))
+          (arguments))
+        (field_identifier))
+      (closure_expression
+        (closure_parameters
+          (closure_parameter
+            (identifier)))
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments
+                (identifier))))))))
+  (expression_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (identifier))
+      (closure_expression
+        (closure_parameters
+          (closure_parameter
+            (identifier)))
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments
+                (identifier))))))))
+  (expression_statement
+    (call_expression
+      (identifier)
+      (block
+        (expression_statement
+          (call_expression
+            (identifier)
+            (arguments))))))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (identifier))))
+
+==================
+Try, catch and await
+==================
+
+let v = try? parse(s) ?? 0;
+let w = try parse(s) catch e: ParseError { 0 } catch { 1 } finally { done(); };
+let x = await fetch(url);
+try {
+    risky();
+} finally {
+    cleanup();
+}
+throw Bad { code: 1 };
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (try_expression
+      (binary_expression
+        (call_expression
+          (identifier)
+          (arguments
+            (identifier)))
+        (integer_literal))))
+  (let_declaration
+    (identifier)
+    (catch_expression
+      (catch_expression
+        (catch_expression
+          (try_expression
+            (call_expression
+              (identifier)
+              (arguments
+                (identifier))))
+          (catch_clause
+            (type_check_pattern
+              (identifier)
+              (type_identifier))
+            (block
+              (integer_literal))))
+        (catch_clause
+          (block
+            (integer_literal))))
+      (finally_clause
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments)))))))
+  (let_declaration
+    (identifier)
+    (await_expression
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier)))))
+  (expression_statement
+    (catch_expression
+      (try_expression
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments)))))
+      (finally_clause
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments)))))))
+  (expression_statement
+    (throw_expression
+      (struct_expression
+        (identifier)
+        (field_initializer_list
+          (field_initializer
+            (field_identifier)
+            (integer_literal)))))))

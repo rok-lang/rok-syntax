@@ -1,0 +1,190 @@
+==================
+Attributes
+==================
+
+#![allow(unused)]
+#[cfg(all(target_os = "linux", not(feature = "x")))]
+#[deprecated(since = "0.1.6", note = "use g")]
+#[niche(-1, 0..=9)]
+#[literal("[" {expr} % "," * "]", priority = -1)]
+#[json::rename]
+fn f() {}
+
+---
+
+(source_file
+  (inner_attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier)))))
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier)
+          (attribute_arguments
+            (attribute
+              (identifier)
+              (string_literal
+                (string_content)))
+            (attribute
+              (identifier)
+              (attribute_arguments
+                (attribute
+                  (identifier)
+                  (string_literal
+                    (string_content))))))))))
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier)
+          (string_literal
+            (string_content)))
+        (attribute
+          (identifier)
+          (string_literal
+            (string_content))))))
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (integer_literal)
+        (integer_literal)
+        (integer_literal))))
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (string_literal
+          (string_content))
+        (token_tree
+          (attribute
+            (identifier)))
+        (string_literal
+          (string_content))
+        (string_literal
+          (string_content))
+        (attribute
+          (identifier)
+          (negative_literal
+            (integer_literal))))))
+  (attribute_item
+    (attribute
+      (scoped_identifier
+        (identifier)
+        (identifier))))
+  (function_item
+    (identifier)
+    (parameters)
+    (block)))
+
+==================
+Macro invocations
+==================
+
+println!("hi {}", x);
+let xs = list![a, b, c];
+json::log!("start");
+accessors! { x: i32 }
+
+---
+
+(source_file
+  (expression_statement
+    (macro_invocation
+      (identifier)
+      (token_tree
+        (string_literal
+          (string_content))
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (macro_invocation
+      (identifier)
+      (token_tree
+        (identifier)
+        (identifier)
+        (identifier))))
+  (expression_statement
+    (macro_invocation
+      (scoped_identifier
+        (identifier)
+        (identifier))
+      (token_tree
+        (string_literal
+          (string_content)))))
+  (macro_invocation
+    (identifier)
+    (token_tree
+      (identifier)
+      (identifier))))
+
+==================
+Meta blocks
+==================
+
+#[impl_derive(MyHash)]
+pub @derive {
+    impl MyHash for @Self {
+        fn my_hash(self) -> u64 { @for_fields { h = h + self.@field.my_hash(); } h }
+    }
+}
+#[impl_macro(twice)] pub @macro {
+    ( @e: expr ) => { { let v = @e; (v, v) } }
+}
+
+---
+
+(source_file
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier)))))
+  (meta_block
+    (visibility_modifier)
+    (metavariable)
+    (token_tree
+      (identifier)
+      (metavariable)
+      (token_tree
+        (identifier)
+        (token_tree
+          (self))
+        (identifier)
+        (token_tree
+          (metavariable)
+          (token_tree
+            (identifier)
+            (identifier)
+            (self)
+            (metavariable)
+            (identifier)
+            (token_tree))
+          (identifier)))))
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier)))))
+  (meta_block
+    (visibility_modifier)
+    (metavariable)
+    (token_tree
+      (token_tree
+        (metavariable)
+        (identifier))
+      (token_tree
+        (token_tree
+          (identifier)
+          (metavariable)
+          (token_tree
+            (identifier)
+            (identifier)))))))

@@ -1,0 +1,104 @@
+==================
+Types
+==================
+
+let a: i32 | str | none = none;
+let b: List<i32>? = none;
+let c: fn(i32, str) throws -> bool + Send = f;
+let d: [u8; 4] = b"abcd";
+let e: (i32, str) = t;
+let f: any (Display + Clone) = v;
+let g: <T as Iterator>::Item = x;
+let h: unsafe extern "C" fn(i32) -> i32 = cb;
+let i: Map<K = str, V = i32> = m;
+let j: Matrix<3, -1, {N + 1}> = mat;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (sum_type
+      (type_identifier)
+      (type_identifier)
+      (none_type))
+    (none))
+  (let_declaration
+    (identifier)
+    (optional_type
+      (generic_type
+        (type_identifier)
+        (type_arguments
+          (type_identifier))))
+    (none))
+  (let_declaration
+    (identifier)
+    (function_type
+      (parameters
+        (type_identifier)
+        (type_identifier))
+      (throws_clause)
+      (type_identifier)
+      (type_identifier))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (array_type
+      (type_identifier)
+      (integer_literal))
+    (byte_string_literal
+      (string_content)))
+  (let_declaration
+    (identifier)
+    (tuple_type
+      (type_identifier)
+      (type_identifier))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (any_type
+      (type_identifier)
+      (type_identifier))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (scoped_type_identifier
+      (bracketed_type
+        (type_identifier)
+        (type_identifier))
+      (type_identifier))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (function_type
+      (string_literal
+        (string_content))
+      (parameters
+        (type_identifier))
+      (type_identifier))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (generic_type
+      (type_identifier)
+      (type_arguments
+        (type_binding
+          (type_identifier)
+          (type_identifier))
+        (type_binding
+          (type_identifier)
+          (type_identifier))))
+    (identifier))
+  (let_declaration
+    (identifier)
+    (generic_type
+      (type_identifier)
+      (type_arguments
+        (integer_literal)
+        (negative_literal
+          (integer_literal))
+        (block
+          (binary_expression
+            (identifier)
+            (integer_literal)))))
+    (identifier)))

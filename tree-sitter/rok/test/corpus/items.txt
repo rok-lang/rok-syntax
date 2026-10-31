@@ -1,0 +1,389 @@
+==================
+Function with generics, throws and where
+==================
+
+pub async fn load<T: Read + Clone = File>(ref self, path: str, n: i32 = 2) throws (IoError | ParseError) -> List<T> where T: Send {
+    return [];
+}
+
+---
+
+(source_file
+  (function_item
+    (visibility_modifier)
+    (identifier)
+    (type_parameters
+      (type_parameter
+        (type_identifier)
+        (trait_bounds
+          (type_identifier)
+          (type_identifier))
+        (type_identifier)))
+    (parameters
+      (self_parameter
+        (self))
+      (parameter
+        (identifier)
+        (type_identifier))
+      (parameter
+        (identifier)
+        (type_identifier)
+        (integer_literal)))
+    (throws_clause
+      (sum_type
+        (type_identifier)
+        (type_identifier)))
+    (generic_type
+      (type_identifier)
+      (type_arguments
+        (type_identifier)))
+    (where_clause
+      (where_predicate
+        (type_identifier)
+        (trait_bounds
+          (type_identifier))))
+    (block
+      (expression_statement
+        (return_expression
+          (array_expression))))))
+
+==================
+Function modifiers and signatures
+==================
+
+const unsafe fn raw(xs: ...i32) -> i32;
+extern "C" fn cb(x: i32) -> i32 { x }
+yield fn count(n: i32) -> i32 { yield n; }
+fn printf(fmt: str, ...) -> i32;
+
+---
+
+(source_file
+  (function_signature_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier)))
+    (type_identifier))
+  (function_item
+    (string_literal
+      (string_content))
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier)))
+    (type_identifier)
+    (block
+      (identifier)))
+  (function_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier)))
+    (type_identifier)
+    (block
+      (expression_statement
+        (yield_expression
+          (identifier)))))
+  (function_signature_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier))
+      (variadic_parameter))
+    (type_identifier)))
+
+==================
+Structs, unions and fields
+==================
+
+#[derive(Debug, Clone)]
+pub struct Point<T> { pub x: T; y: T = 0 }
+struct Pair(i32, pub i64);
+struct Unit;
+struct P<T> where T: Display (T);
+union Bits { i: u32; f: f32; }
+
+---
+
+(source_file
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier))
+        (attribute
+          (identifier)))))
+  (struct_item
+    (visibility_modifier)
+    (type_identifier)
+    (type_parameters
+      (type_parameter
+        (type_identifier)))
+    (field_declaration_list
+      (field_declaration
+        (visibility_modifier)
+        (field_identifier)
+        (type_identifier))
+      (field_declaration
+        (field_identifier)
+        (type_identifier)
+        (integer_literal))))
+  (struct_item
+    (type_identifier)
+    (ordered_field_declaration_list
+      (type_identifier)
+      (visibility_modifier)
+      (type_identifier)))
+  (struct_item
+    (type_identifier))
+  (struct_item
+    (type_identifier)
+    (type_parameters
+      (type_parameter
+        (type_identifier)))
+    (where_clause
+      (where_predicate
+        (type_identifier)
+        (trait_bounds
+          (type_identifier))))
+    (ordered_field_declaration_list
+      (type_identifier)))
+  (union_item
+    (type_identifier)
+    (field_declaration_list
+      (field_declaration
+        (field_identifier)
+        (type_identifier))
+      (field_declaration
+        (field_identifier)
+        (type_identifier)))))
+
+==================
+Enums
+==================
+
+enum Shape {
+    Unit,
+    Circle(f64),
+    Rect { w: f64; h: f64; },
+    Code = 3,
+}
+
+---
+
+(source_file
+  (enum_item
+    (type_identifier)
+    (enum_variant_list
+      (enum_variant
+        (identifier))
+      (enum_variant
+        (identifier)
+        (ordered_field_declaration_list
+          (type_identifier)))
+      (enum_variant
+        (identifier)
+        (field_declaration_list
+          (field_declaration
+            (field_identifier)
+            (type_identifier))
+          (field_declaration
+            (field_identifier)
+            (type_identifier))))
+      (enum_variant
+        (identifier)
+        (integer_literal)))))
+
+==================
+Traits and impls
+==================
+
+trait Show: Display + Clone {
+    type Item: Clone = i32;
+    const K: i32;
+    fn show(self) -> str;
+}
+unsafe impl<T> Show for Point<T> where T: Display {
+    type Item = T;
+    fn show(self) -> str { "p" }
+}
+impl !Send for Raw {}
+
+---
+
+(source_file
+  (trait_item
+    (type_identifier)
+    (trait_bounds
+      (type_identifier)
+      (type_identifier))
+    (declaration_list
+      (type_item
+        (type_identifier)
+        (trait_bounds
+          (type_identifier))
+        (type_identifier))
+      (const_item
+        (identifier)
+        (type_identifier))
+      (function_signature_item
+        (identifier)
+        (parameters
+          (self_parameter
+            (self)))
+        (type_identifier))))
+  (impl_item
+    (type_parameters
+      (type_parameter
+        (type_identifier)))
+    (type_identifier)
+    (generic_type
+      (type_identifier)
+      (type_arguments
+        (type_identifier)))
+    (where_clause
+      (where_predicate
+        (type_identifier)
+        (trait_bounds
+          (type_identifier))))
+    (declaration_list
+      (type_item
+        (type_identifier)
+        (type_identifier))
+      (function_item
+        (identifier)
+        (parameters
+          (self_parameter
+            (self)))
+        (type_identifier)
+        (block
+          (string_literal
+            (string_content))))))
+  (impl_item
+    (type_identifier)
+    (type_identifier)
+    (declaration_list)))
+
+==================
+Modules, uses and aliases
+==================
+
+mod net;
+pub(pkg) mod util { fn f() {} }
+use rok::std::{io, fs::File as F, net::*};
+use pkg::a::**;
+use json::log!;
+type Pair = (i32, i32);
+const N: usize = 3;
+static mut COUNT: i32 = 0;
+extern "C" { fn abs(x: i32) -> i32; static errno: i32; }
+
+---
+
+(source_file
+  (mod_item
+    (identifier))
+  (mod_item
+    (visibility_modifier)
+    (identifier)
+    (declaration_list
+      (function_item
+        (identifier)
+        (parameters)
+        (block))))
+  (use_declaration
+    (scoped_use_list
+      (scoped_identifier
+        (identifier)
+        (identifier))
+      (use_list
+        (identifier)
+        (use_as_clause
+          (scoped_identifier
+            (identifier)
+            (identifier))
+          (identifier))
+        (use_wildcard
+          (identifier)))))
+  (use_declaration
+    (use_wildcard
+      (scoped_identifier
+        (identifier)
+        (identifier))))
+  (use_declaration
+    (use_macro
+      (scoped_identifier
+        (identifier)
+        (identifier))))
+  (type_item
+    (type_identifier)
+    (tuple_type
+      (type_identifier)
+      (type_identifier)))
+  (const_item
+    (identifier)
+    (type_identifier)
+    (integer_literal))
+  (static_item
+    (mutable_specifier)
+    (identifier)
+    (type_identifier)
+    (integer_literal))
+  (extern_block
+    (string_literal
+      (string_content))
+    (declaration_list
+      (function_signature_item
+        (identifier)
+        (parameters
+          (parameter
+            (identifier)
+            (type_identifier)))
+        (type_identifier))
+      (static_item
+        (identifier)
+        (type_identifier)))))
+
+==================
+Top-level statements
+==================
+
+#!/usr/bin/env rok
+//! Inner doc.
+let x = 1;
+println(f"{x}");
+if x > 0 { print("pos"); }
+
+---
+
+(source_file
+  (shebang)
+  (line_comment)
+  (let_declaration
+    (identifier)
+    (integer_literal))
+  (expression_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (format_string
+          (interpolation
+            (identifier))))))
+  (expression_statement
+    (if_expression
+      (binary_expression
+        (identifier)
+        (integer_literal))
+      (block
+        (expression_statement
+          (call_expression
+            (identifier)
+            (arguments
+              (string_literal
+                (string_content)))))))))
