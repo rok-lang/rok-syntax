@@ -2,8 +2,8 @@
 // suffix), the Rok library's Kind, the tree-sitter capture, the LSP
 // semantic token type. A scope takes the row of its longest listed
 // prefix. Kind "" adds no Kind of its own; LSP "" means no LSP type.
-// One tuple a line: scripts/test-textmate.mjs reads this file with a
-// regex. See docs/token-classes.md.
+// One tuple a line: the runners in scripts/ read this file with a
+// regex. Keyword lists are in keywords.rokon. See docs/token-classes.md.
 [
     ("comment", "Comment", "comment", "comment"),
     ("comment.line.documentation", "Comment", "comment.documentation", "comment"),

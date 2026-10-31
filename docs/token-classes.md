@@ -4,8 +4,9 @@ One table ties the four highlighters of Rok together: the TextMate
 grammars in `grammars/`, the tree-sitter grammar in `tree-sitter/`, the
 Rok library in `src/`, and the semantic tokens of `rokls`. The
 machine-readable copy is [`grammars/classes.rokon`](../grammars/classes.rokon);
-both test runners read it, and every scope the grammars name must have a
-row there.
+the test runners read it, every scope the TextMate grammars name must
+have a row there, and every capture `highlights.scm` uses must be a
+capture of the table or a refinement of one.
 
 ## Table
 
@@ -62,6 +63,12 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | operator | `+` `==` `..=` `.+` `?.` `->`, Unicode math operators | `keyword.operator.*` | `@operator` | `operator` | `Text` |
 | punctuation | `(` `,` `;` `.` `::` `:` | `punctuation.brackets.*`, `punctuation.separator.*`, `punctuation.terminator.*`, `punctuation.accessor` | `@punctuation.bracket`, `@punctuation.delimiter` | | `Text` |
 
+Captures refine the table's where tree-sitter knows more:
+`@keyword.conditional`, `@keyword.repeat`, `@keyword.return`,
+`@keyword.exception`, `@keyword.type`, `@keyword.import` and
+`@keyword.coroutine` (`await`, `yield`) for `@keyword`. A theme without
+them falls back to `@keyword`.
+
 `Kind` is coarser than the scopes: identifiers, operators, punctuation,
 labels and names are all `Text`, and an attribute is one `Attribute`
 token, its arguments included. Its CSS classes are `k` `t` `s` `n` `c`
@@ -98,9 +105,22 @@ look at the neighbouring characters only:
 9. `'` starts a char literal when an escape or one character and a
    closing `'` follow; otherwise `'name` is a label.
 10. A capitalized word is a type; so are the primitive type names.
+    tree-sitter's queries know Latin, Greek and Cyrillic capitals only,
+    since Neovim's regex has no `\p{Lu}`.
 
 The words that become keywords in 0.2.0 (`macro` `defer` `dyn` `move`
 `gen` `do`) are names.
+
+## Keyword lists
+
+[`grammars/keywords.rokon`](../grammars/keywords.rokon) lists the words
+of each keyword class, for Rok and ROKON: `(language, scope, words)`.
+The TextMate runner checks that a rule of that scope matches each word
+and that every word of a keyword rule is listed; the tree-sitter runner
+checks that the grammar has each word as a token, that `highlights.scm`
+captures it, that its primitive types are the list, and that the 0.2.0
+names are not tokens. [rok.vim](https://github.com/rok-lang/rok.vim)
+generates its keyword lines from the file.
 
 ## Corpus
 
@@ -136,9 +156,28 @@ How each implementation uses it:
   is `Attribute` if any scope maps to it; otherwise that of the last
   scope with a `Kind`. Assertions without one are skipped, and so are
   the ` - ` scopes.
-- tree-sitter: map each scope to its capture through the table, as
-  `rok test` does for `Kind`; tree-sitter's own highlight tests use the
-  same `^` / `<-` marks with `@capture` names.
+- tree-sitter: `node scripts/test-tree-sitter.mjs` runs
+  `tree-sitter highlight` on each file and maps each asserted scope to
+  its capture through the table. Some capture over the column (an
+  attribute's argument is under `@attribute` and its own capture) must
+  be the capture of one of the scopes or a refinement of it; where
+  TextMate only knows a word is a name (`@variable`), `@property` also
+  passes. Scopes after ` - ` must not match, and scopes without a
+  capture (`meta`) are not checked. `--dump FILE` prints each line's
+  captures. tree-sitter's own tests (`tree-sitter test` in
+  `tree-sitter/rok` and `tree-sitter/rokon`) use the same `^` / `<-`
+  marks with capture names.
 
-To add a case, write the source line and its assertions, then run both
-`npm test` and `rok test`.
+Source lines are Rok (or ROKON): the tree-sitter runner fails on a line
+that does not parse. A case about text that is not Rok, kept for the
+lexical highlighters, goes below a marker line, which the tree-sitter
+runner skips:
+
+```rok
+// tree-sitter: skip, `rb"x"` is not Rok
+    rb"x" br"y"
+//  ^^ variable.other.rok - storage.type.string.rok
+```
+
+To add a case, write the source line and its assertions, then run
+`npm test` (both runners) and `rok test`.
