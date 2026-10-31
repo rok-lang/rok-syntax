@@ -77,6 +77,12 @@ const KEYWORDS = [
   'struct', 'enum', 'trait', 'impl', 'pub', 'mod', 'use', 'as', 'is', 'ref',
 ];
 
+// Contextual keywords (spec 1.5.4).
+const CONTEXTUAL = [
+  'type', 'any', 'in', 'where', 'throws', 'rethrows', 'catch', 'finally', 'const',
+  'static', 'extern', 'mut', 'union',
+];
+
 const PUNCTUATION = [
   '+', '-', '*', '/', '%', '%%', '==', '!=', '<', '>', '<=', '>=', '&&', '||', '!',
   '&', '|', '^', '~', '<<', '>>', '=', '+=', '-=', '*=', '/=', '%=', '%%=', '&=',
@@ -1020,7 +1026,7 @@ module.exports = grammar({
     field_initializer: $ => seq(
       field('field', choice(
         $._field_identifier,
-        alias(choice(...KEYWORDS, 'true', 'false', 'none', 'Self'), $.field_identifier),
+        alias(choice(...KEYWORDS, ...CONTEXTUAL, 'true', 'false', 'none', 'Self'), $.field_identifier),
       )),
       ':',
       field('value', $._expression),

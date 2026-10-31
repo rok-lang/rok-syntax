@@ -3145,6 +3145,11 @@
     }
   },
   {
+    "type": "mutable_specifier",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "named_argument",
     "named": true,
     "fields": {
@@ -5643,8 +5648,8 @@
     "named": false
   },
   {
-    "type": "mutable_specifier",
-    "named": true
+    "type": "mut",
+    "named": false
   },
   {
     "type": "none",

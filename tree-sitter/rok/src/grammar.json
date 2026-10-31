@@ -7469,6 +7469,58 @@
                     },
                     {
                       "type": "STRING",
+                      "value": "type"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "any"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "in"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "where"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "throws"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "rethrows"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "catch"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "finally"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "const"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "static"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "extern"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "mut"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "union"
+                    },
+                    {
+                      "type": "STRING",
                       "value": "true"
                     },
                     {
