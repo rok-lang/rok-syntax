@@ -1,4 +1,6 @@
-use pkg::{highlight_rok, highlight_rokon, tokens, Kind};
+use rok::std::fs;
+use rok::std::rokon;
+use pkg::{highlight_rok, highlight_rokon, tokens, tokens_rokon, Kind, Token};
 
 fn expect(ok: bool, what: str) {
     if !ok { panic(f"check failed: {what}"); }
@@ -86,4 +88,207 @@ fn shebang() {
     expect(h.starts_with("<span class=\"c\">#!/usr/bin/env rok</span>\n"), h);
     let a = highlight_rok("#![allow(unused)]");
     expect(a == "<span class=\"a\">#![allow(unused)]</span>", a);
+}
+
+// The shared corpus (corpus/*.rok, corpus/*.rokon): each `// ^ scope`
+// assertion whose scopes map to a Kind through grammars/classes.rokon
+// must hold for the library's tokens too. docs/token-classes.md.
+
+struct Class {
+    prefix: str;
+    kind: str;
+}
+
+struct Check {
+    line: usize;
+    at: usize;
+    cols: List<usize>;
+    scopes: List<str>;
+}
+
+fn chars_of(s: str) -> List<char> {
+    let cs: List<char> = List::new();
+    for c in s.chars() { cs.push(c); }
+    cs
+}
+
+fn str_of(cs: List<char>, a: usize, b: usize) -> str {
+    let s = StrBuf::new();
+    for k in a..b { s.push(cs[k]); }
+    s.to_str()
+}
+
+fn read(path: str) -> str {
+    try fs::read_to_str(path) catch e { panic(f"{path}: {e}"); }
+}
+
+fn classes() -> List<Class> {
+    let out: List<Class> = List::new();
+    let v = try rokon::parse(read("grammars/classes.rokon")) catch e { panic(f"classes.rokon: {e}"); };
+    match v {
+        rokon::Value::List(rows) => {
+            for r in rows {
+                match r {
+                    rokon::Value::Tuple(p) => {
+                        match (p[0], p[1]) {
+                            (rokon::Value::Str(a), rokon::Value::Str(b)) => out.push(Class { prefix: a, kind: b }),
+                            _ => panic("classes.rokon: rows are (scope, kind, capture, lsp)"),
+                        }
+                    }
+                    _ => panic("classes.rokon: rows are tuples"),
+                }
+            }
+        }
+        _ => panic("classes.rokon: a list of tuples"),
+    }
+    out
+}
+
+/// The Kind name of a TextMate scope: its longest prefix's row, "" if
+/// none or no Kind.
+fn kind_of(cls: List<Class>, scope: str) -> str {
+    let s = scope;
+    if s.ends_with(".rokon") {
+        let cs = chars_of(s);
+        s = str_of(cs, 0, cs.len() - 6);
+    } else if s.ends_with(".rok") {
+        let cs = chars_of(s);
+        s = str_of(cs, 0, cs.len() - 4);
+    }
+    let best = "";
+    let best_len = 0usize;
+    for c in cls {
+        let n = c.prefix.len();
+        if (s == c.prefix || s.starts_with(c.prefix + ".")) && n > best_len {
+            best = c.kind;
+            best_len = n;
+        }
+    }
+    best
+}
+
+/// The Kind an assertion's scopes expect: Attribute if any scope is in
+/// an attribute (the library keeps one token for it), else the last
+/// scope with a Kind; "" if none has one.
+fn expected(cls: List<Class>, scopes: List<str>) -> str {
+    let want = "";
+    for s in scopes {
+        let k = kind_of(cls, s);
+        if k == "Attribute" { return k; }
+        if !k.is_empty() { want = k; }
+    }
+    want
+}
+
+/// An assertion line `// ^^ scope..` / `// <~~-- scope..`, else none.
+fn assertion(l: List<char>, line: usize, at: usize) -> Check | none {
+    let n = l.len();
+    let j = 0usize;
+    while j < n && l[j] == ' ' { j += 1; }
+    if j + 1 >= n || l[j] != '/' || l[j + 1] != '/' { return none; }
+    j += 2;
+    while j < n && l[j] == ' ' { j += 1; }
+    let cols: List<usize> = List::new();
+    if j < n && l[j] == '^' {
+        while j < n && (l[j] == '^' || l[j] == ' ') {
+            if l[j] == '^' { cols.push(j); }
+            j += 1;
+        }
+    } else if j < n && l[j] == '<' {
+        j += 1;
+        let off = 0usize;
+        while j < n && l[j] == '~' {
+            off += 1;
+            j += 1;
+        }
+        let c = off;
+        while j < n && l[j] == '-' {
+            cols.push(c);
+            c += 1;
+            j += 1;
+        }
+        if cols.is_empty() { return none; }
+    } else {
+        return none;
+    }
+    let scopes: List<str> = List::new();
+    for w in str_of(l, j, n).split_whitespace() {
+        if w == "-" { break; }
+        scopes.push(w);
+    }
+    Check { line: line, at: at, cols: cols, scopes: scopes }
+}
+
+/// Per line, the Kind of each UTF-16 column (the unit the assertion
+/// columns count in).
+fn kinds_by_line(toks: List<Token>) -> List<List<Kind>> {
+    let lines: List<List<Kind>> = List::new();
+    let cur: List<Kind> = List::new();
+    for t in toks {
+        for c in t.text.chars() {
+            if c == '\n' {
+                lines.push(cur);
+                cur = List::new();
+            } else {
+                cur.push(t.kind);
+                if c as u32 > 0xFFFFu32 { cur.push(t.kind); }
+            }
+        }
+    }
+    lines.push(cur);
+    lines
+}
+
+/// Checks one corpus file; returns its assertion count and failures.
+fn check_file(cls: List<Class>, name: str, fails: List<str>) -> usize {
+    let text = read(f"corpus/{name}");
+    let lines: List<List<char>> = List::new();
+    for l in text.split("\n") { lines.push(chars_of(l)); }
+    let head = str_of(lines[0], 0, lines[0].len());
+    if !head.contains("SYNTAX TEST") { panic(f"corpus/{name}: no SYNTAX TEST header"); }
+    let toks = if head.contains("\"source.rokon\"") { tokens_rokon(text) } else { tokens(text) };
+    let kinds = kinds_by_line(toks);
+    let src = 0usize;
+    let count = 0usize;
+    for i in 1..lines.len() {
+        let chk = match assertion(lines[i], src, i + 1) {
+            c: Check => c,
+            none => {
+                src = i;
+                continue;
+            }
+        };
+        let want = expected(cls, chk.scopes);
+        if want.is_empty() { continue; }
+        count += 1;
+        for col in chk.cols {
+            let have = if col < kinds[chk.line].len() { f"{kinds[chk.line][col]:?}" } else { "end of line" };
+            if have != want {
+                fails.push(f"corpus/{name}:{chk.at}: col {col}: want {want}, have {have}");
+            }
+        }
+    }
+    count
+}
+
+#[test]
+fn corpus() {
+    let cls = classes();
+    let names: List<str> = List::new();
+    let rd = try fs::read_dir("corpus") catch e { panic(f"corpus: {e}"); };
+    for e in rd {
+        let d = try e.get() catch x { panic(f"corpus: {x}"); };
+        let f = d.file_name();
+        if f.ends_with(".rok") || f.ends_with(".rokon") { names.push(f); }
+    }
+    names.sort();
+    let fails: List<str> = List::new();
+    let total = 0usize;
+    for f in names { total += check_file(cls, f, fails); }
+    println(f"corpus: {names.len()} files, {total} assertions with a Kind, {fails.len()} failures");
+    if !fails.is_empty() {
+        let msg = StrBuf::new();
+        for f in fails { msg.push_str(f"\n{f}"); }
+        panic(msg.to_str());
+    }
 }
