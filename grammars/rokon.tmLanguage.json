@@ -1,0 +1,251 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ROKON",
+  "scopeName": "source.rokon",
+  "fileTypes": [
+    "rokon"
+  ],
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#string"
+    },
+    {
+      "include": "#char"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#constant"
+    },
+    {
+      "include": "#field"
+    },
+    {
+      "include": "#type"
+    },
+    {
+      "include": "#namespace"
+    },
+    {
+      "include": "#punctuation"
+    },
+    {
+      "include": "#ident"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.rokon",
+          "match": "(//).*$",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.rokon"
+            }
+          }
+        },
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "block-comment": {
+      "name": "comment.block.rokon",
+      "begin": "/\\*",
+      "end": "\\*/",
+      "captures": {
+        "0": {
+          "name": "punctuation.definition.comment.rokon"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.raw.rokon",
+          "begin": "(?<![\\p{L}\\p{N}_])(r)(#*)(\")",
+          "end": "(\")(\\2)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.rokon"
+            },
+            "3": {
+              "name": "punctuation.definition.string.begin.rokon"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rokon"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.double.rokon",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.rokon"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rokon"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape"
+            }
+          ]
+        }
+      ]
+    },
+    "escape": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.rokon",
+          "match": "\\\\(?:[\\\\\"'nrt0]|x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|$)"
+        },
+        {
+          "name": "invalid.illegal.escape.rokon",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "char": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.char.rokon",
+          "match": "(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.string.begin.rokon"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#escape"
+                }
+              ]
+            },
+            "3": {
+              "name": "punctuation.definition.string.end.rokon"
+            }
+          }
+        }
+      ]
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])0[xX][0-9A-Fa-f_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.binary.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])0[bB][01_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.octal.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])0[oO][0-7_]+(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.float.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*(?:\\.(?![.\\p{L}_])(?:[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_]*)?|[eE][+-]?[0-9][0-9_]*)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.numeric.decimal.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "constant": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])(?:true|false)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.language.none.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])(?:none)(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "field": {
+      "comment": "a field name: any identifier before a single :",
+      "name": "support.type.property-name.rokon",
+      "match": "(?<![\\p{L}\\p{N}_])(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*:(?!:))"
+    },
+    "type": {
+      "patterns": [
+        {
+          "name": "entity.name.type.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])\\p{Lu}[\\p{L}\\p{N}_]*"
+        }
+      ]
+    },
+    "namespace": {
+      "patterns": [
+        {
+          "name": "entity.name.namespace.rokon",
+          "match": "(?<![\\p{L}\\p{N}_])(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=::)"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.namespace.rokon",
+          "match": "::"
+        },
+        {
+          "name": "keyword.operator.arithmetic.rokon",
+          "match": "-"
+        },
+        {
+          "name": "punctuation.separator.colon.rokon",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.accessor.rokon",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.separator.comma.rokon",
+          "match": ","
+        },
+        {
+          "name": "punctuation.terminator.statement.rokon",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.brackets.round.rokon",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.brackets.square.rokon",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.brackets.curly.rokon",
+          "match": "[{}]"
+        }
+      ]
+    },
+    "ident": {
+      "name": "variable.other.rokon",
+      "match": "[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*"
+    }
+  }
+}

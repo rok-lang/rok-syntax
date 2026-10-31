@@ -1,0 +1,1075 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Rok",
+  "scopeName": "source.rok",
+  "fileTypes": [
+    "rok"
+  ],
+  "patterns": [
+    {
+      "include": "#shebang"
+    },
+    {
+      "include": "#code"
+    }
+  ],
+  "repository": {
+    "shebang": {
+      "name": "comment.line.shebang.rok",
+      "match": "\\A#!(?!\\s*\\[).*$"
+    },
+    "code": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#attribute"
+        },
+        {
+          "include": "#template"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#char"
+        },
+        {
+          "include": "#label"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#member"
+        },
+        {
+          "include": "#function-def"
+        },
+        {
+          "include": "#mod-def"
+        },
+        {
+          "include": "#macro"
+        },
+        {
+          "include": "#raw-ident"
+        },
+        {
+          "include": "#impl-generic"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#type"
+        },
+        {
+          "include": "#namespace"
+        },
+        {
+          "include": "#function-call"
+        },
+        {
+          "include": "#operator"
+        },
+        {
+          "include": "#punctuation"
+        },
+        {
+          "include": "#ident"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.documentation.rok",
+          "match": "(///(?!/)|//!).*$",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.rok"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.rok",
+          "match": "(//).*$",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.comment.rok"
+            }
+          }
+        },
+        {
+          "name": "comment.block.documentation.rok",
+          "begin": "/\\*(?:\\*(?![*/])|!)",
+          "end": "\\*/",
+          "captures": {
+            "0": {
+              "name": "punctuation.definition.comment.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#block-comment"
+            }
+          ]
+        },
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "block-comment": {
+      "name": "comment.block.rok",
+      "begin": "/\\*",
+      "end": "\\*/",
+      "captures": {
+        "0": {
+          "name": "punctuation.definition.comment.rok"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#block-comment"
+        }
+      ]
+    },
+    "attribute": {
+      "name": "meta.attribute.rok",
+      "comment": "#[name], #![name], #[dep::name(args)], #[name = value]",
+      "begin": "(#!?\\[)\\s*((?:(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*::)*(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+      "end": "\\]",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.attribute.begin.rok"
+        },
+        "2": {
+          "name": "entity.name.function.attribute.rok"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.attribute.end.rok"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#char"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#type"
+        },
+        {
+          "include": "#namespace"
+        },
+        {
+          "include": "#attribute-brackets"
+        },
+        {
+          "include": "#operator"
+        },
+        {
+          "include": "#punctuation"
+        },
+        {
+          "include": "#ident"
+        }
+      ]
+    },
+    "attribute-brackets": {
+      "comment": "brackets inside an attribute, so #[a([1])] ends at the right ]",
+      "begin": "\\[",
+      "end": "\\]",
+      "captures": {
+        "0": {
+          "name": "punctuation.brackets.square.rok"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#attribute-brackets"
+        }
+      ]
+    },
+    "template": {
+      "comment": "meta-system template tokens: @derive, @macro, @Self, @for_fields, @x",
+      "name": "keyword.other.template.rok",
+      "match": "(@)[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.template.rok"
+        }
+      }
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.raw.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(r)(#*)(\")",
+          "end": "(\")(\\2)",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.rok"
+            },
+            "3": {
+              "name": "punctuation.definition.string.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          }
+        },
+        {
+          "name": "string.interpolated.triple.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(f)(\"\"\")",
+          "end": "\"\"\"",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#fstring-content"
+            }
+          ]
+        },
+        {
+          "name": "string.interpolated.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(f)(\")",
+          "end": "\"",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#fstring-content"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.byte.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(b)(\")",
+          "end": "\"",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.type.string.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape"
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.rok",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#escape"
+            }
+          ]
+        }
+      ]
+    },
+    "escape": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.rok",
+          "match": "\\\\(?:[\\\\\"'nrt0]|x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|$)"
+        },
+        {
+          "name": "invalid.illegal.escape.rok",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "fstring-content": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.rok",
+          "match": "\\{\\{|\\}\\}"
+        },
+        {
+          "include": "#escape"
+        },
+        {
+          "name": "meta.interpolation.rok",
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.interpolation.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.interpolation.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#format-spec"
+            },
+            {
+              "include": "#hole-groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "format-spec": {
+      "comment": "{x:spec}: the spec runs to the hole's }, with nested {..} / ${..} holes",
+      "name": "constant.other.format-spec.rok",
+      "begin": "(?<!:):(?!:)",
+      "end": "(?=[}\"])",
+      "patterns": [
+        {
+          "name": "constant.character.escape.rok",
+          "match": "\\$\\$"
+        },
+        {
+          "name": "meta.interpolation.rok",
+          "begin": "\\$?\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.interpolation.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.interpolation.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hole-groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "hole-groups": {
+      "comment": "brackets in a hole, so a : or } inside them does not end the expression",
+      "patterns": [
+        {
+          "begin": "\\(",
+          "end": "\\)",
+          "captures": {
+            "0": {
+              "name": "punctuation.brackets.round.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hole-groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "begin": "\\[",
+          "end": "\\]",
+          "captures": {
+            "0": {
+              "name": "punctuation.brackets.square.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hole-groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "captures": {
+            "0": {
+              "name": "punctuation.brackets.curly.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#hole-groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "char": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.byte.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(c)(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
+          "captures": {
+            "1": {
+              "name": "storage.type.string.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.string.begin.rok"
+            },
+            "3": {
+              "patterns": [
+                {
+                  "include": "#escape"
+                }
+              ]
+            },
+            "4": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.single.char.rok",
+          "match": "(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.string.begin.rok"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "include": "#escape"
+                }
+              ]
+            },
+            "3": {
+              "name": "punctuation.definition.string.end.rok"
+            }
+          }
+        }
+      ]
+    },
+    "label": {
+      "comment": "'outer: a label has no closing quote",
+      "name": "entity.name.label.rok",
+      "match": "(')(?>[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(?!')",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.label.rok"
+        }
+      }
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.rok",
+          "match": "(?<![\\p{L}\\p{N}_])0[xX][0-9A-Fa-f_]+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.numeric.rok"
+            }
+          }
+        },
+        {
+          "name": "constant.numeric.binary.rok",
+          "match": "(?<![\\p{L}\\p{N}_])0[bB][01_]+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.numeric.rok"
+            }
+          }
+        },
+        {
+          "name": "constant.numeric.octal.rok",
+          "match": "(?<![\\p{L}\\p{N}_])0[oO][0-7_]+([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.numeric.rok"
+            }
+          }
+        },
+        {
+          "comment": "1.5, 1., 2e10, 1.5e-3f32; not 1..2 or 1.foo",
+          "name": "constant.numeric.float.rok",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*(?:\\.(?![.\\p{L}_])(?:[0-9][0-9_]*)?(?:[eE][+-]?[0-9][0-9_]*)?|[eE][+-]?[0-9][0-9_]*)([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.numeric.rok"
+            }
+          }
+        },
+        {
+          "name": "constant.numeric.decimal.rok",
+          "match": "(?<![\\p{L}\\p{N}_])[0-9][0-9_]*([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type.numeric.rok"
+            }
+          }
+        }
+      ]
+    },
+    "member": {
+      "comment": "after . every word is a name, keywords included: x.type, s.match(p)",
+      "patterns": [
+        {
+          "name": "entity.name.function.call.rok",
+          "match": "(?<=\\.)(?<!\\.\\.)(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*\\()"
+        },
+        {
+          "name": "variable.other.member.rok",
+          "match": "(?<=\\.)(?<!\\.\\.)(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*"
+        }
+      ]
+    },
+    "function-def": {
+      "name": "meta.function.rok",
+      "comment": "fn name<generics>(params) -> ret throws (E) where ..; generics on one line",
+      "begin": "(?<![\\p{L}\\p{N}_])(fn)\\s+((?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)\\s*(<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.function.rok"
+        },
+        "2": {
+          "name": "entity.name.function.rok"
+        },
+        "3": {
+          "patterns": [
+            {
+              "include": "#generic-params"
+            }
+          ]
+        }
+      },
+      "end": "(?=[{;=])",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "name": "meta.parameters.rok",
+          "begin": "\\G\\s*(\\()",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.brackets.round.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.brackets.round.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#attribute"
+            },
+            {
+              "name": "variable.parameter.rok",
+              "match": "(?<![\\p{L}\\p{N}_])(?!(?:true|false|none|self|Self)(?![\\p{L}\\p{N}_]))(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*:(?!:))"
+            },
+            {
+              "include": "#groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "include": "#groups"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "generic-params": {
+      "name": "meta.generic.rok",
+      "begin": "<",
+      "end": ">",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.generic.begin.rok"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.generic.end.rok"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#generic-body"
+        }
+      ]
+    },
+    "groups": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "end": "\\)",
+          "captures": {
+            "0": {
+              "name": "punctuation.brackets.round.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "begin": "\\[",
+          "end": "\\]",
+          "captures": {
+            "0": {
+              "name": "punctuation.brackets.square.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#groups"
+            },
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "mod-def": {
+      "match": "(?<![\\p{L}\\p{N}_])(mod)\\s+((?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+      "captures": {
+        "1": {
+          "name": "storage.type.rok"
+        },
+        "2": {
+          "name": "entity.name.namespace.rok"
+        }
+      }
+    },
+    "macro": {
+      "comment": "name!(..), dep::name!, use dep::name!; not try!, not !=",
+      "match": "(?<![\\p{L}\\p{N}_])(?!(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|true|false|none|self|Self)!)((?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(!)(?!=)",
+      "captures": {
+        "1": {
+          "name": "entity.name.function.macro.rok"
+        },
+        "2": {
+          "name": "entity.name.function.macro.rok"
+        }
+      }
+    },
+    "raw-ident": {
+      "comment": "r#name is a name, never a keyword (r#\"..\"# is a raw string)",
+      "patterns": [
+        {
+          "name": "entity.name.function.call.rok",
+          "match": "(?<![\\p{L}\\p{N}_])r#[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*\\()"
+        },
+        {
+          "name": "variable.other.rok",
+          "match": "(?<![\\p{L}\\p{N}_])r#[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*"
+        }
+      ]
+    },
+    "keyword": {
+      "patterns": [
+        {
+          "comment": "a keyword before : is a field or binding name: struct T { type: i32 }, f(type: 1)",
+          "name": "variable.other.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|type|any|in|where|throws|rethrows|catch|finally|const|static|extern|mut|union)(?=\\s*:(?!:))"
+        },
+        {
+          "comment": "a contextual keyword in value position is a name: let in = 3; f(in)",
+          "name": "variable.other.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:type|any|in|where|throws|rethrows|catch|finally|const|static|extern|mut|union)(?=\\s*(?:=(?![=>])|[,)\\]]|\\.(?!\\.)))"
+        },
+        {
+          "name": "storage.type.rok",
+          "match": "(?<![\\p{L}\\p{N}_])type(?=\\s+(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*\\s*[=<;:])"
+        },
+        {
+          "name": "storage.type.rok",
+          "match": "(?<![\\p{L}\\p{N}_])union(?=\\s+(?:r#)?[\\p{L}_])"
+        },
+        {
+          "name": "variable.other.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:type|union)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "match": "(?<![\\p{L}\\p{N}_])(pub)\\s*(\\()\\s*(pkg|sub)\\s*(\\))",
+          "captures": {
+            "1": {
+              "name": "storage.modifier.rok"
+            },
+            "2": {
+              "name": "punctuation.brackets.round.rok"
+            },
+            "3": {
+              "name": "storage.modifier.visibility.rok"
+            },
+            "4": {
+              "name": "punctuation.brackets.round.rok"
+            }
+          }
+        },
+        {
+          "name": "keyword.other.path.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:pkg|sup|rok)(?=::)"
+        },
+        {
+          "name": "keyword.control.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:if|else|match|while|loop|for|in|return|break|continue|try|throw|yield|await|catch|finally|using)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "storage.type.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:fn|let|struct|enum|trait|impl|mod)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "storage.type.any.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:any)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "storage.modifier.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:pub|unsafe|async|ref|const|static|extern|mut)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "keyword.other.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:use|where|throws|rethrows)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "keyword.operator.word.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:as|is)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.language.boolean.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:true|false)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "constant.language.none.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:none)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "variable.language.self.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:self|Self)(?![\\p{L}\\p{N}_])"
+        }
+      ]
+    },
+    "type": {
+      "patterns": [
+        {
+          "name": "support.type.primitive.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:i8|i16|i32|i64|i128|isize|u8|u16|u32|u64|u128|usize|f32|f64|bool|char|str|int|float|c_char)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "name": "meta.generic.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(\\p{Lu}[\\p{L}\\p{N}_]*)(<)(?=\\s*(?:[\\p{L}_(\\[&]|>))",
+          "end": ">|(?=[;{}\\]])",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.generic.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.generic.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#generic-body"
+            }
+          ]
+        },
+        {
+          "name": "entity.name.type.rok",
+          "match": "(?<![\\p{L}\\p{N}_])\\p{Lu}[\\p{L}\\p{N}_]*"
+        }
+      ]
+    },
+    "impl-generic": {
+      "name": "meta.generic.rok",
+      "begin": "(?<![\\p{L}\\p{N}_])(impl)(<)",
+      "end": ">",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.rok"
+        },
+        "2": {
+          "name": "punctuation.definition.generic.begin.rok"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.generic.end.rok"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#generic-body"
+        }
+      ]
+    },
+    "generic-body": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "name": "meta.generic.rok",
+          "begin": "(?<![\\p{L}\\p{N}_])(\\p{Lu}[\\p{L}\\p{N}_]*)(<)",
+          "end": ">",
+          "beginCaptures": {
+            "1": {
+              "name": "entity.name.type.rok"
+            },
+            "2": {
+              "name": "punctuation.definition.generic.begin.rok"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.generic.end.rok"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#generic-body"
+            }
+          ]
+        },
+        {
+          "include": "#groups"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#char"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#raw-ident"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#type"
+        },
+        {
+          "include": "#namespace"
+        },
+        {
+          "name": "keyword.operator.arrow.rok",
+          "match": "->"
+        },
+        {
+          "name": "keyword.operator.assignment.rok",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.bitwise.rok",
+          "match": "[|&+]"
+        },
+        {
+          "name": "keyword.operator.optional.rok",
+          "match": "\\?"
+        },
+        {
+          "include": "#punctuation"
+        },
+        {
+          "include": "#ident"
+        }
+      ]
+    },
+    "namespace": {
+      "patterns": [
+        {
+          "name": "entity.name.namespace.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=::)"
+        }
+      ]
+    },
+    "function-call": {
+      "name": "entity.name.function.call.rok",
+      "match": "(?<![\\p{L}\\p{N}_])[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*(?=\\s*\\()"
+    },
+    "operator": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.namespace.rok",
+          "match": "::"
+        },
+        {
+          "name": "keyword.operator.range.rok",
+          "match": "\\.\\.=?"
+        },
+        {
+          "name": "keyword.operator.broadcast.rok",
+          "match": "\\.(?:%%|==|!=|<=|>=|<<|>>|&&|\\|\\||[+\\-*/%<>&|^])"
+        },
+        {
+          "name": "keyword.operator.optional.rok",
+          "match": "\\?\\.|\\?\\?|\\?"
+        },
+        {
+          "name": "keyword.operator.arrow.rok",
+          "match": "->|=>"
+        },
+        {
+          "name": "keyword.operator.assignment.compound.rok",
+          "match": "%%=|<<=|>>=|[+\\-*/%&|^]="
+        },
+        {
+          "name": "keyword.operator.bitwise.rok",
+          "match": "<<|>>"
+        },
+        {
+          "name": "keyword.operator.comparison.rok",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.logical.rok",
+          "match": "&&|\\|\\||!"
+        },
+        {
+          "name": "keyword.operator.bitwise.rok",
+          "match": "&|\\||\\^|~"
+        },
+        {
+          "name": "keyword.operator.arithmetic.rok",
+          "match": "%%|[+\\-*/%]"
+        },
+        {
+          "name": "keyword.operator.assignment.rok",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.math.rok",
+          "match": "[\u00d7\u22c5\u00f7\u2218\u221a\u2261\u2260\u2264\u2265\u2208\u2209\u2282\u2286\u222a\u2229]"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.colon.rok",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.accessor.rok",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.separator.comma.rok",
+          "match": ","
+        },
+        {
+          "name": "punctuation.terminator.statement.rok",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.brackets.round.rok",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.brackets.square.rok",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.brackets.curly.rok",
+          "match": "[{}]"
+        }
+      ]
+    },
+    "ident": {
+      "name": "variable.other.rok",
+      "match": "[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*"
+    }
+  }
+}
