@@ -1,0 +1,21 @@
+// SYNTAX TEST "source.rokon" "a package manifest"
+Package {
+// <------- entity.name.type.rokon
+//      ^ punctuation.brackets.curly.rokon
+    name: "rok-syntax",
+//  ^^^^ support.type.property-name.rokon
+//      ^ punctuation.separator.colon.rokon
+//        ^^^^^^^^^^^^ string.quoted.double.rokon
+//                    ^ punctuation.separator.comma.rokon
+    type: "lib", // not a keyword in ROKON
+//  ^^^^ support.type.property-name.rokon - storage.type.rokon
+//               ^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line.double-slash.rokon
+    deps: { "json": "0.1", "http": { path: "../http" } },
+//  ^^^^ support.type.property-name.rokon
+//          ^^^^^^ string.quoted.double.rokon
+//                                   ^^^^ support.type.property-name.rokon
+    /* block /* nested */ */ edition: none,
+//  ^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.rokon
+//                           ^^^^^^^ support.type.property-name.rokon
+//                                    ^^^^ constant.language.none.rokon
+}

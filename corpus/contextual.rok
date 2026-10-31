@@ -1,0 +1,57 @@
+// SYNTAX TEST "source.rok" "contextual keywords and keywords in name positions"
+    type Pair = (i32, i32); type Wrap<T> = List<T>; type Output;
+//  ^^^^ storage.type.rok
+//       ^^^^ entity.name.type.rok
+//                          ^^^^ storage.type.rok
+//                                                  ^^^^ storage.type.rok
+    let type = 1; let in = 3; f(in, type); x = static.len();
+//      ^^^^ variable.other.rok - storage.type.rok
+//                    ^^ variable.other.rok - keyword.control.rok
+//                              ^^ variable.other.rok
+//                                  ^^^^ variable.other.rok
+//                                             ^^^^^^ variable.other.rok
+    struct Token { type: Kind; for: str; match: i32; }
+//                 ^^^^ variable.other.rok - storage.type.rok
+//                       ^^^^ entity.name.type.rok
+//                             ^^^ variable.other.rok - keyword.control.rok
+//                                       ^^^^^ variable.other.rok - keyword.control.rok
+    let k = tok.type + s.match(p) + e.for;
+//              ^^^^ variable.other.member.rok - storage.type.rok
+//                       ^^^^^ entity.name.function.call.rok - keyword.control.rok
+//                                    ^^^ variable.other.member.rok
+    make(type: Kind::Ident); Ev { match: 1 }
+//       ^^^^ variable.other.rok
+//             ^^^^ entity.name.type.rok
+//                 ^^ punctuation.separator.namespace.rok
+//                   ^^^^^ entity.name.type.rok
+//                                ^^^^^ variable.other.rok
+    let s = Point { self: 1, none: 2 };
+//                  ^^^^ variable.language.self.rok
+//                           ^^^^ constant.language.none.rok
+    union Bits { i: u32; f: f32; } let union = 2;
+//  ^^^^^ storage.type.rok
+//                                     ^^^^^ variable.other.rok
+    fn catch(e: str) { } fn in() { } mod type { }
+//     ^^^^^ entity.name.function.rok - keyword.control.rok
+//           ^ variable.parameter.rok
+//                          ^^ entity.name.function.rok
+//                                       ^^^^ entity.name.namespace.rok
+    use pkg::util; sup::f(); rok::std::fs; let rok = 42; pkg.x
+//      ^^^ keyword.other.path.rok
+//           ^^^^ variable.other.rok
+//                 ^^^ keyword.other.path.rok
+//                           ^^^ keyword.other.path.rok
+//                                ^^^ entity.name.namespace.rok
+//                                             ^^^ variable.other.rok
+//                                                       ^^^ variable.other.rok
+    pub(pkg) fn a() { } pub(sub) fn b() { } let sub = 1;
+//  ^^^ storage.modifier.rok
+//      ^^^ storage.modifier.visibility.rok
+//                      ^^^ storage.modifier.rok
+//                          ^^^ storage.modifier.visibility.rok
+//                                              ^^^ variable.other.rok
+    catch e: TimeoutError { } catch _ { }
+//  ^^^^^ keyword.control.rok
+//        ^ variable.other.rok
+//           ^^^^^^^^^^^^ entity.name.type.rok
+//                            ^^^^^ keyword.control.rok

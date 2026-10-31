@@ -1,0 +1,38 @@
+// SYNTAX TEST "source.rok" "plain, raw and byte strings, escapes"
+    let s = "a\tb\"c\\ \x41 \u{1F600} \u{1_F600}";
+//          ^ string.quoted.double.rok punctuation.definition.string.begin.rok
+//           ^ string.quoted.double.rok
+//            ^^ string.quoted.double.rok constant.character.escape.rok
+//               ^^ constant.character.escape.rok
+//                  ^^ constant.character.escape.rok
+//                     ^^^^ constant.character.escape.rok
+//                          ^^^^^^^^^ constant.character.escape.rok
+//                                    ^^^^^^^^^^ constant.character.escape.rok
+//                                              ^ string.quoted.double.rok punctuation.definition.string.end.rok
+//                                               ^ punctuation.terminator.statement.rok
+    "bad \q escape"
+//       ^^ string.quoted.double.rok invalid.illegal.escape.rok
+    "multi
+    line, still a string"
+//  ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.rok
+    "line \
+//        ^ string.quoted.double.rok constant.character.escape.rok
+     continued"
+//   ^^^^^^^^^^ string.quoted.double.rok
+    r"C:\path\n" + r#"has "quotes""# + r##"even "# inside"##
+//  ^ string.quoted.double.raw.rok storage.type.string.rok
+//   ^ string.quoted.double.raw.rok punctuation.definition.string.begin.rok
+//    ^^^^^^^^^ string.quoted.double.raw.rok - constant.character.escape.rok
+//             ^ string.quoted.double.raw.rok punctuation.definition.string.end.rok
+//               ^ keyword.operator.arithmetic.rok
+//                 ^^^^^^^^^^^^^^^^^ string.quoted.double.raw.rok
+//                                   ^ keyword.operator.arithmetic.rok
+//                                     ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.raw.rok
+    b"GET /\r\n" + b"\x7F\xFF"
+//  ^ string.quoted.double.byte.rok storage.type.string.rok
+//   ^^^^^^ string.quoted.double.byte.rok
+//         ^^^^ string.quoted.double.byte.rok constant.character.escape.rok
+//                   ^^^^^^^^ string.quoted.double.byte.rok constant.character.escape.rok
+    rb"x" br"y"
+//  ^^ variable.other.rok - storage.type.string.rok
+//    ^^^ string.quoted.double.rok

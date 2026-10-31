@@ -1,0 +1,13 @@
+// SYNTAX TEST "source.rok" "raw identifiers"
+    fn r#match(x: i32) -> i32 { x + 1 }
+//  ^^ storage.type.function.rok
+//     ^^^^^^^ entity.name.function.rok - keyword.control.rok
+    struct Tok { r#type: i32; } let r#move = r#match(1); tok.r#type
+//               ^^^^^^ variable.other.rok - storage.type.rok
+//                                  ^^^^^^ variable.other.rok
+//                                           ^^^^^^^ entity.name.function.call.rok - keyword.control.rok
+//                                                           ^^^^^^ variable.other.member.rok
+    r#gen + r#"raw"# + r#loop
+//  ^^^^^ variable.other.rok
+//          ^^^^^^^^ string.quoted.double.raw.rok
+//                     ^^^^^^ variable.other.rok - keyword.control.rok

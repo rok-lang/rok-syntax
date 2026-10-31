@@ -1,0 +1,35 @@
+// SYNTAX TEST "source.rok" "attributes"
+    #[test] #[inline(always)] #[derive(Debug, dep::Name)]
+//  ^^ meta.attribute.rok punctuation.definition.attribute.begin.rok
+//    ^^^^ meta.attribute.rok entity.name.function.attribute.rok
+//        ^ meta.attribute.rok punctuation.definition.attribute.end.rok
+//            ^^^^^^ entity.name.function.attribute.rok
+//                   ^^^^^^ meta.attribute.rok variable.other.rok
+//                              ^^^^^^ entity.name.function.attribute.rok
+//                                     ^^^^^ meta.attribute.rok entity.name.type.rok
+//                                            ^^^ meta.attribute.rok entity.name.namespace.rok
+//                                                 ^^^^ meta.attribute.rok entity.name.type.rok
+    #![allow(unused)] #[dep::attr] #[doc = "a ] b"] fn f() {}
+//  ^^^ meta.attribute.rok punctuation.definition.attribute.begin.rok
+//     ^^^^^ entity.name.function.attribute.rok
+//                      ^^^^^^^^^ meta.attribute.rok entity.name.function.attribute.rok
+//                                       ^ meta.attribute.rok keyword.operator.assignment.rok
+//                                         ^^^^^^^ meta.attribute.rok string.quoted.double.rok
+//                                                ^ meta.attribute.rok punctuation.definition.attribute.end.rok
+//                                                  ^^ storage.type.function.rok - meta.attribute.rok
+    #[deprecated(since = "0.1.6", note = "use g")]
+//    ^^^^^^^^^^ entity.name.function.attribute.rok
+//               ^^^^^ meta.attribute.rok variable.other.rok
+//                       ^^^^^^^ meta.attribute.rok string.quoted.double.rok
+    #[cfg(target_os = "linux",
+          feature = "x")] #[a([1, 2])] x
+//        ^^^^^^^ meta.attribute.rok variable.other.rok
+//                      ^ meta.attribute.rok punctuation.definition.attribute.end.rok
+//                        ^^^^^^^^^^^^ meta.attribute.rok
+//                                     ^ variable.other.rok - meta.attribute.rok
+    #[infix("<-", like = "<")] #[literal(number "kg")] #[keyword(unless)]
+//    ^^^^^ entity.name.function.attribute.rok
+//                               ^^^^^^^ entity.name.function.attribute.rok
+//                                                       ^^^^^^^ entity.name.function.attribute.rok
+    # [x] #x
+//  ^ - meta.attribute.rok

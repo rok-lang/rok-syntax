@@ -1,0 +1,71 @@
+// SYNTAX TEST "source.rok" "functions, parameters, generics, types, paths"
+    fn add<T: Add<Output = T>>(a: T, b: T) -> T { a + b }
+//  ^^ meta.function.rok storage.type.function.rok
+//     ^^^ meta.function.rok entity.name.function.rok
+//        ^ meta.generic.rok punctuation.definition.generic.begin.rok
+//         ^ meta.generic.rok entity.name.type.rok
+//            ^^^ meta.generic.rok entity.name.type.rok
+//                ^^^^^^ entity.name.type.rok
+//                       ^ keyword.operator.assignment.rok
+//                          ^^ meta.generic.rok punctuation.definition.generic.end.rok
+//                             ^ meta.parameters.rok variable.parameter.rok
+//                              ^ punctuation.separator.colon.rok
+//                                   ^ variable.parameter.rok
+//                                         ^^ keyword.operator.arrow.rok
+//                                                ^ variable.other.rok - variable.parameter.rok
+    pub fn read(self, path: str, buf: List<u8>) throws (IoError) -> usize;
+//         ^^^^ entity.name.function.rok
+//              ^^^^ variable.language.self.rok - variable.parameter.rok
+//                    ^^^^ variable.parameter.rok
+//                          ^^^ support.type.primitive.rok
+//                                    ^^^^ entity.name.type.rok
+//                                         ^^ support.type.primitive.rok
+//                                              ^^^^^^ keyword.other.rok
+//                                                      ^^^^^^^ entity.name.type.rok - variable.parameter.rok
+//                                                                  ^^^^^ support.type.primitive.rok
+    fn f(cb: fn(i32) -> i32, t: (i32, [u8; 4])) { }
+//       ^^ variable.parameter.rok
+//           ^^ storage.type.rok
+//                           ^ variable.parameter.rok
+//                                         ^ constant.numeric.decimal.rok
+    impl<T> Iterator for Stack<T> where T: Clone { }
+//  ^^^^ storage.type.rok
+//      ^ meta.generic.rok punctuation.definition.generic.begin.rok
+//          ^^^^^^^^ entity.name.type.rok
+//                   ^^^ keyword.control.rok
+//                       ^^^^^ meta.generic.rok entity.name.type.rok
+//                                ^^^^^ keyword.other.rok
+//                                         ^^^^^ entity.name.type.rok
+    let v: Dict<str, List<i32 | none>> = Dict::new(); a < b; A < B
+//         ^^^^ entity.name.type.rok
+//             ^ punctuation.definition.generic.begin.rok
+//              ^^^ support.type.primitive.rok
+//                            ^ keyword.operator.bitwise.rok
+//                              ^^^^ constant.language.none.rok
+//                                  ^^ punctuation.definition.generic.end.rok
+//                                       ^^^^ entity.name.type.rok
+//                                             ^^^ entity.name.function.call.rok
+//                                                      ^ keyword.operator.comparison.rok
+//                                                             ^ keyword.operator.comparison.rok - punctuation.definition.generic.begin.rok
+    i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize f32 f64 bool char str int float c_char
+//  ^^ support.type.primitive.rok
+//                 ^^^^ support.type.primitive.rok
+//                                                ^^^^^ support.type.primitive.rok
+//                                                              ^^^^ support.type.primitive.rok
+//                                                                   ^^^^ support.type.primitive.rok
+//                                                                                ^^^^^ support.type.primitive.rok
+//                                                                                      ^^^^^^ support.type.primitive.rok
+    Option::Some(x) foo::bar::Baz::qux() MAX_LEN
+//  ^^^^^^ entity.name.type.rok
+//          ^^^^ entity.name.type.rok
+//                  ^^^ entity.name.namespace.rok
+//                       ^^^ entity.name.namespace.rok
+//                            ^^^ entity.name.type.rok
+//                                 ^^^ entity.name.function.call.rok
+//                                       ^^^^^^^ entity.name.type.rok
+    mod geom { } extern "C" { fn puts(s: Ptr<c_char>) -> i32; }
+//  ^^^ storage.type.rok
+//      ^^^^ entity.name.namespace.rok
+//               ^^^^^^ storage.modifier.rok
+//                      ^^^ string.quoted.double.rok
+//                               ^^^^ entity.name.function.rok

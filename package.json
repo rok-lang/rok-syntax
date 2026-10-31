@@ -1,0 +1,14 @@
+{
+  "name": "rok-syntax",
+  "private": true,
+  "description": "Tests for the Rok and ROKON TextMate grammars",
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/test-textmate.mjs"
+  },
+  "devDependencies": {
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2"
+  }
+}

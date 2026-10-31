@@ -1,0 +1,59 @@
+// SYNTAX TEST "source.rok" "f-strings: holes, specs, nesting, reused quotes"
+    f"x = {x}, {{literal}} {a + b}"
+//  ^ string.interpolated.rok storage.type.string.rok
+//   ^ string.interpolated.rok punctuation.definition.string.begin.rok
+//    ^^^ string.interpolated.rok
+//        ^ meta.interpolation.rok punctuation.section.interpolation.begin.rok
+//         ^ meta.interpolation.rok variable.other.rok
+//          ^ meta.interpolation.rok punctuation.section.interpolation.end.rok
+//             ^^ string.interpolated.rok constant.character.escape.rok
+//               ^^^^^^^ string.interpolated.rok - meta.interpolation.rok
+//                      ^^ constant.character.escape.rok
+//                          ^ meta.interpolation.rok variable.other.rok
+//                            ^ meta.interpolation.rok keyword.operator.arithmetic.rok
+//                                ^ string.interpolated.rok punctuation.definition.string.end.rok
+    f"{s.split(" ")} {d["k"]}"
+//     ^ meta.interpolation.rok variable.other.rok
+//       ^^^^^ meta.interpolation.rok entity.name.function.call.rok
+//             ^^^ meta.interpolation.rok string.quoted.double.rok
+//                      ^^^ meta.interpolation.rok string.quoted.double.rok
+//                          ^^ string.interpolated.rok
+    f"{x:.2f} {n:0>5d} {v:?} {x:>{w}} {x:>${w}.${p}f} {a::b}"
+//      ^^^^ meta.interpolation.rok constant.other.format-spec.rok
+//              ^^^^^ constant.other.format-spec.rok
+//                       ^^ constant.other.format-spec.rok
+//                             ^^ constant.other.format-spec.rok
+//                               ^ constant.other.format-spec.rok punctuation.section.interpolation.begin.rok
+//                                ^ constant.other.format-spec.rok meta.interpolation.rok variable.other.rok
+//                                 ^ constant.other.format-spec.rok punctuation.section.interpolation.end.rok
+//                                  ^ meta.interpolation.rok punctuation.section.interpolation.end.rok - constant.other.format-spec.rok
+//                                        ^^ constant.other.format-spec.rok punctuation.section.interpolation.begin.rok
+//                                          ^ meta.interpolation.rok variable.other.rok
+//                                            ^ constant.other.format-spec.rok - punctuation.accessor.rok
+//                                                 ^ constant.other.format-spec.rok
+//                                                     ^ meta.interpolation.rok entity.name.namespace.rok
+//                                                      ^^ meta.interpolation.rok punctuation.separator.namespace.rok - constant.other.format-spec.rok
+//                                                        ^ meta.interpolation.rok variable.other.rok
+    f"{f"{x:>{w}}"} {(a, b):?} {if a { 1 } else { 2 }}"
+//    ^ meta.interpolation.rok punctuation.section.interpolation.begin.rok
+//     ^ meta.interpolation.rok string.interpolated.rok storage.type.string.rok
+//        ^ meta.interpolation.rok meta.interpolation.rok variable.other.rok
+//                     ^ meta.interpolation.rok punctuation.separator.comma.rok
+//                         ^^ constant.other.format-spec.rok
+//                              ^^ meta.interpolation.rok keyword.control.rok
+//                                     ^ meta.interpolation.rok constant.numeric.decimal.rok
+//                                         ^^^^ meta.interpolation.rok keyword.control.rok
+    f"""
+    name: "{name}"
+//  ^^^^^^^ string.interpolated.triple.rok - meta.interpolation.rok
+//          ^^^^ string.interpolated.triple.rok meta.interpolation.rok variable.other.rok
+    total: {items
+        .len()}
+//       ^^^ meta.interpolation.rok entity.name.function.call.rok
+    """ + 1
+//  ^^^ string.interpolated.triple.rok punctuation.definition.string.end.rok
+//        ^ constant.numeric.decimal.rok
+    f"" + if"x"
+//  ^^^ string.interpolated.rok
+//        ^^ keyword.control.rok
+//          ^^^ string.quoted.double.rok

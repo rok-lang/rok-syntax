@@ -1,0 +1,11 @@
+// SYNTAX TEST "source.rok" "unicode identifiers"
+    let 변수 = α + Δt + σ² + x₀ + データ;
+//      ^^ variable.other.rok
+//         ^ keyword.operator.assignment.rok
+//           ^ variable.other.rok
+//               ^^ entity.name.type.rok
+//                              ^^^ variable.other.rok
+//                                 ^ punctuation.terminator.statement.rok
+    fn 합계(값: i32) -> i32 { 값 }
+//     ^^ entity.name.function.rok
+//        ^ variable.parameter.rok

@@ -1,0 +1,31 @@
+// SYNTAX TEST "source.rok" "comments: line, block (nested), doc"
+    let x = 1; // trailing
+//             ^^ comment.line.double-slash.rok punctuation.definition.comment.rok
+//               ^^^^^^^^^ comment.line.double-slash.rok
+/// outer doc
+// <--- comment.line.documentation.rok punctuation.definition.comment.rok
+// ^^^^^^^^^^ comment.line.documentation.rok
+//! inner doc
+// <--- comment.line.documentation.rok
+//// four slashes are an ordinary comment
+// <---- comment.line.double-slash.rok - comment.line.documentation.rok
+    /* a /* nested */ still comment */ x
+//  ^^ comment.block.rok punctuation.definition.comment.rok
+//       ^^^^^^^^^^^^ comment.block.rok comment.block.rok
+//                    ^^^^^^^^^^^^^ comment.block.rok
+//                                  ^^ comment.block.rok punctuation.definition.comment.rok
+//                                     ^ variable.other.rok - comment.block.rok
+    /** outer block doc */
+//  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.rok
+    /*! inner block doc */
+//  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.rok
+    /**/ /*** stars */ x
+//  ^^^^ comment.block.rok - comment.block.documentation.rok
+//       ^^^^^^^^^^^^^ comment.block.rok - comment.block.documentation.rok
+//                     ^ variable.other.rok
+    /* spans
+       lines with "no string" and fn */ let
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.rok
+//                                      ^^^ storage.type.rok
+    "// not a comment"
+//   ^^^^^^^^^^^^^^^^ string.quoted.double.rok - comment.line.double-slash.rok

@@ -1,0 +1,33 @@
+// SYNTAX TEST "source.rokon" "ROKON values"
+Config {
+    retries: 3, ratio: -0.75, big: 1_000_000, mask: 0xff, bits: 0b1010, perm: 0o17, e: 2E10,
+//           ^ constant.numeric.decimal.rokon
+//                     ^ keyword.operator.arithmetic.rokon
+//                      ^^^^ constant.numeric.float.rokon
+//                                 ^^^^^^^^^ constant.numeric.decimal.rokon
+//                                                  ^^^^ constant.numeric.hex.rokon
+//                                                              ^^^^^^ constant.numeric.binary.rokon
+//                                                                            ^^^^ constant.numeric.octal.rokon
+//                                                                                     ^^^^ constant.numeric.float.rokon
+    ok: true, off: false, c: 'a', nl: '\n', raw: r#"C:\x"#, s: "a\tb",
+//      ^^^^ constant.language.boolean.rokon
+//                 ^^^^^ constant.language.boolean.rokon
+//                           ^^^ string.quoted.single.char.rokon
+//                                     ^^ constant.character.escape.rokon
+//                                               ^^^^^^^^^ string.quoted.double.raw.rokon
+//                                                               ^^ constant.character.escape.rokon
+    tags: ["a", "b"], pair: (1, 2), at: geom::Point { x: 1, y: 2 },
+//        ^ punctuation.brackets.square.rokon
+//                          ^ punctuation.brackets.round.rokon
+//                                      ^^^^ entity.name.namespace.rokon
+//                                          ^^ punctuation.separator.namespace.rokon
+//                                            ^^^^^ entity.name.type.rokon
+//                                                    ^ support.type.property-name.rokon
+    mode: Mode::Fast, shape: Shape::Circle(1.0, at: p), i32: 1,
+//        ^^^^ entity.name.type.rokon
+//              ^^^^ entity.name.type.rokon
+//                                  ^^^^^^ entity.name.type.rokon
+//                                         ^^^ constant.numeric.float.rokon
+//                                              ^^ support.type.property-name.rokon
+//                                                      ^^^ support.type.property-name.rokon
+}
