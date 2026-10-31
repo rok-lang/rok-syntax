@@ -68,7 +68,7 @@ const EXT_OP = '[\\u{2190}-\\u{21FF}\\u{2200}\\u{2201}\\u{2203}-\\u{2206}' +
   '\\u{220A}-\\u{220E}\\u{2210}\\u{2212}-\\u{2217}\\u{2219}\\u{221B}-\\u{221D}' +
   '\\u{221F}-\\u{2228}\\u{222C}-\\u{225F}\\u{2262}\\u{2263}\\u{2266}-\\u{2281}' +
   '\\u{2283}\\u{2284}\\u{2285}\\u{2287}-\\u{22C4}\\u{22C6}-\\u{22FF}' +
-  '\\u{2A00}-\\u{2AFF}\\u{27C0}-\\u{27EF}\\u{2980}-\\u{29FF}\\u{00B0}]+';
+  '\\u{2A00}-\\u{2AFF}\\u{27C0}-\\u{27EF}\\u{2980}-\\u{29FF}\\u{00AC}\\u{00B0}]+';
 
 // Keywords, as written in token trees.
 const KEYWORDS = [
@@ -120,6 +120,10 @@ module.exports = grammar({
     [$.scoped_identifier, $.scoped_type_identifier],
     [$._pattern_atom, $.struct_pattern],
     [$._expression, $._trailing_call],
+    [$.call_expression, $._trailing_call],
+    [$.binary_expression, $.unary_expression],
+    [$.binary_expression, $.unary_expression, $.await_expression],
+    [$.field_initializer_list, $._item],
   ],
 
   rules: {
@@ -164,6 +168,8 @@ module.exports = grammar({
     expression_statement: $ => choice(
       seq($._expression, ';'),
       prec(1, $._expression_ending_with_block),
+      prec(1, alias($._try_block, $.try_expression)),
+      prec(1, $.catch_expression),
       prec(-1, alias($._trailing_call, $.call_expression)),
       prec(-1, $.macro_invocation),
     ),
@@ -324,7 +330,12 @@ module.exports = grammar({
       optional(field('type_parameters', $.type_parameters)),
       choice(
         seq(optional($.where_clause), field('body', $.field_declaration_list)),
-        seq(field('body', $.ordered_field_declaration_list), optional($.where_clause), ';'),
+        seq(
+          optional($.where_clause),
+          field('body', $.ordered_field_declaration_list),
+          optional($.where_clause),
+          ';',
+        ),
         seq(optional($.where_clause), ';'),
       ),
     ),
@@ -507,23 +518,11 @@ module.exports = grammar({
     use_macro: $ => seq(field('path', $._path), token.immediate('!')),
 
     // Meta blocks (spec 6.8): `@derive { .. }`, `@attribute { .. }`,
-    // `@macro { (matcher) => { template } .. }`.
+    // `@macro { (matcher) => { template } .. }`. The body is a token tree.
     meta_block: $ => seq(
       optional($.visibility_modifier),
-      '@',
-      choice(
-        seq(field('kind', alias('macro', $.identifier)), field('body', $.macro_rules)),
-        seq(field('kind', $.identifier), field('body', alias($._brace_tree, $.token_tree))),
-      ),
-    ),
-
-    macro_rules: $ => seq('{', repeat($.macro_rule), '}'),
-
-    macro_rule: $ => seq(
-      field('left', alias($._paren_tree, $.token_tree)),
-      '=>',
-      field('right', alias($._brace_tree, $.token_tree)),
-      optional(choice(';', ',')),
+      field('kind', $.metavariable),
+      field('body', alias($._brace_tree, $.token_tree)),
     ),
 
     macro_invocation: $ => seq(
@@ -543,6 +542,7 @@ module.exports = grammar({
       $.identifier,
       $.label,
       $._literal,
+      alias($._ext_operator, $.operator),
       $.self,
       $.self_type,
       ...KEYWORDS,
@@ -694,6 +694,7 @@ module.exports = grammar({
       $.scoped_identifier,
       $.self,
       $.self_type,
+      $.metavariable,
       $._literal,
       $._expression_ending_with_block,
     ),
@@ -754,10 +755,17 @@ module.exports = grammar({
 
     _ext_operator: _ => token(new RegExp(EXT_OP, 'u')),
 
-    unary_expression: $ => prec(PREC.unary, seq(
-      field('operator', choice('-', '!', '~', '√', alias($._ext_operator, $.operator))),
-      field('argument', $._expression),
-    )),
+    unary_expression: $ => choice(
+      prec(PREC.unary, seq(
+        field('operator', choice('-', '!', '~', '√', alias($._ext_operator, $.operator))),
+        field('argument', $._expression),
+      )),
+      // `#[postfix("°")]`: `180°`
+      prec(PREC.postfix, seq(
+        field('argument', $._expression),
+        field('operator', alias($._ext_operator, $.operator)),
+      )),
+    ),
 
     await_expression: $ => prec(PREC.unary, seq('await', field('argument', $._expression))),
 
@@ -776,8 +784,25 @@ module.exports = grammar({
 
     // A cast type takes no sum and no `??` (that is coalescing).
     _cast_type: $ => choice(
-      $._base_type,
+      $._type_identifier,
+      $.scoped_type_identifier,
+      alias($._cast_generic, $.generic_type),
+      $.self_type,
+      alias('none', $.none_type),
+      $.never_type,
+      $.function_type,
+      $.unit_type,
+      $.tuple_type,
+      $.parenthesized_type,
+      $.array_type,
+      $.any_type,
       alias($._cast_optional, $.optional_type),
+    ),
+
+    // Unlike in a type, `<` after a cast type may be a comparison.
+    _cast_generic: $ => seq(
+      field('type', choice($._type_identifier, $.scoped_type_identifier)),
+      field('type_arguments', $.type_arguments),
     ),
 
     _cast_optional: $ => seq(field('type', $._cast_type), '?'),
@@ -795,6 +820,13 @@ module.exports = grammar({
       'try',
       optional(field('operator', choice(token.immediate('?'), token.immediate('!')))),
       field('argument', $._expression),
+    )),
+
+    // `try { .. }`, `try for x in xs { .. }`: a statement without `;`.
+    _try_block: $ => prec(1, seq(
+      'try',
+      optional(field('operator', choice(token.immediate('?'), token.immediate('!')))),
+      field('argument', $._expression_ending_with_block),
     )),
 
     catch_expression: $ => prec.left(PREC.catch, choice(
@@ -879,7 +911,12 @@ module.exports = grammar({
       prec.dynamic(1, prec(PREC.call - 1, seq(
         field('function', $._expression),
         field('arguments', $.arguments),
-        field('closure', choice($.block, $.closure_expression)),
+        field('closure', $.block),
+      ))),
+      prec.dynamic(1, prec(PREC.call, seq(
+        field('function', $._expression),
+        field('arguments', $.arguments),
+        field('closure', $.closure_expression),
       ))),
       prec.dynamic(1, prec(-1, seq(
         field('function', choice($.identifier, $.scoped_identifier, $.generic_function)),
@@ -928,7 +965,7 @@ module.exports = grammar({
     field_expression: $ => prec(PREC.field, seq(
       field('value', $._expression),
       choice('.', '?.'),
-      field('field', choice($._field_identifier, $.integer_literal)),
+      field('field', choice($._field_identifier, $.integer_literal, $.metavariable)),
     )),
 
     index_expression: $ => prec(PREC.postfix, seq(
@@ -970,10 +1007,9 @@ module.exports = grammar({
 
     field_initializer_list: $ => prec(1, seq(
       '{',
-      sepBy(',', choice(
-        $.shorthand_field_initializer,
-        $.field_initializer,
-        $.base_field_initializer,
+      sepBy(',', seq(
+        repeat($.attribute_item),
+        choice($.shorthand_field_initializer, $.field_initializer, $.base_field_initializer),
       )),
       optional(','),
       '}',
@@ -982,7 +1018,10 @@ module.exports = grammar({
     shorthand_field_initializer: $ => prec(1, $.identifier),
 
     field_initializer: $ => seq(
-      field('field', $._field_identifier),
+      field('field', choice(
+        $._field_identifier,
+        alias(choice(...KEYWORDS, 'true', 'false', 'none', 'Self'), $.field_identifier),
+      )),
       ':',
       field('value', $._expression),
     ),
@@ -1172,7 +1211,7 @@ module.exports = grammar({
 
     tuple_pattern: $ => seq(
       '(',
-      sepBy(',', choice($._pattern, $.remaining_field_pattern)),
+      sepBy(',', choice($._pattern, $.remaining_field_pattern, $.rest_pattern)),
       optional(','),
       ')',
     ),
@@ -1191,6 +1230,9 @@ module.exports = grammar({
     ),
 
     remaining_field_pattern: _ => '..',
+
+    // `..rest` binds the remaining elements (spec 3.15.3).
+    rest_pattern: $ => seq('..', $.identifier),
 
     tuple_struct_pattern: $ => seq(
       field('type', choice($.identifier, $.scoped_identifier)),

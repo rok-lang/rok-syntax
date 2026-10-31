@@ -104,6 +104,10 @@
         "named": true
       },
       {
+        "type": "metavariable",
+        "named": true
+      },
+      {
         "type": "parenthesized_expression",
         "named": true
       },
@@ -1266,10 +1270,6 @@
             "named": true
           },
           {
-            "type": "macro_invocation",
-            "named": true
-          },
-          {
             "type": "never_type",
             "named": true
           },
@@ -2126,6 +2126,10 @@
           {
             "type": "integer_literal",
             "named": true
+          },
+          {
+            "type": "metavariable",
+            "named": true
           }
         ]
       },
@@ -2175,6 +2179,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "attribute_item",
+          "named": true
+        },
         {
           "type": "base_field_initializer",
           "named": true
@@ -2968,47 +2976,6 @@
     }
   },
   {
-    "type": "macro_rule",
-    "named": true,
-    "fields": {
-      "left": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "token_tree",
-            "named": true
-          }
-        ]
-      },
-      "right": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "token_tree",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "macro_rules",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "macro_rule",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "match_arm",
     "named": true,
     "fields": {
@@ -3114,10 +3081,6 @@
         "required": true,
         "types": [
           {
-            "type": "macro_rules",
-            "named": true
-          },
-          {
             "type": "token_tree",
             "named": true
           }
@@ -3128,7 +3091,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "metavariable",
             "named": true
           }
         ]
@@ -3560,6 +3523,21 @@
     "fields": {}
   },
   {
+    "type": "rest_pattern",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "return_expression",
     "named": true,
     "fields": {
@@ -3718,6 +3696,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "self_type",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "set_expression",
@@ -4224,6 +4207,10 @@
           "named": true
         },
         {
+          "type": "operator",
+          "named": true
+        },
+        {
           "type": "self",
           "named": true
         },
@@ -4372,6 +4359,10 @@
         },
         {
           "type": "remaining_field_pattern",
+          "named": true
+        },
+        {
+          "type": "rest_pattern",
           "named": true
         }
       ]
@@ -4670,10 +4661,6 @@
           },
           {
             "type": "generic_type",
-            "named": true
-          },
-          {
-            "type": "macro_invocation",
             "named": true
           },
           {
@@ -5486,6 +5473,10 @@
     "named": false
   },
   {
+    "type": "Self",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -5693,10 +5684,6 @@
   },
   {
     "type": "self",
-    "named": true
-  },
-  {
-    "type": "self_type",
     "named": true
   },
   {
