@@ -1,0 +1,49 @@
+fn main() -> i32 {
+    let p = Point { x: 1, y };
+    //      ^ type
+    //              ^ property
+    //                    ^ property
+    let s = f"x = {p.x:>8} {{}}\n";
+    //      ^ string.special
+    //         ^ string
+    //            ^ punctuation.special
+    //               ^ property
+    //                ^ punctuation.delimiter
+    //                 ^ string.special
+    //                         ^ string.escape
+    let r = r#"raw "q""#;
+    //      ^ string
+    let c = 'a';
+    //      ^ character
+    let n = none ?? 1_000i64;
+    //      ^ constant.builtin
+    //           ^ operator
+    //              ^ number
+    let v = try? parse(s) catch e { 0 };
+    //      ^ keyword.exception
+    //         ^ keyword.exception
+    //           ^ function.call
+    //                    ^ keyword.exception
+    xs.iter().for_each |x| { print(x); }
+    // ^ function.method.call
+    //                  ^ variable.parameter
+    'outer: for i in 0..10 { break 'outer; }
+    // <- label
+    //      ^ keyword.repeat
+    //            ^ keyword.operator
+    //                ^ operator
+    let k = a as i64 is i64;
+    //        ^ keyword.operator
+    //           ^ type.builtin
+    //               ^ keyword.operator
+    println!("hi");
+    // ^ function.macro
+    let q = Shape::Circle(1.0);
+    //      ^ module
+    //             ^ type
+    if true { await go(); }
+    // <- keyword.conditional
+    // ^ boolean
+    //        ^ keyword.coroutine
+    return 0;
+}

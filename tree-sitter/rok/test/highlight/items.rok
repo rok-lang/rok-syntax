@@ -1,0 +1,51 @@
+/// A point.
+// <- comment.documentation
+#[derive(Debug)]
+// <- attribute
+//^ attribute
+pub struct Point<T> { x: T; y: i32 }
+// <- keyword.modifier
+//  ^ keyword.type
+//         ^ type
+//               ^ type
+//                    ^ property
+//                             ^ type.builtin
+
+pub(pkg) fn area(ref self, n: i32) throws (IoError) -> f64 {
+//  ^ keyword.modifier
+//       ^ keyword.function
+//          ^ function
+//               ^ keyword.modifier
+//                   ^ variable.builtin
+//                         ^ variable.parameter
+//                                 ^ keyword.exception
+//                                          ^ type
+    return 0.0;
+    // <- keyword.return
+    //     ^ number.float
+}
+
+enum Shape { Unit, Circle(f64) }
+//^ keyword.type
+//           ^ constant
+//                 ^ constant
+
+const LIMIT: usize = 3;
+// <- keyword.modifier
+//    ^ constant
+
+use rok::std::io;
+// <- keyword.import
+//  ^ module.builtin
+//       ^ module
+
+#[impl_macro(twice)] pub @macro {
+//                       ^ keyword.directive
+    ( @e: expr ) => { { let v = @e; (v, v) } }
+    //^ function.macro
+    //                  ^ keyword
+}
+
+yield fn count(n: i32) -> i32 { yield n; }
+// <- keyword.coroutine
+//                              ^ keyword.return

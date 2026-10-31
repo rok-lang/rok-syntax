@@ -11,7 +11,7 @@
   },
   "scripts": {
     "generate": "tree-sitter generate",
-    "test": "tree-sitter test",
+    "test": "tree-sitter test --config-path test/config.json",
     "parse": "tree-sitter parse"
   }
 }
