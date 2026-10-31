@@ -4,12 +4,10 @@
 
 (identifier) @variable
 
-; Path roots `pkg::`, `sup::`, `rok::` (spec 5.7)
-((identifier) @module.builtin
-  (#match? @module.builtin "^(pkg|sup|rok)$"))
-
-((identifier) @constant
-  (#match? @constant "^[A-Z][A-Z0-9_]+$"))
+; A capitalized word is a type (docs/token-classes.md, rule 10). Latin,
+; Greek and Cyrillic capitals: Neovim's regex has no \p{Lu}.
+((identifier) @type
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
 ; Operators and punctuation
 
@@ -126,18 +124,16 @@
   "static"
   "extern"
   "unsafe"
+  "async"
   "ref"
   "pkg"
   "sub"
   (mutable_specifier)
 ] @keyword.modifier
 
-[
-  "async"
-  "await"
-] @keyword.coroutine
+"await" @keyword.coroutine
 
-(closure_modifiers) @keyword.coroutine
+(closure_modifiers) @keyword.modifier
 
 (function_item
   "yield" @keyword.coroutine)
@@ -154,9 +150,6 @@
 (for_expression
   "await" @keyword.coroutine)
 
-(try_expression
-  operator: _ @keyword.exception)
-
 ; Literals
 
 (string_literal) @string
@@ -165,12 +158,13 @@
 
 (raw_string_literal) @string
 
-(format_string) @string.special
-
-(format_string
-  (string_content) @string)
+(format_string) @string
 
 (format_specifier) @string.special
+
+; The `:` that opens a format spec is part of it.
+(interpolation
+  ":" @string.special)
 
 (interpolation
   [
@@ -210,11 +204,11 @@
 
 ((type_identifier) @type.builtin
   (#match? @type.builtin
-    "^(i8|i16|i32|i64|isize|u8|u16|u32|u64|usize|f32|f64|bool|char|str|int|float|c_char|c_int|c_uint|c_long|c_ulong|c_void)$"))
+    "^(i8|i16|i32|i64|i128|isize|u8|u16|u32|u64|u128|usize|f32|f64|bool|char|str|int|float|c_char)$"))
 
-(self_type) @type.builtin
+(self_type) @variable.builtin
 
-(none_type) @type.builtin
+(none_type) @constant.builtin
 
 (never_type) @type.builtin
 
@@ -251,15 +245,30 @@
   path: (identifier) @module.builtin)
   (#match? @module.builtin "^(pkg|sup|rok)$"))
 
-; `Shape::Circle`, `Ordering::Less`: an uppercase last segment is a type
-; or variant.
+; `Shape::Circle`, `Option::Some`, `foo::Baz::qux`: a capitalized
+; segment is a type or variant.
 ((scoped_identifier
   name: (identifier) @type)
-  (#match? @type "^[A-Z]"))
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
 ((scoped_identifier
-  name: (identifier) @constant)
-  (#match? @constant "^[A-Z][A-Z0-9_]+$"))
+  path: (identifier) @type)
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
+
+((scoped_type_identifier
+  path: (identifier) @type)
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
+
+((scoped_identifier
+  path: (scoped_identifier
+    name: (identifier) @type))
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
+
+((scoped_type_identifier
+  path: (scoped_identifier
+    name: (identifier) @type))
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
+
 
 (struct_expression
   name: (identifier) @type)
@@ -282,23 +291,20 @@
   type: (scoped_identifier
     name: (identifier) @type))
 
-; Constants
-
-(const_item
-  name: (identifier) @constant)
-
-(static_item
-  name: (identifier) @constant)
-
-(enum_variant
-  name: (identifier) @constant)
-
-(const_parameter
-  name: (identifier) @constant)
-
 ; Fields and parameters
 
 (field_identifier) @property
+
+; `true` `false` `none` `self` `Self` stay keywords before `:`
+; (docs/token-classes.md, rule 3).
+((field_identifier) @boolean
+  (#match? @boolean "^(true|false)$"))
+
+((field_identifier) @constant.builtin
+  (#eq? @constant.builtin "none"))
+
+((field_identifier) @variable.builtin
+  (#match? @variable.builtin "^(self|Self)$"))
 
 (shorthand_field_initializer
   (identifier) @property)
@@ -329,7 +335,7 @@
 
 (call_expression
   function: (field_expression
-    field: (field_identifier) @function.method.call))
+    field: (field_identifier) @function.call))
 
 (call_expression
   function: (generic_function
@@ -343,7 +349,7 @@
 (call_expression
   function: (generic_function
     function: (field_expression
-      field: (field_identifier) @function.method.call)))
+      field: (field_identifier) @function.call)))
 
 (broadcast_call_expression
   function: (identifier) @function.call)
@@ -351,12 +357,12 @@
 ; `Some(x)`, `Shape::Circle(r)`: an uppercase callee builds a value.
 ((call_expression
   function: (identifier) @type)
-  (#match? @type "^[A-Z]"))
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
 ((call_expression
   function: (scoped_identifier
     name: (identifier) @type))
-  (#match? @type "^[A-Z]"))
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
 ; Attributes and meta
 
@@ -366,6 +372,12 @@
 (attribute
   name: (scoped_identifier
     name: (identifier) @attribute))
+
+; The whole attribute, as TextMate's meta.attribute; its parts keep
+; their own captures inside.
+(attribute_item) @attribute
+
+(inner_attribute_item) @attribute
 
 (attribute_item
   [
@@ -381,8 +393,6 @@
 
 (metavariable) @function.macro
 
-(meta_block
-  kind: (metavariable) @keyword.directive)
 
 (macro_invocation
   macro: (identifier) @function.macro
@@ -394,11 +404,20 @@
   "!" @function.macro)
 
 (use_macro
-  path: (identifier) @function.macro)
+  path: (identifier) @function.macro
+  "!" @function.macro)
 
 (use_macro
   path: (scoped_identifier
-    name: (identifier) @function.macro))
+    name: (identifier) @function.macro)
+  "!" @function.macro)
+
+; `name(` in a token tree is a call, as TextMate reads it.
+(token_tree
+  (identifier) @function.call
+  .
+  (token_tree
+    "("))
 
 ; Comments
 

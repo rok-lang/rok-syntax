@@ -11,6 +11,11 @@
 (path
   path: (identifier) @module)
 
+; A capitalized segment is a type: `Mode::Fast`.
+((path
+  path: (identifier) @type)
+  (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
+
 (path
   name: (identifier) @type)
 
@@ -18,7 +23,7 @@
   key: (identifier) @property)
 
 (named_argument
-  name: (field_identifier) @variable.parameter)
+  name: (field_identifier) @property)
 
 (string) @string
 
@@ -31,6 +36,12 @@
 (integer) @number
 
 (float) @number.float
+
+(integer
+  "-" @operator)
+
+(float
+  "-" @operator)
 
 (boolean) @boolean
 

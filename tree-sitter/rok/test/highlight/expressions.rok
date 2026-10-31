@@ -4,11 +4,11 @@ fn main() -> i32 {
     //              ^ property
     //                    ^ property
     let s = f"x = {p.x:>8} {{}}\n";
-    //      ^ string.special
+    //      ^ string
     //         ^ string
     //            ^ punctuation.special
     //               ^ property
-    //                ^ punctuation.delimiter
+    //                ^ string.special
     //                 ^ string.special
     //                         ^ string.escape
     let r = r#"raw "q""#;
@@ -21,11 +21,11 @@ fn main() -> i32 {
     //              ^ number
     let v = try? parse(s) catch e { 0 };
     //      ^ keyword.exception
-    //         ^ keyword.exception
+    //         ^ operator
     //           ^ function.call
     //                    ^ keyword.exception
     xs.iter().for_each |x| { print(x); }
-    // ^ function.method.call
+    // ^ function.call
     //                  ^ variable.parameter
     'outer: for i in 0..10 { break 'outer; }
     // <- label
@@ -39,7 +39,7 @@ fn main() -> i32 {
     println!("hi");
     // ^ function.macro
     let q = Shape::Circle(1.0);
-    //      ^ module
+    //      ^ type
     //             ^ type
     if true { await go(); }
     // <- keyword.conditional

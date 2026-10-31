@@ -10,7 +10,7 @@ Package {
     ratio: 0.75,
     //     ^ number.float
     mode: Mode::Fast,
-    //    ^ module
+    //    ^ type
     //          ^ type
     proxy: none,
     //     ^ constant.builtin

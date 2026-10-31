@@ -27,12 +27,12 @@ pub(pkg) fn area(ref self, n: i32) throws (IoError) -> f64 {
 
 enum Shape { Unit, Circle(f64) }
 //^ keyword.type
-//           ^ constant
-//                 ^ constant
+//           ^ type
+//                 ^ type
 
 const LIMIT: usize = 3;
 // <- keyword.modifier
-//    ^ constant
+//    ^ type
 
 use rok::std::io;
 // <- keyword.import
@@ -40,7 +40,7 @@ use rok::std::io;
 //       ^ module
 
 #[impl_macro(twice)] pub @macro {
-//                       ^ keyword.directive
+//                       ^ function.macro
     ( @e: expr ) => { { let v = @e; (v, v) } }
     //^ function.macro
     //                  ^ keyword
