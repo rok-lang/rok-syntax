@@ -1,3 +1,9 @@
 target/
 .DS_Store
 node_modules/
+tree-sitter/*/build/
+tree-sitter/*/*.wasm
+tree-sitter/*/*.dylib
+tree-sitter/*/*.so
+tree-sitter/*/*.dll
+tree-sitter/*/package-lock.json

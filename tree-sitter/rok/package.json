@@ -1,0 +1,17 @@
+{
+  "name": "tree-sitter-rok",
+  "version": "0.1.0",
+  "description": "Rok grammar for tree-sitter",
+  "repository": "https://github.com/rok-lang/rok-syntax",
+  "license": "MIT OR Apache-2.0",
+  "keywords": ["incremental", "parsing", "tree-sitter", "rok"],
+  "files": ["grammar.js", "tree-sitter.json", "queries/*", "src/**"],
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.10"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  }
+}
