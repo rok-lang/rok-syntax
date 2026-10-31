@@ -1,0 +1,165 @@
+==================
+Manifest
+==================
+
+Package {
+    name: "geom",
+    version: "0.1.0",
+    deps: { "rok-syntax": "0.1", json: { path: "../json" } },
+    features: ["a", "b",],
+}
+
+---
+
+(source_file
+  (struct
+    (identifier)
+    (dict
+      (pair
+        (identifier)
+        (string
+          (string_content)))
+      (pair
+        (identifier)
+        (string
+          (string_content)))
+      (pair
+        (identifier)
+        (dict
+          (pair
+            (string
+              (string_content))
+            (string
+              (string_content)))
+          (pair
+            (identifier)
+            (dict
+              (pair
+                (identifier)
+                (string
+                  (string_content)))))))
+      (pair
+        (identifier)
+        (list
+          (string
+            (string_content))
+          (string
+            (string_content)))))))
+
+==================
+Scalars
+==================
+
+[none, true, false, 42, -7, 0xff, 0b1010, 0o17, 1_000_000, 3.14, -1.5e-3, 2E10, 'a', '\n']
+
+---
+
+(source_file
+  (list
+    (none)
+    (boolean)
+    (boolean)
+    (integer)
+    (integer)
+    (integer)
+    (integer)
+    (integer)
+    (integer)
+    (float)
+    (float)
+    (float)
+    (char)
+    (char)))
+
+==================
+Strings
+==================
+
+("text\t\u{1F600}", r#"raw "q""#, "multi
+line", (1,))
+
+---
+
+(source_file
+  (tuple
+    (string
+      (string_content)
+      (escape_sequence)
+      (escape_sequence))
+    (raw_string_literal)
+    (string
+      (string_content))
+    (tuple
+      (integer))))
+
+==================
+Variants and structs
+==================
+
+[Shape::Unit, Shape::Circle(1.0, at: 2), Shape::Rect { w: 2, h: 3 }, Pair(1, 2), Unit {}, geom::Point { x: 1 }]
+
+---
+
+(source_file
+  (list
+    (path
+      (identifier)
+      (identifier))
+    (call
+      (path
+        (identifier)
+        (identifier))
+      (arguments
+        (float)
+        (named_argument
+          (field_identifier)
+          (integer))))
+    (struct
+      (path
+        (identifier)
+        (identifier))
+      (dict
+        (pair
+          (identifier)
+          (integer))
+        (pair
+          (identifier)
+          (integer))))
+    (call
+      (identifier)
+      (arguments
+        (integer)
+        (integer)))
+    (struct
+      (identifier)
+      (dict))
+    (struct
+      (path
+        (identifier)
+        (identifier))
+      (dict
+        (pair
+          (identifier)
+          (integer))))))
+
+==================
+Comments
+==================
+
+// config
+/* block /* nested */ */
+{ "cpu": 2, 1: none }
+
+---
+
+(source_file
+  (line_comment)
+  (block_comment)
+  (dict
+    (pair
+      (string
+        (string_content))
+      (integer))
+    (pair
+      (integer)
+      (none))))

@@ -1,0 +1,32 @@
+{
+  "grammars": [
+    {
+      "name": "rokon",
+      "camelcase": "Rokon",
+      "title": "ROKON",
+      "scope": "source.rokon",
+      "path": ".",
+      "file-types": ["rokon", "rok.lock"],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm",
+      "locals": "queries/locals.scm",
+      "injection-regex": "^rokon$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT OR Apache-2.0",
+    "description": "ROKON grammar for tree-sitter",
+    "links": {
+      "repository": "https://github.com/rok-lang/rok-syntax"
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

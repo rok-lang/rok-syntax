@@ -1,0 +1,19 @@
+// The package manifest.
+// <- comment
+Package {
+// <- type
+    name: "geom",
+    // <- property
+    //    ^ string
+    retries: 3,
+    //       ^ number
+    ratio: 0.75,
+    //     ^ number.float
+    mode: Mode::Fast,
+    //    ^ module
+    //          ^ type
+    proxy: none,
+    //     ^ constant.builtin
+    tls: true,
+    //   ^ boolean
+}
