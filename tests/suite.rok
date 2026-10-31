@@ -58,3 +58,13 @@ fn raw_strings() {
         + s("b\"x\"") + " + " + s("c'\\xFF'");
     expect(h == want, h);
 }
+
+#[test]
+fn qualified_meta_names() {
+    let h = highlight_rok("#[dep::attr] #[derive(dep::Name)]\nuse dep::log!; dep::log!(1);");
+    let want = "<span class=\"a\">#[dep::attr]</span> <span class=\"a\">#[derive(dep::Name)]</span>\n"
+        + k("use") + " dep::log!; dep::log!(<span class=\"n\">1</span>);";
+    expect(h == want, h);
+    let d = highlight_rok("#[deprecated(since = \"0.1.6\", note = \"use g\")]");
+    expect(d == "<span class=\"a\">#[deprecated(since = \"0.1.6\", note = \"use g\")]</span>", d);
+}
