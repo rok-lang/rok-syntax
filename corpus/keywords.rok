@@ -21,51 +21,51 @@
 //                               ^^^ keyword.control.rok
 //                                            ^^^^^ keyword.control.rok
 //                                                          ^^^^^^^ keyword.control.rok
-    fn(i32) struct enum trait impl mod;
-//  ^^ storage.type.rok
-//          ^^^^^^ storage.type.rok
-//                 ^^^^ storage.type.rok
-//                      ^^^^^ storage.type.rok
-//                            ^^^^ storage.type.rok
-//                                 ^^^ storage.type.rok
-    pub unsafe async ref const static extern mut
+    type F = fn(i32); struct A { } enum B { } trait C { } impl C { } mod d;
+//           ^^ storage.type.rok
+//                    ^^^^^^ storage.type.rok
+//                                 ^^^^ storage.type.rok
+//                                            ^^^^^ storage.type.rok
+//                                                        ^^^^ storage.type.rok
+//                                                                   ^^^ storage.type.rok
+    pub unsafe async fn f(ref a: T) { } pub const A: i32 = 1; pub static B: i32 = 2; extern "C" { } static mut C: i32 = 1;
 //  ^^^ storage.modifier.rok
 //      ^^^^^^ storage.modifier.rok
 //             ^^^^^ storage.modifier.rok
-//                   ^^^ storage.modifier.rok
-//                       ^^^^^ storage.modifier.rok
-//                             ^^^^^^ storage.modifier.rok
-//                                    ^^^^^^ storage.modifier.rok
-//                                           ^^^ storage.modifier.rok
-    use a; x as i64; v is Foo; fn f() throws (E) -> T where T: Ord rethrows
+//                        ^^^ storage.modifier.rok
+//                                          ^^^^^ storage.modifier.rok
+//                                                                ^^^^^^ storage.modifier.rok
+//                                                                                   ^^^^^^ storage.modifier.rok
+//                                                                                                         ^^^ storage.modifier.rok
+    use a; x as i64; v is Foo; fn f() throws (E) -> T where T: Ord { } fn g(h: fn()) rethrows { }
 //  ^^^ keyword.other.rok
 //           ^^ keyword.operator.word.rok
 //                     ^^ keyword.operator.word.rok
 //                                    ^^^^^^ keyword.other.rok
 //                                                    ^^^^^ keyword.other.rok
-//                                                                 ^^^^^^^^ keyword.other.rok
-    true false none self Self any Error
-//  ^^^^ constant.language.boolean.rok
-//       ^^^^^ constant.language.boolean.rok
-//             ^^^^ constant.language.none.rok
-//                  ^^^^ variable.language.self.rok
+//                                                                                   ^^^^^^^^ keyword.other.rok
+    f(true, false, none, self); fn g(x: Self) -> any Error { }
+//    ^^^^ constant.language.boolean.rok
+//          ^^^^^ constant.language.boolean.rok
+//                 ^^^^ constant.language.none.rok
 //                       ^^^^ variable.language.self.rok
-//                            ^^^ storage.type.any.rok
-//                                ^^^^^ entity.name.type.rok
-    iffy letter format selfish _ try!(x) try?(y)
+//                                      ^^^^ variable.language.self.rok
+//                                               ^^^ storage.type.any.rok
+//                                                   ^^^^^ entity.name.type.rok
+    iffy + letter + format + selfish + _; try!(x); try?(y);
 //  ^^^^ variable.other.rok - keyword.control.rok
-//       ^^^^^^ variable.other.rok
-//              ^^^^^^ variable.other.rok
-//                     ^^^^^^^ variable.other.rok
-//                             ^ variable.other.rok
-//                               ^^^ keyword.control.rok - entity.name.function.macro.rok
-//                                  ^ keyword.operator.logical.rok
-//                                       ^^^ keyword.control.rok
-//                                          ^ keyword.operator.optional.rok
-    macro defer dyn move gen do
+//         ^^^^^^ variable.other.rok
+//                  ^^^^^^ variable.other.rok
+//                           ^^^^^^^ variable.other.rok
+//                                     ^ variable.other.rok
+//                                        ^^^ keyword.control.rok - entity.name.function.macro.rok
+//                                           ^ keyword.operator.logical.rok
+//                                                 ^^^ keyword.control.rok
+//                                                    ^ keyword.operator.optional.rok
+    macro + defer + dyn + move + gen + do;
 //  ^^^^^ variable.other.rok - keyword.control.rok
-//        ^^^^^ variable.other.rok
-//              ^^^ variable.other.rok
-//                  ^^^^ variable.other.rok
-//                       ^^^ variable.other.rok
-//                           ^^ variable.other.rok
+//          ^^^^^ variable.other.rok
+//                  ^^^ variable.other.rok
+//                        ^^^^ variable.other.rok
+//                               ^^^ variable.other.rok
+//                                     ^^ variable.other.rok

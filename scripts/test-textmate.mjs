@@ -11,11 +11,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
 import vsctm from "vscode-textmate";
 import onig from "vscode-oniguruma";
+import { root, classOf, parseCorpus, corpusFiles, keywords } from "./corpus.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 
 const grammarFiles = {
@@ -36,24 +35,6 @@ const registry = new vsctm.Registry({
   },
 });
 
-// Scope prefix -> class row, from grammars/classes.rokon (one tuple a line).
-const classes = new Map();
-for (const line of fs.readFileSync(path.join(root, "grammars/classes.rokon"), "utf8").split("\n")) {
-  const m = line.match(/^\s*\(\s*"([^"]+)",\s*"([^"]*)",\s*"([^"]*)",\s*"([^"]*)"\s*\),/);
-  if (m) classes.set(m[1], { kind: m[2], capture: m[3], lsp: m[4] });
-}
-
-// The longest classes.rokon prefix of a scope, language suffix dropped.
-function classOf(scope) {
-  let s = scope.replace(/\.(rok|rokon)$/, "");
-  for (;;) {
-    if (classes.has(s)) return s;
-    const dot = s.lastIndexOf(".");
-    if (dot < 0) return null;
-    s = s.slice(0, dot);
-  }
-}
-
 function grammarScopes(g, acc = new Set()) {
   if (Array.isArray(g)) g.forEach((x) => grammarScopes(x, acc));
   else if (g && typeof g === "object") {
@@ -65,6 +46,42 @@ function grammarScopes(g, acc = new Set()) {
   return acc;
 }
 
+// [names, match] of every rule with a `match`, names from `name` and
+// `captures`.
+function grammarRules(g, acc = []) {
+  if (Array.isArray(g)) g.forEach((x) => grammarRules(x, acc));
+  else if (g && typeof g === "object") {
+    if (typeof g.match === "string") {
+      const names = [g.name, ...Object.values(g.captures ?? {}).map((c) => c.name)].filter(Boolean);
+      acc.push([names, g.match]);
+    }
+    for (const v of Object.values(g)) grammarRules(v, acc);
+  }
+  return acc;
+}
+
+// The grammars give each word of grammars/keywords.rokon its scope, and
+// every word of a keyword rule is listed.
+function checkKeywords(lang, g) {
+  const fails = [];
+  const rules = grammarRules([g.patterns, g.repository]);
+  const lists = keywords.filter((k) => k.lang === lang && k.scope !== "variable.other");
+  for (const { scope, words } of lists) {
+    const named = rules.filter(([names]) => names.includes(`${scope}.${lang}`));
+    for (const w of words) {
+      const re = new RegExp(`(?:^|[(|:)])${w}(?:[|)(]|$)`);
+      if (!named.some(([, m]) => re.test(m))) fails.push(`keywords.rokon: ${lang} ${w}: no ${scope}.${lang} rule matches it`);
+    }
+    for (const [, m] of named) {
+      const alt = m.match(/^\(\?<!\[[^\]]*\]\)\(\?:([\w|]+)\)/);
+      for (const w of alt ? alt[1].split("|") : []) {
+        if (!words.includes(w)) fails.push(`grammars/${lang}.tmLanguage.json: ${w} (${scope}) is not in keywords.rokon`);
+      }
+    }
+  }
+  return fails;
+}
+
 async function tokenize(scope, lines) {
   const g = await registry.loadGrammar(scope);
   let stack = vsctm.INITIAL;
@@ -73,51 +90,6 @@ async function tokenize(scope, lines) {
     stack = r.ruleStack;
     return r.tokens;
   });
-}
-
-// Parses an assertion line `// ^^ a b - c` or `// <~~-- a`; null if
-// the line is not one.
-function parseAssertion(line, token) {
-  const at = line.indexOf(token);
-  if (at < 0 || line.slice(0, at).trim() !== "") return null;
-  const rest = line.slice(at + token.length);
-  const lead = rest.match(/^\s*/)[0].length;
-  const body = rest.slice(lead);
-  const cols = [];
-  let tail;
-  if (body.startsWith("<")) {
-    const m = body.match(/^<(~*)(-+)/);
-    if (!m) return null;
-    for (let i = 0; i < m[2].length; i++) cols.push(m[1].length + i);
-    tail = body.slice(m[0].length);
-  } else if (body.startsWith("^")) {
-    const m = body.match(/^[\^\s]*\^/)[0];
-    const base = at + token.length + lead;
-    for (let i = 0; i < m.length; i++) if (m[i] === "^") cols.push(base + i);
-    tail = body.slice(m.length);
-  } else {
-    return null;
-  }
-  const [pos, neg = ""] = tail.split(/\s-\s|^-\s/);
-  const words = (s) => s.trim().split(/\s+/).filter(Boolean);
-  return { cols, scopes: words(pos), not: words(neg) };
-}
-
-// Source lines with their assertions, from vscode-tmgrammar-test syntax.
-export function parseCorpus(text) {
-  const lines = text.split(/\r?\n/);
-  const head = lines[0].match(/^(\S+)\s+SYNTAX TEST\s+"([^"]+)"/);
-  if (!head) throw new Error('first line must be `// SYNTAX TEST "source.rok"`');
-  const [, token, scope] = head;
-  const checks = [];
-  let src = 0;
-  lines.forEach((line, i) => {
-    if (i === 0) return;
-    const a = parseAssertion(line, token);
-    if (a) checks.push({ ...a, line: src, at: i + 1 });
-    else src = i;
-  });
-  return { scope, lines, checks };
 }
 
 async function run(file) {
@@ -174,10 +146,14 @@ for (const f of Object.values(grammarFiles)) {
   }
 }
 
-const dir = path.join(root, "corpus");
-const files = args.length
-  ? args
-  : fs.readdirSync(dir).filter((f) => /\.(rok|rokon)$/.test(f)).sort().map((f) => path.join(dir, f));
+for (const [scope, f] of Object.entries(grammarFiles)) {
+  for (const m of checkKeywords(scope.slice("source.".length), JSON.parse(fs.readFileSync(f, "utf8")))) {
+    console.log(m);
+    failed++;
+  }
+}
+
+const files = corpusFiles(args);
 let total = 0;
 
 // The shebang is only on a file's first line, where the corpus has its

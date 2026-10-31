@@ -1,53 +1,53 @@
 // SYNTAX TEST "source.rok" "integer and float literals, radixes, suffixes"
-    42 1_000_000 0123 0
-//  ^^ constant.numeric.decimal.rok
-//     ^^^^^^^^^ constant.numeric.decimal.rok
-//               ^^^^ constant.numeric.decimal.rok
-//                    ^ constant.numeric.decimal.rok
-    0xFF 0X1a 0xFFFF_FFFF 0b1010_0101 0B11 0o755 0O17
-//  ^^^^ constant.numeric.hex.rok
-//       ^^^^ constant.numeric.hex.rok
-//            ^^^^^^^^^^^ constant.numeric.hex.rok
-//                        ^^^^^^^^^^^ constant.numeric.binary.rok
-//                                    ^^^^ constant.numeric.binary.rok
-//                                         ^^^^^ constant.numeric.octal.rok
-//                                               ^^^^ constant.numeric.octal.rok
-    3.14 1. 0.5 1.5e10 2e-3 6.022E+23 3.141_592
-//  ^^^^ constant.numeric.float.rok
-//       ^^ constant.numeric.float.rok
-//          ^^^ constant.numeric.float.rok
-//              ^^^^^^ constant.numeric.float.rok
-//                     ^^^^ constant.numeric.float.rok
-//                          ^^^^^^^^^ constant.numeric.float.rok
-//                                    ^^^^^^^^^ constant.numeric.float.rok
-    42i32 3.14f64 0xFFu8 1f64 2i 5kg 1_000_000i64 -128i8
-//  ^^ constant.numeric.decimal.rok - entity.name.type.numeric.rok
-//    ^^^ constant.numeric.decimal.rok entity.name.type.numeric.rok
-//            ^^^ constant.numeric.float.rok entity.name.type.numeric.rok
-//                ^^^^ constant.numeric.hex.rok
-//                    ^^ entity.name.type.numeric.rok
-//                       ^ constant.numeric.decimal.rok
-//                        ^^^ entity.name.type.numeric.rok
+    f(42, 1_000_000, 0123, 0);
+//    ^^ constant.numeric.decimal.rok
+//        ^^^^^^^^^ constant.numeric.decimal.rok
+//                   ^^^^ constant.numeric.decimal.rok
+//                         ^ constant.numeric.decimal.rok
+    f(0xFF, 0X1a, 0xFFFF_FFFF, 0b1010_0101, 0B11, 0o755, 0O17);
+//    ^^^^ constant.numeric.hex.rok
+//          ^^^^ constant.numeric.hex.rok
+//                ^^^^^^^^^^^ constant.numeric.hex.rok
+//                             ^^^^^^^^^^^ constant.numeric.binary.rok
+//                                          ^^^^ constant.numeric.binary.rok
+//                                                ^^^^^ constant.numeric.octal.rok
+//                                                       ^^^^ constant.numeric.octal.rok
+    f(3.14, 1., 0.5, 1.5e10, 2e-3, 6.022E+23, 3.141_592);
+//    ^^^^ constant.numeric.float.rok
+//          ^^ constant.numeric.float.rok
+//              ^^^ constant.numeric.float.rok
+//                   ^^^^^^ constant.numeric.float.rok
+//                           ^^^^ constant.numeric.float.rok
+//                                 ^^^^^^^^^ constant.numeric.float.rok
+//                                            ^^^^^^^^^ constant.numeric.float.rok
+    f(42i32, 3.14f64, 0xFFu8, 1f64, 2i, 5kg, 1_000_000i64, -128i8);
+//    ^^ constant.numeric.decimal.rok - entity.name.type.numeric.rok
+//      ^^^ constant.numeric.decimal.rok entity.name.type.numeric.rok
+//               ^^^ constant.numeric.float.rok entity.name.type.numeric.rok
+//                    ^^^^ constant.numeric.hex.rok
+//                        ^^ entity.name.type.numeric.rok
 //                            ^ constant.numeric.decimal.rok
-//                             ^ entity.name.type.numeric.rok
-//                               ^ constant.numeric.decimal.rok
-//                                ^^ entity.name.type.numeric.rok
-//                                                ^ keyword.operator.arithmetic.rok
-//                                                 ^^^^^ constant.numeric.decimal.rok
-    1..2 1..=9 1.foo t.0 1.+2 2e10 1e x2
-//  ^ constant.numeric.decimal.rok
-//   ^^ keyword.operator.range.rok
-//     ^ constant.numeric.decimal.rok
+//                             ^^^ entity.name.type.numeric.rok
+//                                  ^ constant.numeric.decimal.rok
+//                                   ^ entity.name.type.numeric.rok
+//                                      ^ constant.numeric.decimal.rok
+//                                       ^^ entity.name.type.numeric.rok
+//                                                         ^ keyword.operator.arithmetic.rok
+//                                                          ^^^^^ constant.numeric.decimal.rok
+    f(1..2, 1..=9, 1.foo, t.0, 1.+2, 2e10, 1e, x2);
+//    ^ constant.numeric.decimal.rok
+//     ^^ keyword.operator.range.rok
 //       ^ constant.numeric.decimal.rok
-//        ^^^ keyword.operator.range.rok
-//             ^ constant.numeric.decimal.rok - constant.numeric.float.rok
-//              ^ punctuation.accessor.rok
-//               ^^^ variable.other.member.rok
-//                   ^ variable.other.rok
-//                     ^ constant.numeric.decimal.rok
-//                       ^^ constant.numeric.float.rok
-//                         ^ keyword.operator.arithmetic.rok
-//                            ^^^^ constant.numeric.float.rok
-//                                 ^ constant.numeric.decimal.rok
-//                                  ^ entity.name.type.numeric.rok
-//                                    ^^ variable.other.rok
+//          ^ constant.numeric.decimal.rok
+//           ^^^ keyword.operator.range.rok
+//                 ^ constant.numeric.decimal.rok - constant.numeric.float.rok
+//                  ^ punctuation.accessor.rok
+//                   ^^^ variable.other.member.rok
+//                        ^ variable.other.rok
+//                          ^ constant.numeric.decimal.rok
+//                             ^^ constant.numeric.float.rok
+//                               ^ keyword.operator.arithmetic.rok
+//                                   ^^^^ constant.numeric.float.rok
+//                                         ^ constant.numeric.decimal.rok
+//                                          ^ entity.name.type.numeric.rok
+//                                             ^^ variable.other.rok

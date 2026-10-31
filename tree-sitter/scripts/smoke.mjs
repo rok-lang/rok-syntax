@@ -91,7 +91,10 @@ function parseFails(file) {
 }
 
 const bad = new Map();
-const cli = path.join(gdir, 'node_modules', '.bin', 'tree-sitter');
+const cli = [
+  path.join(gdir, 'node_modules', '.bin', 'tree-sitter'),
+  path.join(here, '..', '..', 'node_modules', '.bin', 'tree-sitter'),
+].find((f) => fs.existsSync(f)) ?? 'tree-sitter';
 for (let i = 0; i < files.length; i += 200) {
   const batch = files.slice(i, i + 200);
   const r = spawnSync(cli, ['parse', '-q', ...batch.map((f) => f.file)], {

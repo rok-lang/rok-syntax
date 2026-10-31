@@ -1,0 +1,22 @@
+// Keyword lists of Rok and ROKON: language, TextMate scope (its row in
+// classes.rokon), words. Contextual words are keywords only in some
+// positions (docs/token-classes.md, rules 3 to 6). The TextMate and
+// tree-sitter runners check their grammars against these lists, and
+// rok.vim generates its keyword lines from them. One tuple a line.
+[
+    ("rok", "keyword.control", ["if", "else", "match", "while", "loop", "for", "in", "return", "break", "continue", "try", "throw", "yield", "await", "catch", "finally", "using"]),
+    ("rok", "storage.type", ["fn", "let", "struct", "enum", "trait", "impl", "mod", "type", "union"]),
+    ("rok", "storage.type.any", ["any"]),
+    ("rok", "storage.modifier", ["pub", "unsafe", "async", "ref", "const", "static", "extern", "mut"]),
+    ("rok", "storage.modifier.visibility", ["pkg", "sub"]),
+    ("rok", "keyword.other", ["use", "where", "throws", "rethrows"]),
+    ("rok", "keyword.other.path", ["pkg", "sup", "rok"]),
+    ("rok", "keyword.operator.word", ["as", "is"]),
+    ("rok", "constant.language.boolean", ["true", "false"]),
+    ("rok", "constant.language.none", ["none"]),
+    ("rok", "variable.language.self", ["self", "Self"]),
+    ("rok", "support.type.primitive", ["i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64", "bool", "char", "str", "int", "float", "c_char"]),
+    ("rok", "variable.other", ["macro", "defer", "dyn", "move", "gen", "do"]),
+    ("rokon", "constant.language.boolean", ["true", "false"]),
+    ("rokon", "constant.language.none", ["none"]),
+]

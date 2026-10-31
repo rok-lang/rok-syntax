@@ -1,28 +1,28 @@
 // SYNTAX TEST "source.rok" "operators and punctuation"
-    a + b - c * d / e % f %% g
+    a + b - c * d / e % f %% g;
 //    ^ keyword.operator.arithmetic.rok
 //        ^ keyword.operator.arithmetic.rok
 //            ^ keyword.operator.arithmetic.rok
 //                ^ keyword.operator.arithmetic.rok
 //                    ^ keyword.operator.arithmetic.rok
 //                        ^^ keyword.operator.arithmetic.rok
-    a == b != c < d > e <= f >= g
-//    ^^ keyword.operator.comparison.rok
-//         ^^ keyword.operator.comparison.rok
-//              ^ keyword.operator.comparison.rok
-//                  ^ keyword.operator.comparison.rok
-//                      ^^ keyword.operator.comparison.rok
-//                           ^^ keyword.operator.comparison.rok
-    a && b || !c; a & b | c ^ d ~ e << f >> g
+    f(a == b, b != c, c < d, d > e, e <= f, f >= g);
+//      ^^ keyword.operator.comparison.rok
+//              ^^ keyword.operator.comparison.rok
+//                      ^ keyword.operator.comparison.rok
+//                             ^ keyword.operator.comparison.rok
+//                                    ^^ keyword.operator.comparison.rok
+//                                            ^^ keyword.operator.comparison.rok
+    a && b || !c; a & b | c ^ d | ~e << f >> g;
 //    ^^ keyword.operator.logical.rok
 //         ^^ keyword.operator.logical.rok
 //            ^ keyword.operator.logical.rok
 //                  ^ keyword.operator.bitwise.rok
 //                      ^ keyword.operator.bitwise.rok
 //                          ^ keyword.operator.bitwise.rok
-//                              ^ keyword.operator.bitwise.rok
-//                                  ^^ keyword.operator.bitwise.rok
-//                                       ^^ keyword.operator.bitwise.rok
+//                                ^ keyword.operator.bitwise.rok
+//                                   ^^ keyword.operator.bitwise.rok
+//                                        ^^ keyword.operator.bitwise.rok
     a = 1; a += 1; a -= 1; a %%= 2; a <<= 1; a >>= 1; a ^= 1;
 //    ^ keyword.operator.assignment.rok
 //           ^^ keyword.operator.assignment.compound.rok
@@ -31,13 +31,13 @@
 //                                    ^^^ keyword.operator.assignment.compound.rok
 //                                             ^^^ keyword.operator.assignment.compound.rok
 //                                                      ^^ keyword.operator.assignment.compound.rok
-    a .+ b; a.+b; a .== b; a .&& b; a.%%b
+    a .+ b; a.+b; a .== b; a .&& b; a.%%b;
 //    ^^ keyword.operator.broadcast.rok
 //           ^^ keyword.operator.broadcast.rok
 //                  ^^^ keyword.operator.broadcast.rok
 //                           ^^^ keyword.operator.broadcast.rok
 //                                   ^^^ keyword.operator.broadcast.rok
-    x?.y ?? z; f()?; 0..n; 0..=n; a::b; |x| x -> T => v
+    x?.y ?? z; f()?; 0..n; 0..=n; a::b; |x| -> T { x }; match m { x => v };
 //   ^^ keyword.operator.optional.rok
 //     ^ variable.other.member.rok
 //       ^^ keyword.operator.optional.rok
@@ -46,22 +46,22 @@
 //                          ^^^ keyword.operator.range.rok
 //                                 ^^ punctuation.separator.namespace.rok
 //                                      ^ keyword.operator.bitwise.rok
-//                                            ^^ keyword.operator.arrow.rok
-//                                                 ^^ keyword.operator.arrow.rok
-    a × b ⋅ c ÷ d ∘ e √f ≡ ≠ ≤ ≥ ∈ ∉ ⊂ ⊆ ∪ ∩
+//                                          ^^ keyword.operator.arrow.rok
+//                                                                  ^^ keyword.operator.arrow.rok
+    a × b ⋅ c ÷ d ∘ e + √f; f(a ≡ b, a ≠ b, a ≤ b, a ≥ b, a ∈ b, a ∉ b, a ⊂ b, a ⊆ b, a ∪ b, a ∩ b);
 //    ^ keyword.operator.math.rok
 //        ^ keyword.operator.math.rok
 //            ^ keyword.operator.math.rok
-//                    ^ keyword.operator.math.rok
-//                         ^ keyword.operator.math.rok
-//                               ^ keyword.operator.math.rok
-//                                         ^ keyword.operator.math.rok
-    (a, b); [c]; {d}: x.y
+//                      ^ keyword.operator.math.rok
+//                                     ^ keyword.operator.math.rok
+//                                                          ^ keyword.operator.math.rok
+//                                                                                             ^ keyword.operator.math.rok
+    (a, b); [c]; {d}; f(e: x.y);
 //  ^ punctuation.brackets.round.rok
 //    ^ punctuation.separator.comma.rok
 //       ^ punctuation.brackets.round.rok
 //        ^ punctuation.terminator.statement.rok
 //          ^ punctuation.brackets.square.rok
 //               ^ punctuation.brackets.curly.rok
-//                  ^ punctuation.separator.colon.rok
-//                     ^ punctuation.accessor.rok
+//                       ^ punctuation.separator.colon.rok
+//                          ^ punctuation.accessor.rok

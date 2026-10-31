@@ -10,16 +10,16 @@
 //                                    ^^^^^^^^^^ constant.character.escape.rok
 //                                              ^ string.quoted.double.rok punctuation.definition.string.end.rok
 //                                               ^ punctuation.terminator.statement.rok
-    "bad \q escape"
+    "bad \q escape";
 //       ^^ string.quoted.double.rok invalid.illegal.escape.rok
     "multi
-    line, still a string"
+    line, still a string";
 //  ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.rok
     "line \
 //        ^ string.quoted.double.rok constant.character.escape.rok
-     continued"
+     continued";
 //   ^^^^^^^^^^ string.quoted.double.rok
-    r"C:\path\n" + r#"has "quotes""# + r##"even "# inside"##
+    r"C:\path\n" + r#"has "quotes""# + r##"even "# inside"##;
 //  ^ string.quoted.double.raw.rok storage.type.string.rok
 //   ^ string.quoted.double.raw.rok punctuation.definition.string.begin.rok
 //    ^^^^^^^^^ string.quoted.double.raw.rok - constant.character.escape.rok
@@ -28,11 +28,12 @@
 //                 ^^^^^^^^^^^^^^^^^ string.quoted.double.raw.rok
 //                                   ^ keyword.operator.arithmetic.rok
 //                                     ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.raw.rok
-    b"GET /\r\n" + b"\x7F\xFF"
+    b"GET /\r\n" + b"\x7F\xFF";
 //  ^ string.quoted.double.byte.rok storage.type.string.rok
 //   ^^^^^^ string.quoted.double.byte.rok
 //         ^^^^ string.quoted.double.byte.rok constant.character.escape.rok
 //                   ^^^^^^^^ string.quoted.double.byte.rok constant.character.escape.rok
+// tree-sitter: skip, `rb"x"` is not Rok
     rb"x" br"y"
 //  ^^ variable.other.rok - storage.type.string.rok
 //    ^^^ string.quoted.double.rok

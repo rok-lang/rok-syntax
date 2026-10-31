@@ -19,12 +19,13 @@
 //              ^^^^ variable.other.member.rok - storage.type.rok
 //                       ^^^^^ entity.name.function.call.rok - keyword.control.rok
 //                                    ^^^ variable.other.member.rok
-    make(type: Kind::Ident); Ev { match: 1 }
+    make(type: Kind::Ident); Ev { match: 1 };
 //       ^^^^ variable.other.rok
 //             ^^^^ entity.name.type.rok
 //                 ^^ punctuation.separator.namespace.rok
 //                   ^^^^^ entity.name.type.rok
 //                                ^^^^^ variable.other.rok
+// tree-sitter: skip, `self` and `none` are not field names
     let s = Point { self: 1, none: 2 };
 //                  ^^^^ variable.language.self.rok
 //                           ^^^^ constant.language.none.rok
@@ -36,7 +37,7 @@
 //           ^ variable.parameter.rok
 //                          ^^ entity.name.function.rok
 //                                       ^^^^ entity.name.namespace.rok
-    use pkg::util; sup::f(); rok::std::fs; let rok = 42; pkg.x
+    use pkg::util; sup::f(); rok::std::fs; let rok = 42; pkg.x;
 //      ^^^ keyword.other.path.rok
 //           ^^^^ variable.other.rok
 //                 ^^^ keyword.other.path.rok
@@ -50,8 +51,8 @@
 //                      ^^^ storage.modifier.rok
 //                          ^^^ storage.modifier.visibility.rok
 //                                              ^^^ variable.other.rok
-    catch e: TimeoutError { } catch _ { }
-//  ^^^^^ keyword.control.rok
-//        ^ variable.other.rok
-//           ^^^^^^^^^^^^ entity.name.type.rok
-//                            ^^^^^ keyword.control.rok
+    f() catch e: TimeoutError { } catch _ { }
+//      ^^^^^ keyword.control.rok
+//            ^ variable.other.rok
+//               ^^^^^^^^^^^^ entity.name.type.rok
+//                                ^^^^^ keyword.control.rok

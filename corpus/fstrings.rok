@@ -1,5 +1,5 @@
 // SYNTAX TEST "source.rok" "f-strings: holes, specs, nesting, reused quotes"
-    f"x = {x}, {{literal}} {a + b}"
+    f"x = {x}, {{literal}} {a + b}";
 //  ^ string.interpolated.rok storage.type.string.rok
 //   ^ string.interpolated.rok punctuation.definition.string.begin.rok
 //    ^^^ string.interpolated.rok
@@ -12,13 +12,13 @@
 //                          ^ meta.interpolation.rok variable.other.rok
 //                            ^ meta.interpolation.rok keyword.operator.arithmetic.rok
 //                                ^ string.interpolated.rok punctuation.definition.string.end.rok
-    f"{s.split(" ")} {d["k"]}"
+    f"{s.split(" ")} {d["k"]}";
 //     ^ meta.interpolation.rok variable.other.rok
 //       ^^^^^ meta.interpolation.rok entity.name.function.call.rok
 //             ^^^ meta.interpolation.rok string.quoted.double.rok
 //                      ^^^ meta.interpolation.rok string.quoted.double.rok
 //                          ^^ string.interpolated.rok
-    f"{x:.2f} {n:0>5d} {v:?} {x:>{w}} {x:>${w}.${p}f} {a::b}"
+    f"{x:.2f} {n:0>5d} {v:?} {x:>{w}} {x:>${w}.${p}f} {a::b}";
 //      ^^^^ meta.interpolation.rok constant.other.format-spec.rok
 //              ^^^^^ constant.other.format-spec.rok
 //                       ^^ constant.other.format-spec.rok
@@ -34,7 +34,7 @@
 //                                                     ^ meta.interpolation.rok entity.name.namespace.rok
 //                                                      ^^ meta.interpolation.rok punctuation.separator.namespace.rok - constant.other.format-spec.rok
 //                                                        ^ meta.interpolation.rok variable.other.rok
-    f"{f"{x:>{w}}"} {(a, b):?} {if a { 1 } else { 2 }}"
+    f"{f"{x:>{w}}"} {(a, b):?} {if a { 1 } else { 2 }}";
 //    ^ meta.interpolation.rok punctuation.section.interpolation.begin.rok
 //     ^ meta.interpolation.rok string.interpolated.rok storage.type.string.rok
 //        ^ meta.interpolation.rok meta.interpolation.rok variable.other.rok
@@ -50,10 +50,10 @@
     total: {items
         .len()}
 //       ^^^ meta.interpolation.rok entity.name.function.call.rok
-    """ + 1
+    """ + 1;
 //  ^^^ string.interpolated.triple.rok punctuation.definition.string.end.rok
 //        ^ constant.numeric.decimal.rok
-    f"" + if"x"
+    f"" + if"x" { 1 } else { 2 };
 //  ^^^ string.interpolated.rok
 //        ^^ keyword.control.rok
 //          ^^^ string.quoted.double.rok

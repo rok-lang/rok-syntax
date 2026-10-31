@@ -9,7 +9,7 @@
 // <--- comment.line.documentation.rok
 //// four slashes are an ordinary comment
 // <---- comment.line.double-slash.rok - comment.line.documentation.rok
-    /* a /* nested */ still comment */ x
+    /* a /* nested */ still comment */ x;
 //  ^^ comment.block.rok punctuation.definition.comment.rok
 //       ^^^^^^^^^^^^ comment.block.rok comment.block.rok
 //                    ^^^^^^^^^^^^^ comment.block.rok
@@ -19,13 +19,13 @@
 //  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.rok
     /*! inner block doc */
 //  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.rok
-    /**/ /*** stars */ x
+    /**/ /*** stars */ x;
 //  ^^^^ comment.block.rok - comment.block.documentation.rok
 //       ^^^^^^^^^^^^^ comment.block.rok - comment.block.documentation.rok
 //                     ^ variable.other.rok
     /* spans
-       lines with "no string" and fn */ let
+       lines with "no string" and fn */ let y = 1;
 //     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.rok
 //                                      ^^^ storage.type.rok
-    "// not a comment"
+    "// not a comment";
 //   ^^^^^^^^^^^^^^^^ string.quoted.double.rok - comment.line.double-slash.rok

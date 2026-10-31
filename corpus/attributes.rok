@@ -22,7 +22,7 @@
 //               ^^^^^ meta.attribute.rok variable.other.rok
 //                       ^^^^^^^ meta.attribute.rok string.quoted.double.rok
     #[cfg(target_os = "linux",
-          feature = "x")] #[a([1, 2])] x
+          feature = "x")] #[a([1, 2])] x;
 //        ^^^^^^^ meta.attribute.rok variable.other.rok
 //                      ^ meta.attribute.rok punctuation.definition.attribute.end.rok
 //                        ^^^^^^^^^^^^ meta.attribute.rok
@@ -31,5 +31,6 @@
 //    ^^^^^ entity.name.function.attribute.rok
 //                               ^^^^^^^ entity.name.function.attribute.rok
 //                                                       ^^^^^^^ entity.name.function.attribute.rok
+// tree-sitter: skip, `# [x]` is not an attribute
     # [x] #x
 //  ^ - meta.attribute.rok

@@ -8,12 +8,12 @@
 //                                         ^^^^ entity.name.function.macro.rok
 //                                                  ^^^ keyword.other.rok
 //                                                           ^^^^ entity.name.function.macro.rok
-    a != b; x.y!(1); r#gen!(2); !ready
+    a != b; x.y != 1; r#gen!(2); !ready;
 //    ^^ keyword.operator.comparison.rok - entity.name.function.macro.rok
 //            ^ variable.other.member.rok
-//             ^ keyword.operator.logical.rok
-//                   ^^^^^^ entity.name.function.macro.rok
-//                              ^ keyword.operator.logical.rok
+//              ^ keyword.operator.comparison.rok
+//                    ^^^^^^ entity.name.function.macro.rok
+//                               ^ keyword.operator.logical.rok
     #[impl_macro(sq)] pub @macro { (@x: expr) => { @x * @x } }
 //  ^^^^^^^^^^^^^^^^^ meta.attribute.rok
 //                        ^ keyword.other.template.rok punctuation.definition.template.rok
@@ -25,11 +25,11 @@
 //                             ^^^^^^^ keyword.other.template.rok
 //                                       ^^^^ storage.type.rok
 //                                                       ^^^^^ keyword.other.template.rok
-    @for_fields { h = h ^ self.@field.hash(); } @field.name @item.body
+    @for_fields { h = h ^ self.@field.hash(); } @field.name; @item.body;
 //  ^^^^^^^^^^^ keyword.other.template.rok
 //                        ^^^^ variable.language.self.rok
 //                             ^^^^^^ keyword.other.template.rok
 //                                    ^^^^ entity.name.function.call.rok
 //                                              ^^^^^^ keyword.other.template.rok
 //                                                     ^^^^ variable.other.member.rok
-//                                                          ^^^^^ keyword.other.template.rok
+//                                                           ^^^^^ keyword.other.template.rok

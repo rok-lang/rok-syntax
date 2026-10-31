@@ -1,18 +1,18 @@
 // SYNTAX TEST "source.rok" "chars, byte chars and labels"
-    'A' '세' '\n' '\'' '\x41' '\u{1F600}' c'A' c'\x7F'
-//  ^^^ string.quoted.single.char.rok
-//  ^ punctuation.definition.string.begin.rok
-//   ^ string.quoted.single.char.rok
-//    ^ punctuation.definition.string.end.rok
-//      ^^^ string.quoted.single.char.rok
-//          ^^^^ string.quoted.single.char.rok
-//           ^^ constant.character.escape.rok
-//               ^^^^ string.quoted.single.char.rok
-//                    ^^^^^^ string.quoted.single.char.rok
-//                            ^^^^^^^^^ string.quoted.single.char.rok constant.character.escape.rok
-//                                       ^ string.quoted.single.byte.rok storage.type.string.rok
-//                                        ^^^ string.quoted.single.byte.rok
-//                                            ^^^^^^^ string.quoted.single.byte.rok
+    f('A', '세', '\n', '\'', '\x41', '\u{1F600}', c'A', c'\x7F');
+//    ^^^ string.quoted.single.char.rok
+//    ^ string.quoted.single.char.rok punctuation.definition.string.begin.rok
+//     ^ string.quoted.single.char.rok
+//      ^ string.quoted.single.char.rok punctuation.definition.string.end.rok
+//         ^^^ string.quoted.single.char.rok
+//              ^^^^ string.quoted.single.char.rok
+//               ^^ string.quoted.single.char.rok constant.character.escape.rok
+//                    ^^^^ string.quoted.single.char.rok
+//                          ^^^^^^ string.quoted.single.char.rok
+//                                   ^^^^^^^^^ string.quoted.single.char.rok constant.character.escape.rok
+//                                               ^ string.quoted.single.byte.rok storage.type.string.rok
+//                                                ^^^ string.quoted.single.byte.rok
+//                                                     ^^^^^^^ string.quoted.single.byte.rok
     'outer: loop { break 'outer; continue 'a; }
 //  ^ entity.name.label.rok punctuation.definition.label.rok
 //   ^^^^^ entity.name.label.rok
@@ -25,6 +25,7 @@
 //  ^^^^^ entity.name.label.rok - keyword.control.rok
 //         ^^^^^ keyword.control.rok
 //                         ^^^^^ entity.name.label.rok - keyword.control.rok
+// tree-sitter: skip, `'ab` is neither a char nor a label
     let c = 'x'; let d = 'ab;
 //          ^^^ string.quoted.single.char.rok
 //                       ^^^ entity.name.label.rok

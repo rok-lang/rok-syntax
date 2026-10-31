@@ -1,13 +1,16 @@
 {
   "name": "rok-syntax",
   "private": true,
-  "description": "Tests for the Rok and ROKON TextMate grammars",
+  "description": "Tests for the Rok and ROKON TextMate and tree-sitter grammars",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "scripts": {
-    "test": "node scripts/test-textmate.mjs"
+    "test": "npm run test:textmate && npm run test:tree-sitter",
+    "test:textmate": "node scripts/test-textmate.mjs",
+    "test:tree-sitter": "node scripts/test-tree-sitter.mjs"
   },
   "devDependencies": {
+    "tree-sitter-cli": "0.27.1",
     "vscode-oniguruma": "2.0.1",
     "vscode-textmate": "9.3.2"
   }

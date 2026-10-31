@@ -36,7 +36,7 @@
 //                       ^^^^^ meta.generic.rok entity.name.type.rok
 //                                ^^^^^ keyword.other.rok
 //                                         ^^^^^ entity.name.type.rok
-    let v: Dict<str, List<i32 | none>> = Dict::new(); a < b; A < B
+    let v: Dict<str, List<i32 | none>> = Dict::new(); a < b; A < B;
 //         ^^^^ entity.name.type.rok
 //             ^ punctuation.definition.generic.begin.rok
 //              ^^^ support.type.primitive.rok
@@ -47,22 +47,22 @@
 //                                             ^^^ entity.name.function.call.rok
 //                                                      ^ keyword.operator.comparison.rok
 //                                                             ^ keyword.operator.comparison.rok - punctuation.definition.generic.begin.rok
-    i8 i16 i32 i64 i128 isize u8 u16 u32 u64 u128 usize f32 f64 bool char str int float c_char
-//  ^^ support.type.primitive.rok
-//                 ^^^^ support.type.primitive.rok
-//                                                ^^^^^ support.type.primitive.rok
-//                                                              ^^^^ support.type.primitive.rok
-//                                                                   ^^^^ support.type.primitive.rok
-//                                                                                ^^^^^ support.type.primitive.rok
-//                                                                                      ^^^^^^ support.type.primitive.rok
-    Option::Some(x) foo::bar::Baz::qux() MAX_LEN
+    type P = (i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32, f64, bool, char, str, int, float, c_char);
+//            ^^ support.type.primitive.rok
+//                               ^^^^ support.type.primitive.rok
+//                                                                     ^^^^^ support.type.primitive.rok
+//                                                                                      ^^^^ support.type.primitive.rok
+//                                                                                            ^^^^ support.type.primitive.rok
+//                                                                                                            ^^^^^ support.type.primitive.rok
+//                                                                                                                   ^^^^^^ support.type.primitive.rok
+    Option::Some(x); foo::bar::Baz::qux(); MAX_LEN;
 //  ^^^^^^ entity.name.type.rok
 //          ^^^^ entity.name.type.rok
-//                  ^^^ entity.name.namespace.rok
-//                       ^^^ entity.name.namespace.rok
-//                            ^^^ entity.name.type.rok
-//                                 ^^^ entity.name.function.call.rok
-//                                       ^^^^^^^ entity.name.type.rok
+//                   ^^^ entity.name.namespace.rok
+//                        ^^^ entity.name.namespace.rok
+//                             ^^^ entity.name.type.rok
+//                                  ^^^ entity.name.function.call.rok
+//                                         ^^^^^^^ entity.name.type.rok
     mod geom { } extern "C" { fn puts(s: Ptr<c_char>) -> i32; }
 //  ^^^ storage.type.rok
 //      ^^^^ entity.name.namespace.rok
