@@ -39,6 +39,8 @@ fn tokens_round_trip() {
 
 fn k(t: str) -> str { f"<span class=\"k\">{t}</span>" }
 
+fn m(t: str) -> str { f"<span class=\"m\">{t}</span>" }
+
 #[test]
 fn raw_identifiers() {
     // r#name is a name even when spelled as a keyword; the words that
@@ -63,8 +65,25 @@ fn raw_strings() {
 fn qualified_meta_names() {
     let h = highlight_rok("#[dep::attr] #[derive(dep::Name)]\nuse dep::log!; dep::log!(1);");
     let want = "<span class=\"a\">#[dep::attr]</span> <span class=\"a\">#[derive(dep::Name)]</span>\n"
-        + k("use") + " dep::log!; dep::log!(<span class=\"n\">1</span>);";
+        + k("use") + " dep::" + m("log!") + "; dep::" + m("log!") + "(<span class=\"n\">1</span>);";
     expect(h == want, h);
     let d = highlight_rok("#[deprecated(since = \"0.1.6\", note = \"use g\")]");
     expect(d == "<span class=\"a\">#[deprecated(since = \"0.1.6\", note = \"use g\")]</span>", d);
+}
+
+#[test]
+fn macros_and_templates() {
+    let h = highlight_rok("#[impl_macro(sq)] pub @macro { (@x: expr) => { @x * @x } } sq!(2) != try!(f())");
+    let want = "<span class=\"a\">#[impl_macro(sq)]</span> " + k("pub") + " " + m("@macro") + " { ("
+        + m("@x") + ": expr) =&gt; { " + m("@x") + " * " + m("@x") + " } } " + m("sq!")
+        + "(<span class=\"n\">2</span>) != " + k("try") + "!(f())";
+    expect(h == want, h);
+}
+
+#[test]
+fn shebang() {
+    let h = highlight_rok("#!/usr/bin/env rok\nlet x = 1;");
+    expect(h.starts_with("<span class=\"c\">#!/usr/bin/env rok</span>\n"), h);
+    let a = highlight_rok("#![allow(unused)]");
+    expect(a == "<span class=\"a\">#![allow(unused)]</span>", a);
 }
