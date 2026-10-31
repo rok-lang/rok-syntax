@@ -9255,6 +9255,15 @@
                     "name": "escape_sequence"
                   },
                   {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_brace_escape"
+                    },
+                    "named": true,
+                    "value": "escape_sequence"
+                  },
+                  {
                     "type": "SYMBOL",
                     "name": "interpolation"
                   }
@@ -9293,6 +9302,15 @@
                     "name": "escape_sequence"
                   },
                   {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_brace_escape"
+                    },
+                    "named": true,
+                    "value": "escape_sequence"
+                  },
+                  {
                     "type": "SYMBOL",
                     "name": "interpolation"
                   }
@@ -9306,6 +9324,22 @@
           ]
         }
       ]
+    },
+    "_brace_escape": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "{{"
+          },
+          {
+            "type": "STRING",
+            "value": "}}"
+          }
+        ]
+      }
     },
     "interpolation": {
       "type": "SEQ",
@@ -9522,62 +9556,71 @@
       }
     },
     "float_literal": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 1,
-        "content": {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "PATTERN",
-              "value": "[0-9][0-9_]*"
-            },
-            {
-              "type": "CHOICE",
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "SEQ",
               "members": [
                 {
-                  "type": "SEQ",
+                  "type": "PATTERN",
+                  "value": "[0-9][0-9_]*"
+                },
+                {
+                  "type": "CHOICE",
                   "members": [
                     {
-                      "type": "PATTERN",
-                      "value": "\\.[0-9][0-9_]*"
-                    },
-                    {
-                      "type": "CHOICE",
+                      "type": "SEQ",
                       "members": [
                         {
                           "type": "PATTERN",
-                          "value": "[eE][+-]?[0-9][0-9_]*"
+                          "value": "\\.[0-9][0-9_]*"
                         },
                         {
-                          "type": "BLANK"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "PATTERN",
+                              "value": "[eE][+-]?[0-9][0-9_]*"
+                            },
+                            {
+                              "type": "BLANK"
+                            }
+                          ]
                         }
                       ]
+                    },
+                    {
+                      "type": "PATTERN",
+                      "value": "[eE][+-]?[0-9][0-9_]*"
                     }
                   ]
                 },
                 {
-                  "type": "PATTERN",
-                  "value": "[eE][+-]?[0-9][0-9_]*"
-                }
-              ]
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "PATTERN",
-                  "value": "[a-zA-Z_][a-zA-Z0-9_]*"
-                },
-                {
-                  "type": "BLANK"
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "PATTERN",
+                      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
                 }
               ]
             }
-          ]
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_float_dot"
         }
-      }
+      ]
     },
     "boolean_literal": {
       "type": "CHOICE",
@@ -9701,6 +9744,10 @@
     {
       "type": "SYMBOL",
       "name": "block_comment"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_float_dot"
     },
     {
       "type": "SYMBOL",

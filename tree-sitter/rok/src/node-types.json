@@ -2241,6 +2241,11 @@
     }
   },
   {
+    "type": "float_literal",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "for_expression",
     "named": true,
     "fields": {
@@ -5577,10 +5582,6 @@
   {
     "type": "finally",
     "named": false
-  },
-  {
-    "type": "float_literal",
-    "named": true
   },
   {
     "type": "fn",

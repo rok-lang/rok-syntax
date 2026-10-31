@@ -103,6 +103,7 @@ module.exports = grammar({
     $._format_spec_text,
     $.raw_string_literal,
     $.block_comment,
+    $._float_dot,
     $._error_sentinel,
   ],
 
@@ -1289,7 +1290,12 @@ module.exports = grammar({
     format_string: $ => choice(
       seq(
         'f"',
-        repeat(choice(alias($._fstring_content, $.string_content), $.escape_sequence, $.interpolation)),
+        repeat(choice(
+          alias($._fstring_content, $.string_content),
+          $.escape_sequence,
+          alias($._brace_escape, $.escape_sequence),
+          $.interpolation,
+        )),
         '"',
       ),
       seq(
@@ -1297,11 +1303,15 @@ module.exports = grammar({
         repeat(choice(
           alias($._fstring_triple_content, $.string_content),
           $.escape_sequence,
+          alias($._brace_escape, $.escape_sequence),
           $.interpolation,
         )),
         '"""',
       ),
     ),
+
+    // `{{` and `}}` are a literal brace.
+    _brace_escape: _ => token.immediate(choice('{{', '}}')),
 
     interpolation: $ => seq(
       '{',
@@ -1341,14 +1351,19 @@ module.exports = grammar({
       optional(/[a-zA-Z_][a-zA-Z0-9_]*/),
     )),
 
-    float_literal: _ => token(prec(1, seq(
-      /[0-9][0-9_]*/,
-      choice(
-        seq(/\.[0-9][0-9_]*/, optional(/[eE][+-]?[0-9][0-9_]*/)),
-        /[eE][+-]?[0-9][0-9_]*/,
-      ),
-      optional(/[a-zA-Z_][a-zA-Z0-9_]*/),
-    ))),
+    // `1.` comes from the scanner: it is a float only when no `.`, digit
+    // or name follows.
+    float_literal: $ => choice(
+      token(prec(1, seq(
+        /[0-9][0-9_]*/,
+        choice(
+          seq(/\.[0-9][0-9_]*/, optional(/[eE][+-]?[0-9][0-9_]*/)),
+          /[eE][+-]?[0-9][0-9_]*/,
+        ),
+        optional(/[a-zA-Z_][a-zA-Z0-9_]*/),
+      ))),
+      $._float_dot,
+    ),
 
     boolean_literal: _ => choice('true', 'false'),
 

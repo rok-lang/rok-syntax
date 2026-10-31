@@ -7,7 +7,7 @@
   "keywords": ["incremental", "parsing", "tree-sitter", "rok"],
   "files": ["grammar.js", "tree-sitter.json", "queries/*", "src/**"],
   "devDependencies": {
-    "tree-sitter-cli": "^0.25.10"
+    "tree-sitter-cli": "^0.27.1"
   },
   "scripts": {
     "generate": "tree-sitter generate",

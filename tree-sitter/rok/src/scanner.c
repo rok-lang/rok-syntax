@@ -1,5 +1,6 @@
 // External scanner for Rok: string and f-string text, format specs,
-// raw strings with matching `#` counts and nested block comments.
+// raw strings with matching `#` counts, nested block comments and `1.`
+// floats.
 
 #include "tree_sitter/parser.h"
 
@@ -13,6 +14,7 @@ enum TokenType {
     FORMAT_SPEC_TEXT,
     RAW_STRING_LITERAL,
     BLOCK_COMMENT,
+    FLOAT_DOT,
     ERROR_SENTINEL,
 };
 
@@ -52,8 +54,8 @@ static bool scan_string_content(TSLexer *lexer) {
     return any;
 }
 
-// Text of an f-string: up to the closing quote(s), a backslash or a hole.
-// `{{` and `}}` are text.
+// Text of an f-string: up to the closing quote(s), a backslash, a hole
+// or a `{{` / `}}` escape.
 static bool scan_fstring_content(TSLexer *lexer, bool triple) {
     bool any = false;
     for (;;) {
@@ -62,15 +64,14 @@ static bool scan_fstring_content(TSLexer *lexer, bool triple) {
             break;
         }
         int32_t c = lexer->lookahead;
-        if (c == '\\') {
+        if (c == '\\' || c == '{') {
             break;
         }
-        if (c == '{') {
+        if (c == '}') {
             advance(lexer);
-            if (lexer->lookahead != '{') {
+            if (lexer->lookahead == '}') {
                 break;
             }
-            advance(lexer);
             any = true;
             continue;
         }
@@ -190,6 +191,28 @@ static bool scan_block_comment(TSLexer *lexer) {
     return true;
 }
 
+static inline bool is_digit(int32_t c) { return c >= '0' && c <= '9'; }
+
+// `1.`: digits and a dot with no `.`, digit or name after it. `1..2`,
+// `1.5` and `1.foo` are left to the grammar's tokens.
+static bool scan_float_dot(TSLexer *lexer) {
+    while (is_digit(lexer->lookahead) || lexer->lookahead == '_') {
+        advance(lexer);
+    }
+    if (lexer->lookahead != '.') {
+        return false;
+    }
+    advance(lexer);
+    int32_t c = lexer->lookahead;
+    if (c == '.' || is_digit(c) || c == '_' || (c >= 'a' && c <= 'z') ||
+        (c >= 'A' && c <= 'Z') || c >= 0x80) {
+        return false;
+    }
+    lexer->mark_end(lexer);
+    lexer->result_symbol = FLOAT_DOT;
+    return true;
+}
+
 bool tree_sitter_rok_external_scanner_scan(void *payload, TSLexer *lexer,
                                            const bool *valid_symbols) {
     (void)payload;
@@ -223,6 +246,9 @@ bool tree_sitter_rok_external_scanner_scan(void *payload, TSLexer *lexer,
     }
     if (valid_symbols[BLOCK_COMMENT] && lexer->lookahead == '/') {
         return scan_block_comment(lexer);
+    }
+    if (valid_symbols[FLOAT_DOT] && is_digit(lexer->lookahead)) {
+        return scan_float_dot(lexer);
     }
     return false;
 }

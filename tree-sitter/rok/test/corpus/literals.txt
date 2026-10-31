@@ -55,7 +55,10 @@ let e = f"""
         (identifier)
         (format_specifier
           (format_text)))
-      (string_content)))
+      (string_content)
+      (escape_sequence)
+      (string_content)
+      (escape_sequence)))
   (let_declaration
     (identifier)
     (format_string

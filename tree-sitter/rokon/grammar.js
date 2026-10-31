@@ -92,24 +92,27 @@ module.exports = grammar({
 
     boolean: _ => choice('true', 'false'),
 
-    integer: _ => token(seq(
+    // The sign is its own token, so it highlights as an operator.
+    integer: _ => seq(
       optional('-'),
-      choice(
+      token(choice(
         /0[xX][0-9a-fA-F][0-9a-fA-F_]*/,
         /0[bB][01][01_]*/,
         /0[oO][0-7][0-7_]*/,
         /[0-9][0-9_]*/,
-      ),
-    )),
+      )),
+    ),
 
-    float: _ => token(prec(1, seq(
+    float: _ => seq(
       optional('-'),
-      /[0-9][0-9_]*/,
-      choice(
-        seq(/\.[0-9][0-9_]*/, optional(/[eE][+-]?[0-9][0-9_]*/)),
-        /[eE][+-]?[0-9][0-9_]*/,
-      ),
-    ))),
+      token(prec(1, seq(
+        /[0-9][0-9_]*/,
+        choice(
+          seq(/\.[0-9][0-9_]*/, optional(/[eE][+-]?[0-9][0-9_]*/)),
+          /[eE][+-]?[0-9][0-9_]*/,
+        ),
+      ))),
+    ),
 
     char: _ => token(seq(
       "'",
