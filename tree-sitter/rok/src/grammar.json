@@ -3841,15 +3841,8 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 1,
-            "content": {
-              "type": "STRING",
-              "value": "<"
-            }
-          }
+          "type": "STRING",
+          "value": "<"
         },
         {
           "type": "SEQ",
@@ -7578,10 +7571,6 @@
                 {
                   "type": "SYMBOL",
                   "name": "bracketed_type"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "generic_type"
                 }
               ]
             }

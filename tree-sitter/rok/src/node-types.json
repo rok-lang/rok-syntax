@@ -3602,10 +3602,6 @@
             "named": true
           },
           {
-            "type": "generic_type",
-            "named": true
-          },
-          {
             "type": "identifier",
             "named": true
           },

@@ -595,7 +595,7 @@ module.exports = grammar({
     )),
 
     type_arguments: $ => seq(
-      token(prec(1, '<')),
+      '<',
       sepBy1(',', choice($._type, $.type_binding, $._const_value)),
       optional(','),
       '>',
@@ -1036,7 +1036,6 @@ module.exports = grammar({
         $._path,
         $.generic_function,
         $.bracketed_type,
-        $.generic_type,
       )),
       '::',
       field('name', $.identifier),
