@@ -11,6 +11,7 @@
 // @ts-check
 
 // Binding power, weakest first (spec 3.2.3, shifted to stay positive).
+// The binary levels are Rust's.
 const PREC = {
   closure: -1,
   assign: 1,
@@ -22,16 +23,17 @@ const PREC = {
   and: 7,
   compare: 8,
   bitor: 9,
-  bitand: 10,
-  additive: 11,
-  multiplicative: 12,
-  compose: 13,
-  shift: 14,
-  cast: 15,
-  unary: 16,
-  postfix: 17,
-  call: 18,
-  field: 19,
+  bitxor: 10,
+  bitand: 11,
+  shift: 12,
+  additive: 13,
+  multiplicative: 14,
+  compose: 15,
+  cast: 16,
+  unary: 17,
+  postfix: 18,
+  call: 19,
+  field: 20,
 };
 
 const BINARY = [
@@ -41,11 +43,12 @@ const BINARY = [
   [PREC.compare, ['==', '!=', '<', '>', '<=', '>=', '≡', '≠', '≤', '≥', '∈', '∉', '⊂', '⊆',
     '.==', '.!=', '.<', '.>', '.<=', '.>=']],
   [PREC.bitor, ['|', '.|']],
-  [PREC.bitand, ['&', '^', '.&', '.^']],
+  [PREC.bitxor, ['^', '.^']],
+  [PREC.bitand, ['&', '.&']],
+  [PREC.shift, ['<<', '>>', '.<<', '.>>']],
   [PREC.additive, ['+', '-', '∪', '.+', '.-']],
   [PREC.multiplicative, ['*', '/', '%', '%%', '×', '⋅', '÷', '∩', '.*', './', '.%', '.%%']],
   [PREC.compose, ['∘']],
-  [PREC.shift, ['<<', '>>', '.<<', '.>>']],
 ];
 
 const COMPOUND_ASSIGN = ['+=', '-=', '*=', '/=', '%=', '%%=', '&=', '|=', '^=', '<<=', '>>='];
@@ -76,6 +79,10 @@ const KEYWORDS = [
   'continue', 'try', 'throw', 'async', 'await', 'yield', 'unsafe', 'using',
   'struct', 'enum', 'trait', 'impl', 'pub', 'mod', 'use', 'as', 'is', 'ref',
 ];
+
+// Reserved keywords no syntax uses yet (spec 1.5.6). Outside token trees
+// they parse as identifiers; highlights.scm marks them.
+const RESERVED = ['macro', 'defer', 'dyn', 'move', 'gen', 'do'];
 
 // Contextual keywords (spec 1.5.4).
 const CONTEXTUAL = [
@@ -177,7 +184,9 @@ module.exports = grammar({
       prec(1, $._expression_ending_with_block),
       prec(1, alias($._try_block, $.try_expression)),
       prec(1, $.catch_expression),
-      prec(-1, alias($._trailing_call, $.call_expression)),
+      // A trailing-closure call that starts a statement ends at its `}`:
+      // an operator after it starts the next statement (spec 1.3.4).
+      prec(PREC.field + 1, alias($._trailing_call, $.call_expression)),
       prec(-1, $.macro_invocation),
     ),
 
@@ -553,6 +562,7 @@ module.exports = grammar({
       $.self,
       $.self_type,
       ...KEYWORDS,
+      ...RESERVED,
       ...PUNCTUATION,
       '@',
     ),
@@ -852,10 +862,16 @@ module.exports = grammar({
     // Postfix `?`: early return of `none` (spec 3.14.10).
     propagate_expression: $ => prec(PREC.postfix, seq(field('argument', $._expression), '?')),
 
+    // `return@each` leaves one call of the trailing closure of `each`
+    // (spec 4.3.12).
     return_expression: $ => choice(
-      prec.left(seq('return', field('value', $._expression))),
-      prec(-1, 'return'),
+      prec.left(seq('return', optional($._return_label), field('value', $._expression))),
+      prec(-1, seq('return', optional($._return_label))),
     ),
+
+    _return_label: $ => field('label', alias($._return_at, $.label)),
+
+    _return_at: _ => token.immediate(prec(1, seq('@', new RegExp(IDENT, 'u')))),
 
     break_expression: $ => prec.left(seq(
       'break',

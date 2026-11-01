@@ -63,9 +63,18 @@
 //                                                 ^^^ keyword.control.rok
 //                                                    ^ keyword.operator.optional.rok
     macro + defer + dyn + move + gen + do;
-//  ^^^^^ variable.other.rok - keyword.control.rok
-//          ^^^^^ variable.other.rok
-//                  ^^^ variable.other.rok
-//                        ^^^^ variable.other.rok
-//                               ^^^ variable.other.rok
-//                                     ^^ variable.other.rok
+//  ^^^^^ keyword.other.reserved.rok - variable.other.rok
+//          ^^^^^ keyword.other.reserved.rok
+//                  ^^^ keyword.other.reserved.rok
+//                        ^^^^ keyword.other.reserved.rok
+//                               ^^^ keyword.other.reserved.rok
+//                                     ^^ keyword.other.reserved.rok
+    let m = s.move(gen: 1) + Step { move: 1, do: 2 }.dyn + r#defer; move!(x); gen(1);
+//            ^^^^ entity.name.function.call.rok - keyword.other.reserved.rok
+//                 ^^^ variable.other.rok - keyword.other.reserved.rok
+//                                  ^^^^ variable.other.rok - keyword.other.reserved.rok
+//                                           ^^ variable.other.rok - keyword.other.reserved.rok
+//                                                   ^^^ variable.other.member.rok
+//                                                         ^^^^^^^ variable.other.rok - keyword.other.reserved.rok
+//                                                                  ^^^^ keyword.other.reserved.rok - entity.name.function.macro.rok
+//                                                                            ^^^ keyword.other.reserved.rok - entity.name.function.call.rok

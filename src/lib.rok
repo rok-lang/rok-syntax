@@ -44,11 +44,13 @@ pub struct Token {
     pub text: str;
 }
 
-// Keywords everywhere but in name positions (spec 1.5.1).
-const RESERVED: [str; 33] = [
+// Keywords everywhere but in name positions (spec 1.5.1). The last six
+// are reserved for later syntax (spec 1.5.6).
+const RESERVED: [str; 39] = [
     "let", "fn", "if", "else", "match", "while", "loop", "for", "return", "break", "continue",
     "try", "throw", "async", "await", "yield", "unsafe", "using", "struct", "enum", "trait",
     "impl", "pub", "mod", "use", "as", "is", "ref", "true", "false", "none", "self", "Self",
+    "macro", "defer", "dyn", "move", "gen", "do",
 ];
 
 // Keywords only in their positions (spec 1.5.4); `pkg` `sub` `sup`
@@ -427,6 +429,18 @@ impl Lexer {
         !(p > 0 && is_ident(self.cs[p - 1]))
     }
 
+    /// Whether the word `return` ends right at `i`: `return@name`.
+    fn after_return(self, i: usize) -> bool {
+        if i < 6 { return false; }
+        let p = i - 6;
+        let m = 0usize;
+        for c in "return".chars() {
+            if self.cs[p + m] != c { return false; }
+            m += 1;
+        }
+        !(p > 0 && is_ident(self.cs[p - 1]))
+    }
+
     /// Whether `pub(` (spaces allowed) comes right before `i`.
     fn after_pub_paren(self, i: usize) -> bool {
         let j = i;
@@ -572,8 +586,10 @@ impl Lexer {
                 self.emit(Kind::Attribute, i, k);
                 i = k;
             } else if !self.rokon && c == '@' && is_ident_start(nx) {
+                // `return@each` names a closure's callee; `@x` is a template token.
                 let k = self.ident_end(i + 1);
-                self.emit(Kind::Macro, i, k);
+                let kind = if self.after_return(i) { Kind::Text } else { Kind::Macro };
+                self.emit(kind, i, k);
                 i = k;
             } else if c.is_ascii_digit() {
                 let k = self.number_end(i);

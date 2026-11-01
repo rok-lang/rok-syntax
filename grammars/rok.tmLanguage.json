@@ -27,6 +27,9 @@
           "include": "#attribute"
         },
         {
+          "include": "#labeled-return"
+        },
+        {
           "include": "#template"
         },
         {
@@ -211,6 +214,21 @@
           "include": "#attribute-brackets"
         }
       ]
+    },
+    "labeled-return": {
+      "comment": "return@each: the @ and the callee name it leaves, no space",
+      "match": "(?<![\\p{L}\\p{N}_])(return)(@)([\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.rok"
+        },
+        "2": {
+          "name": "punctuation.definition.label.rok"
+        },
+        "3": {
+          "name": "entity.name.label.rok"
+        }
+      }
     },
     "template": {
       "comment": "meta-system template tokens: @derive, @macro, @Self, @for_fields, @x",
@@ -727,7 +745,7 @@
     },
     "macro": {
       "comment": "name!(..), dep::name!, use dep::name!; not try!, not !=",
-      "match": "(?<![\\p{L}\\p{N}_])(?!(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|true|false|none|self|Self)!)((?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(!)(?!=)",
+      "match": "(?<![\\p{L}\\p{N}_])(?!(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|true|false|none|self|Self|macro|defer|dyn|move|gen|do)!)((?:r#)?[\\p{L}_][\\p{L}\\p{N}\\p{M}_]*)(!)(?!=)",
       "captures": {
         "1": {
           "name": "entity.name.function.macro.rok"
@@ -755,7 +773,7 @@
         {
           "comment": "a keyword before : is a field or binding name: struct T { type: i32 }, f(type: 1)",
           "name": "variable.other.rok",
-          "match": "(?<![\\p{L}\\p{N}_])(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|type|any|in|where|throws|rethrows|catch|finally|const|static|extern|mut|union)(?=\\s*:(?!:))"
+          "match": "(?<![\\p{L}\\p{N}_])(?:let|fn|if|else|match|while|loop|for|return|break|continue|try|throw|async|await|yield|unsafe|using|struct|enum|trait|impl|pub|mod|use|as|is|ref|type|any|in|where|throws|rethrows|catch|finally|const|static|extern|mut|union|macro|defer|dyn|move|gen|do)(?=\\s*:(?!:))"
         },
         {
           "comment": "a contextual keyword in value position is a name: let in = 3; f(in)",
@@ -814,6 +832,11 @@
         {
           "name": "keyword.other.rok",
           "match": "(?<![\\p{L}\\p{N}_])(?:use|where|throws|rethrows)(?![\\p{L}\\p{N}_])"
+        },
+        {
+          "comment": "reserved for later syntax: a keyword, never a name outside name positions",
+          "name": "keyword.other.reserved.rok",
+          "match": "(?<![\\p{L}\\p{N}_])(?:macro|defer|dyn|move|gen|do)(?![\\p{L}\\p{N}_])"
         },
         {
           "name": "keyword.operator.word.rok",

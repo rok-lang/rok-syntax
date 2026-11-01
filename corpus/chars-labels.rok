@@ -25,6 +25,13 @@
 //  ^^^^^ entity.name.label.rok - keyword.control.rok
 //         ^^^^^ keyword.control.rok
 //                         ^^^^^ entity.name.label.rok - keyword.control.rok
+    each(xs) |x| { if x == 2 { return@each; } } let n = first(xs) |x| { return@first x > 1 }; return @x;
+//                             ^^^^^^ keyword.control.rok
+//                                   ^ punctuation.definition.label.rok - keyword.other.template.rok
+//                                    ^^^^ entity.name.label.rok - keyword.other.template.rok
+//                                                                      ^^^^^^ keyword.control.rok
+//                                                                             ^^^^^ entity.name.label.rok
+//                                                                                                   ^^ keyword.other.template.rok
 // tree-sitter: skip, `'ab` is neither a char nor a label
     let c = 'x'; let d = 'ab;
 //          ^^^ string.quoted.single.char.rok

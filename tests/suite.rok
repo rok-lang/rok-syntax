@@ -45,11 +45,10 @@ fn m(t: str) -> str { f"<span class=\"m\">{t}</span>" }
 
 #[test]
 fn raw_identifiers() {
-    // r#name is a name even when spelled as a keyword; the words that
-    // become keywords in 0.2.0 are still names.
-    let h = highlight_rok("fn r#match(r#gen: i32) { let move = r#type + do; }");
+    // r#name is a name even when spelled as a keyword, reserved ones too.
+    let h = highlight_rok("fn r#match(r#gen: i32) { let r#move = r#type + do; }");
     let want = k("fn") + " r#match(r#gen: <span class=\"t\">i32</span>) { " + k("let")
-        + " move = r#type + do; }";
+        + " r#move = r#type + " + k("do") + "; }";
     expect(h == want, h);
     let ts = tokens("r#match");
     expect(ts.len() == 1 && ts[0].kind == Kind::Text && ts[0].text == "r#match", "one name");
@@ -79,6 +78,13 @@ fn macros_and_templates() {
     let want = "<span class=\"a\">#[impl_macro(sq)]</span> " + k("pub") + " " + m("@macro") + " { ("
         + m("@x") + ": expr) =&gt; { " + m("@x") + " * " + m("@x") + " } } " + m("sq!")
         + "(<span class=\"n\">2</span>) != " + k("try") + "!(f())";
+    expect(h == want, h);
+}
+
+#[test]
+fn labeled_return() {
+    let h = highlight_rok("each(xs) |x| { return@each; } return @x;");
+    let want = "each(xs) |x| { " + k("return") + "@each; } " + k("return") + " " + m("@x") + ";";
     expect(h == want, h);
 }
 

@@ -65,7 +65,7 @@ function grammarRules(g, acc = []) {
 function checkKeywords(lang, g) {
   const fails = [];
   const rules = grammarRules([g.patterns, g.repository]);
-  const lists = keywords.filter((k) => k.lang === lang && k.scope !== "variable.other");
+  const lists = keywords.filter((k) => k.lang === lang);
   for (const { scope, words } of lists) {
     const named = rules.filter(([names]) => names.includes(`${scope}.${lang}`));
     for (const w of words) {

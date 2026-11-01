@@ -3551,6 +3551,16 @@
     "type": "return_expression",
     "named": true,
     "fields": {
+      "label": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "label",
+            "named": true
+          }
+        ]
+      },
       "value": {
         "multiple": false,
         "required": false,
@@ -5548,6 +5558,18 @@
     "named": false
   },
   {
+    "type": "defer",
+    "named": false
+  },
+  {
+    "type": "do",
+    "named": false
+  },
+  {
+    "type": "dyn",
+    "named": false
+  },
+  {
     "type": "else",
     "named": false
   },
@@ -5596,6 +5618,10 @@
     "named": true
   },
   {
+    "type": "gen",
+    "named": false
+  },
+  {
     "type": "identifier",
     "named": true
   },
@@ -5637,6 +5663,10 @@
     "named": false
   },
   {
+    "type": "macro",
+    "named": false
+  },
+  {
     "type": "match",
     "named": false
   },
@@ -5646,6 +5676,10 @@
   },
   {
     "type": "mod",
+    "named": false
+  },
+  {
+    "type": "move",
     "named": false
   },
   {

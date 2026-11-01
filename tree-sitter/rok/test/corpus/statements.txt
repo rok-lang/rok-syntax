@@ -228,6 +228,74 @@ let s = async { await x };
           (identifier))))))
 
 ==================
+Trailing-closure call statements
+==================
+
+run { a(); }
+-x;
+xs.each |x| { f(x); }
+(a, b);
+let v = run { a(); } - x;
+run { a(); }.len();
+
+---
+
+(source_file
+  (expression_statement
+    (call_expression
+      (identifier)
+      (block
+        (expression_statement
+          (call_expression
+            (identifier)
+            (arguments))))))
+  (expression_statement
+    (unary_expression
+      (identifier)))
+  (expression_statement
+    (call_expression
+      (field_expression
+        (identifier)
+        (field_identifier))
+      (closure_expression
+        (closure_parameters
+          (closure_parameter
+            (identifier)))
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments
+                (identifier))))))))
+  (expression_statement
+    (tuple_expression
+      (identifier)
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (call_expression
+        (identifier)
+        (block
+          (expression_statement
+            (call_expression
+              (identifier)
+              (arguments)))))
+      (identifier)))
+  (expression_statement
+    (call_expression
+      (field_expression
+        (call_expression
+          (identifier)
+          (block
+            (expression_statement
+              (call_expression
+                (identifier)
+                (arguments)))))
+        (field_identifier))
+      (arguments))))
+
+==================
 Statements ending in blocks
 ==================
 

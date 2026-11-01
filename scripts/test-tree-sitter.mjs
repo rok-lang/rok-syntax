@@ -125,9 +125,7 @@ function checkKeywords() {
     const named = (w) => hl.includes(`"${w}"`) || (nodes[w] ?? []).some((n) => hl.includes(n)) ||
       [...hl.matchAll(/#match\? @[\w.]+\s+"([^"]*)"/g)].some((m) => new RegExp(`[(|^]${w}[|)$]`).test(m[1]));
     for (const { scope: s, words } of keywords.filter((k) => k.lang === lang)) {
-      if (s === "variable.other") {
-        for (const w of words) if (strings.has(w)) fails.push(`${lang}/grammar.js: ${w} is a name, not a keyword`);
-      } else if (s === "support.type.primitive") {
+      if (s === "support.type.primitive") {
         const m = hl.match(/@type\.builtin\s+"\^\(([\w|]+)\)\$"/);
         const have = m ? m[1].split("|") : [];
         if (have.join(" ") !== words.join(" ")) fails.push(`${lang}/queries/highlights.scm: primitive types are not keywords.rokon's`);

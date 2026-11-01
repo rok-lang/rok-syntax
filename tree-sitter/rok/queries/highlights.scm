@@ -133,6 +133,20 @@
 
 "await" @keyword.coroutine
 
+; Reserved for later syntax (spec 1.5.6). They parse as names; outside
+; the name positions, which have their own nodes, they are keywords.
+[
+  "macro"
+  "defer"
+  "dyn"
+  "move"
+  "gen"
+  "do"
+] @keyword
+
+((identifier) @keyword
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
 (closure_modifiers) @keyword.modifier
 
 (function_item
@@ -418,6 +432,16 @@
   .
   (token_tree
     "("))
+
+; A reserved keyword before `(` or `!` is still the keyword
+; (docs/token-classes.md, rule 7).
+((call_expression
+  function: (identifier) @keyword)
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
+((macro_invocation
+  macro: (identifier) @keyword)
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
 
 ; Comments
 

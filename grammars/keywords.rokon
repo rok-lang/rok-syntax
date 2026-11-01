@@ -16,7 +16,7 @@
     ("rok", "constant.language.none", ["none"]),
     ("rok", "variable.language.self", ["self", "Self"]),
     ("rok", "support.type.primitive", ["i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64", "bool", "char", "str", "int", "float", "c_char"]),
-    ("rok", "variable.other", ["macro", "defer", "dyn", "move", "gen", "do"]),
+    ("rok", "keyword.other.reserved", ["macro", "defer", "dyn", "move", "gen", "do"]),
     ("rokon", "constant.language.boolean", ["true", "false"]),
     ("rokon", "constant.language.none", ["none"]),
 ]

@@ -42,6 +42,7 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | modifier | `pub` `const` `mut` `async` | `storage.modifier` | `@keyword.modifier` | `keyword` | `Keyword` |
 | visibility qualifier | `pkg` in `pub(pkg)` | `storage.modifier.visibility` | `@keyword.modifier` | `keyword` | `Keyword` |
 | other keyword | `use` `where` `throws` | `keyword.other` | `@keyword` | `keyword` | `Keyword` |
+| reserved keyword | `macro` `defer` `dyn` `move` `gen` `do` | `keyword.other.reserved` | `@keyword` | `keyword` | `Keyword` |
 | path root | `pkg::` `sup::` `rok::` | `keyword.other.path` | `@module.builtin` | `keyword` | `Keyword` |
 | word operator | `as` `is` | `keyword.operator.word` | `@keyword.operator` | `keyword` | `Keyword` |
 | boolean, none | `true` `false` / `none` | `constant.language.boolean` / `.none` | `@boolean` / `@constant.builtin` | `keyword` | `Keyword` |
@@ -58,7 +59,7 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | parameter | `a` in `fn f(a: i32)` | `variable.parameter` | `@variable.parameter` | `parameter` | `Text` |
 | member | `type` in `t.type` | `variable.other.member` | `@property` | `property` | `Text` |
 | ROKON field | `name` in `name: "x"` | `support.type.property-name` | `@property` | `property` | `Text` |
-| label | `'outer` | `entity.name.label` | `@label` | | `Text` |
+| label | `'outer`, `@each` in `return@each` | `entity.name.label` (`@`: `punctuation.definition.label`) | `@label` | | `Text` |
 | identifier | `x` `r#match`, Unicode names | `variable.other` | `@variable` | `variable` | `Text` |
 | operator | `+` `==` `..=` `.+` `?.` `->`, Unicode math operators | `keyword.operator.*` | `@operator` | `operator` | `Text` |
 | punctuation | `(` `,` `;` `.` `::` `:` | `punctuation.brackets.*`, `punctuation.separator.*`, `punctuation.terminator.*`, `punctuation.accessor` | `@punctuation.bracket`, `@punctuation.delimiter` | | `Text` |
@@ -108,8 +109,12 @@ look at the neighbouring characters only:
     tree-sitter's queries know Latin, Greek and Cyrillic capitals only,
     since Neovim's regex has no `\p{Lu}`.
 
-The words that become keywords in 0.2.0 (`macro` `defer` `dyn` `move`
-`gen` `do`) are names.
+The reserved keywords (`macro` `defer` `dyn` `move` `gen` `do`, spec
+1.5.6) have no syntax yet. tree-sitter parses them as names and
+`highlights.scm` captures them as `@keyword`, except in the name
+positions, which have their own nodes. `@macro` is a template token and
+`return@each` a labeled return: the `@name` right after `return` is a
+label.
 
 ## Keyword lists
 
@@ -118,8 +123,7 @@ of each keyword class, for Rok and ROKON: `(language, scope, words)`.
 The TextMate runner checks that a rule of that scope matches each word
 and that every word of a keyword rule is listed; the tree-sitter runner
 checks that the grammar has each word as a token, that `highlights.scm`
-captures it, that its primitive types are the list, and that the 0.2.0
-names are not tokens. [rok.vim](https://github.com/rok-lang/rok.vim)
+captures it, and that its primitive types are the list. [rok.vim](https://github.com/rok-lang/rok.vim)
 generates its keyword lines from the file.
 
 ## Corpus

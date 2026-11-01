@@ -31,6 +31,14 @@
 //    ^^^^^ entity.name.function.attribute.rok
 //                               ^^^^^^^ entity.name.function.attribute.rok
 //                                                       ^^^^^^^ entity.name.function.attribute.rok
+    #[sealed] trait T { } #[internal] pub fn f() { } #[discardable] fn g() -> i32 { 1 } #[non_exhaustive] struct R { a: i32 }
+//    ^^^^^^ meta.attribute.rok entity.name.function.attribute.rok
+//            ^^^^^ storage.type.rok - meta.attribute.rok
+//                          ^^^^^^^^ entity.name.function.attribute.rok
+//                                    ^^^ storage.modifier.rok - meta.attribute.rok
+//                                                     ^^^^^^^^^^^ entity.name.function.attribute.rok
+//                                                                                        ^^^^^^^^^^^^^^ entity.name.function.attribute.rok
+//                                                                                                        ^^^^^^ storage.type.rok - meta.attribute.rok
 // tree-sitter: skip, `# [x]` is not an attribute
     # [x] #x
 //  ^ - meta.attribute.rok

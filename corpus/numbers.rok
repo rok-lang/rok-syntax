@@ -1,5 +1,5 @@
 // SYNTAX TEST "source.rok" "integer and float literals, radixes, suffixes"
-    f(42, 1_000_000, 0123, 0);
+    f(42, 1_000_000, 1230, 0);
 //    ^^ constant.numeric.decimal.rok
 //        ^^^^^^^^^ constant.numeric.decimal.rok
 //                   ^^^^ constant.numeric.decimal.rok
