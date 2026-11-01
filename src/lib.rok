@@ -160,7 +160,7 @@ fn lex(src: str, rokon: bool) -> List<Token> {
     for c in src.chars() { cs.push(c); }
     let lx = Lexer { cs: cs, rokon: rokon, toks: List::new(), text: StrBuf::new() };
     let start = lx.shebang();
-    lx.code(start, false);
+    _ = lx.code(start, false);
     lx.flush();
     lx.toks
 }
