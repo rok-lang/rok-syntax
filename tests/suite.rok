@@ -282,11 +282,10 @@ fn corpus() {
     let cls = classes();
     let names: List<str> = List::new();
     let rd = try fs::read_dir("corpus") catch e { panic(f"corpus: {e}"); };
-    for e in rd {
-        let d = try e.get() catch x { panic(f"corpus: {x}"); };
+    try for d in rd {
         let f = d.file_name();
         if f.ends_with(".rok") || f.ends_with(".rokon") { names.push(f); }
-    }
+    } catch x { panic(f"corpus: {x}"); };
     names.sort();
     let fails: List<str> = List::new();
     let total = 0usize;
