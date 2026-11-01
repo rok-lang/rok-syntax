@@ -126,7 +126,7 @@ path = "tree-sitter/rok"
 
 ```rokon
 Package {
-    deps: { "rok-syntax": "0.1" },
+    deps: { "rok-syntax": "0.2" },
 }
 ```
 
