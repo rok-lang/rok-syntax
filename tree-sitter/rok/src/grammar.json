@@ -6347,8 +6347,17 @@
           "value": "["
         },
         {
-          "type": "STRING",
-          "value": "ref"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "ref"
+            },
+            {
+              "type": "STRING",
+              "value": "move"
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -6367,8 +6376,17 @@
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "STRING",
-                    "value": "ref"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "ref"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "move"
+                      }
+                    ]
                   },
                   {
                     "type": "BLANK"

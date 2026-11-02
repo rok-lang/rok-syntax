@@ -377,6 +377,41 @@ let k = yield |x| { yield x; };
             (identifier)))))))
 
 ==================
+Move captures
+==================
+
+let a = [move xs] || xs.len();
+let b = [ref total, move self, n] |v| total += v;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (capture_list
+        (identifier))
+      (closure_parameters)
+      (call_expression
+        (field_expression
+          (identifier)
+          (field_identifier))
+        (arguments))))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (capture_list
+        (identifier)
+        (self)
+        (identifier))
+      (closure_parameters
+        (closure_parameter
+          (identifier)))
+      (compound_assignment_expr
+        (identifier)
+        (identifier)))))
+
+==================
 Trailing closures
 ==================
 

@@ -2,9 +2,9 @@
  * @file Rok grammar for tree-sitter
  * @license MIT OR Apache-2.0
  *
- * Follows the Rok language reference (refs-lang chapters 1 to 6) and the
- * rokc parser. The tree is for highlighting, folding, indents and locals:
- * desugarings the compiler does (let-else, using, if-let) stay as written.
+ * Follows the rokc parser. The tree is for highlighting, folding, indents
+ * and locals: desugarings the compiler does (let-else, using, if-let) stay
+ * as written.
  */
 
 /// <reference types="tree-sitter-cli/dsl" />
@@ -80,8 +80,8 @@ const KEYWORDS = [
   'struct', 'enum', 'trait', 'impl', 'pub', 'mod', 'use', 'as', 'is', 'ref',
 ];
 
-// Reserved keywords no syntax uses yet. Outside token trees
-// they parse as identifiers; highlights.scm marks them.
+// Reserved keywords. Outside token trees and capture lists they
+// parse as identifiers; highlights.scm marks them.
 const RESERVED = ['macro', 'defer', 'dyn', 'move', 'gen', 'do'];
 
 // Contextual keywords.
@@ -897,13 +897,13 @@ module.exports = grammar({
 
     closure_modifiers: _ => prec(1, choice('async', seq('async', 'yield'), 'yield')),
 
-    // `[ref total, n]`: the compiler reads `[` as a capture list only when
-    // `ref` comes first.
+    // `[ref total, move xs, n]`. A bare first name reads as an array
+    // here, so the list must open with `ref` or `move`.
     capture_list: $ => seq(
       '[',
-      'ref',
+      choice('ref', 'move'),
       $._capture_name,
-      repeat(seq(',', optional('ref'), $._capture_name)),
+      repeat(seq(',', optional(choice('ref', 'move')), $._capture_name)),
       optional(','),
       ']',
     ),

@@ -133,8 +133,8 @@
 
 "await" @keyword.coroutine
 
-; Reserved for later syntax. They parse as names; outside
-; the name positions, which have their own nodes, they are keywords.
+; Reserved keywords. They parse as names; outside the name
+; positions, which have their own nodes, they are keywords.
 [
   "macro"
   "defer"
@@ -146,6 +146,9 @@
 
 ((identifier) @keyword
   (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
+(capture_list
+  "move" @keyword.modifier)
 
 (closure_modifiers) @keyword.modifier
 
