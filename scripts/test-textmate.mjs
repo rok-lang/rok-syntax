@@ -4,7 +4,7 @@
 //   node scripts/test-textmate.mjs FILE..       run some files
 //   node scripts/test-textmate.mjs --dump FILE  print each line's tokens
 //
-// Assertion syntax is vscode-tmgrammar-test's (docs/token-classes.md).
+// Assertion syntax is vscode-tmgrammar-test's.
 // Every scope a grammar names, and every scope the corpus asserts, must
 // have a row in grammars/classes.rokon.
 

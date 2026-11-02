@@ -98,7 +98,7 @@ fn shebang() {
 
 // The shared corpus (corpus/*.rok, corpus/*.rokon): each `// ^ scope`
 // assertion whose scopes map to a Kind through grammars/classes.rokon
-// must hold for the library's tokens too. docs/token-classes.md.
+// must hold for the library's tokens too.
 
 struct Class {
     prefix: str;

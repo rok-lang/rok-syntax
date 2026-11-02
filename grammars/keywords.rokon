@@ -1,6 +1,6 @@
 // Keyword lists of Rok and ROKON: language, TextMate scope (its row in
 // classes.rokon), words. Contextual words are keywords only in some
-// positions (docs/token-classes.md, rules 3 to 6). The TextMate and
+// positions. The TextMate and
 // tree-sitter runners check their grammars against these lists, and
 // rok.vim generates its keyword lines from them. One tuple a line.
 [

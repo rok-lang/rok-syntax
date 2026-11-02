@@ -10,7 +10,7 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-// Binding power, weakest first (spec 3.2.3, shifted to stay positive).
+// Binding power, weakest first (shifted to stay positive).
 // The binary levels are Rust's.
 const PREC = {
   closure: -1,
@@ -53,7 +53,7 @@ const BINARY = [
 
 const COMPOUND_ASSIGN = ['+=', '-=', '*=', '/=', '%=', '%%=', '&=', '|=', '^=', '<<=', '>>='];
 
-// Identifier characters (spec 1.4.1): UAX #31 plus `_`, the math profile,
+// Identifier characters: UAX #31 plus `_`, the math profile,
 // primes and emoji.
 const MATH = '\\u{2202}\\u{2207}\\u{221E}\\u{2211}\\u{220F}\\u{222B}' +
   '\\u{1D6C1}\\u{1D6DB}\\u{1D6FB}\\u{1D715}\\u{1D735}\\u{1D74F}\\u{1D76F}' +
@@ -65,7 +65,7 @@ const IDENT_CONTINUE = `\\p{XID_Continue}${MATH}\\p{Extended_Pictographic}` +
   '\\u{1F1E6}-\\u{1F1FF}\\u{E0020}-\\u{E007F}';
 const IDENT = `[${IDENT_START}][${IDENT_CONTINUE}]*`;
 
-// Registered extension operators (spec 1.10.4): runs of math and arrow
+// Registered extension operators: runs of math and arrow
 // symbols that are not fixed tokens or identifier characters.
 const EXT_OP = '[\\u{2190}-\\u{21FF}\\u{2200}\\u{2201}\\u{2203}-\\u{2206}' +
   '\\u{220A}-\\u{220E}\\u{2210}\\u{2212}-\\u{2217}\\u{2219}\\u{221B}-\\u{221D}' +
@@ -80,11 +80,11 @@ const KEYWORDS = [
   'struct', 'enum', 'trait', 'impl', 'pub', 'mod', 'use', 'as', 'is', 'ref',
 ];
 
-// Reserved keywords no syntax uses yet (spec 1.5.6). Outside token trees
+// Reserved keywords no syntax uses yet. Outside token trees
 // they parse as identifiers; highlights.scm marks them.
 const RESERVED = ['macro', 'defer', 'dyn', 'move', 'gen', 'do'];
 
-// Contextual keywords (spec 1.5.4).
+// Contextual keywords.
 const CONTEXTUAL = [
   'type', 'any', 'in', 'where', 'throws', 'rethrows', 'catch', 'finally', 'const',
   'static', 'extern', 'mut', 'union',
@@ -185,12 +185,12 @@ module.exports = grammar({
       prec(1, alias($._try_block, $.try_expression)),
       prec(1, $.catch_expression),
       // A trailing-closure call that starts a statement ends at its `}`:
-      // an operator after it starts the next statement (spec 1.3.4).
+      // an operator after it starts the next statement.
       prec(PREC.field + 1, alias($._trailing_call, $.call_expression)),
       prec(-1, $.macro_invocation),
     ),
 
-    // The last statement before `}` may drop its `;` (spec 1.3.4).
+    // The last statement before `}` may drop its `;`.
     _tail: $ => choice(
       $._expression,
       alias($._let_tail, $.let_declaration),
@@ -208,7 +208,7 @@ module.exports = grammar({
       optional(seq('else', field('alternative', $.block))),
     ),
 
-    // Attributes (spec 6.1)
+    // Attributes
 
     attribute_item: $ => seq('#[', $.attribute, ']'),
 
@@ -530,10 +530,10 @@ module.exports = grammar({
       choice('*', '**'),
     ),
 
-    // `use dep::name!;` (spec 6.8.11)
+    // `use dep::name!;`
     use_macro: $ => seq(field('path', $._path), token.immediate('!')),
 
-    // Meta blocks (spec 6.8): `@derive { .. }`, `@attribute { .. }`,
+    // Meta blocks: `@derive { .. }`, `@attribute { .. }`,
     // `@macro { (matcher) => { template } .. }`. The body is a token tree.
     meta_block: $ => seq(
       optional($.visibility_modifier),
@@ -567,10 +567,10 @@ module.exports = grammar({
       '@',
     ),
 
-    // Template tokens: `@x`, `@Self`, `@for_fields` (spec 6.9).
+    // Template tokens: `@x`, `@Self`, `@for_fields`.
     metavariable: _ => token(seq('@', new RegExp(IDENT, 'u'))),
 
-    // Types (spec 2.1)
+    // Types
 
     _type: $ => choice($._type_atom, $.sum_type),
 
@@ -672,7 +672,7 @@ module.exports = grammar({
 
     self_type: _ => 'Self',
 
-    // Expressions (spec 3)
+    // Expressions
 
     _expression: $ => choice(
       $.assignment_expression,
@@ -792,7 +792,7 @@ module.exports = grammar({
       field('type', $._cast_type),
     )),
 
-    // `x is T` (spec 2.2.5)
+    // `x is T`
     type_test_expression: $ => prec.left(PREC.cast, seq(
       field('value', $._expression),
       'is',
@@ -831,7 +831,7 @@ module.exports = grammar({
       '..',
     )),
 
-    // `try e`, `try? e`, `try! e` (spec 3.14.3): the operand runs to a
+    // `try e`, `try? e`, `try! e`: the operand runs to a
     // `catch` / `finally`, `;`, a closing bracket or a comma.
     try_expression: $ => prec.right(PREC.try, seq(
       'try',
@@ -859,11 +859,10 @@ module.exports = grammar({
 
     finally_clause: $ => seq('finally', field('body', $.block)),
 
-    // Postfix `?`: early return of `none` (spec 3.14.10).
+    // Postfix `?`: early return of `none`.
     propagate_expression: $ => prec(PREC.postfix, seq(field('argument', $._expression), '?')),
 
-    // `return@each` leaves one call of the trailing closure of `each`
-    // (spec 4.3.12).
+    // `return@each` leaves one call of the trailing closure of `each`.
     return_expression: $ => choice(
       prec.left(seq('return', optional($._return_label), field('value', $._expression))),
       prec(-1, seq('return', optional($._return_label))),
@@ -927,7 +926,7 @@ module.exports = grammar({
       field('arguments', $.arguments),
     )),
 
-    // Trailing closures (spec 4.8): `f(a) { .. }`, `f(a) |x| ..`,
+    // Trailing closures: `f(a) { .. }`, `f(a) |x| ..`,
     // `retry { .. }`, `xs.map |x| { .. }`. In the head of `if` / `while` /
     // `match` / `for` / `using` the block is the body instead.
     _trailing_call: $ => choice(
@@ -978,7 +977,7 @@ module.exports = grammar({
 
     spread_argument: $ => prec(1, seq('..', field('value', $._expression))),
 
-    // `f.(xs)` (spec 3.3)
+    // `f.(xs)`
     broadcast_call_expression: $ => prec(PREC.call, seq(
       field('function', $._expression),
       '.',
@@ -999,7 +998,7 @@ module.exports = grammar({
       ']',
     )),
 
-    // `a[lo:hi:step]`, `a[::2]` (spec 3.6.3)
+    // `a[lo:hi:step]`, `a[::2]`
     slice: $ => choice(
       seq(
         optional(field('start', $._expression)),
@@ -1073,8 +1072,8 @@ module.exports = grammar({
       ']',
     ),
 
-    // `{a, b}` (a comma after the first element) and `{k: v}` (spec 2.x
-    // collection literals); `{}` is a block.
+    // `{a, b}` (a comma after the first element) and `{k: v}`
+    // (collection literals); `{}` is a block.
     set_expression: $ => seq(
       '{',
       $._expression,
@@ -1189,7 +1188,7 @@ module.exports = grammar({
 
     using_binding: $ => seq(field('pattern', $._pattern), '=', field('value', $._expression)),
 
-    // Patterns (spec 3.11)
+    // Patterns
 
     _pattern: $ => choice($._pattern_atom, $.or_pattern),
 
@@ -1225,7 +1224,7 @@ module.exports = grammar({
 
     captured_pattern: $ => seq($.identifier, '@', $._pattern_atom),
 
-    // `x: T` / `_: T`: matches when the value is a `T` (spec 3.11).
+    // `x: T` / `_: T`: matches when the value is a `T`.
     type_check_pattern: $ => prec(-1, seq(
       field('name', choice($.identifier, $.wildcard_pattern)),
       ':',
@@ -1254,7 +1253,7 @@ module.exports = grammar({
 
     remaining_field_pattern: _ => '..',
 
-    // `..rest` binds the remaining elements (spec 3.15.3).
+    // `..rest` binds the remaining elements.
     rest_pattern: $ => seq('..', $.identifier),
 
     tuple_struct_pattern: $ => seq(
@@ -1278,7 +1277,7 @@ module.exports = grammar({
       $.negative_literal,
     ),
 
-    // Literals (spec 1.6 to 1.9)
+    // Literals
 
     string_literal: $ => seq(
       '"',
@@ -1302,7 +1301,7 @@ module.exports = grammar({
       ),
     )),
 
-    // `f"x = {x:>{w}}"` (spec 1.7.3)
+    // `f"x = {x:>{w}}"`
     format_string: $ => choice(
       seq(
         'f"',
