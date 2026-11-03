@@ -7,7 +7,7 @@
 //       --cases ../rok/compiler/rokc/tests/cases [--rokc path/to/rokc] [-v]
 //
 // A case whose header has `// expect-error:` is skipped when rokc reports
-// a lexical or parse error (E001 / E002) for it: such files are meant not
+// a lexical or parse error (E0001 to E0025) for it: such files are meant not
 // to parse. Without --rokc every `expect-error` case is skipped.
 // --skip-list FILE names the cases to skip instead (one file name a line);
 // --write-skip-list FILE saves the list --rokc found.
@@ -87,7 +87,7 @@ function parseFails(file) {
   const dir = fs.mkdtempSync(path.join(tmp, 'rokc-'));
   fs.copyFileSync(file, path.join(dir, `x.${grammar}`));
   const r = spawnSync(rokc, ['emit', '--emit=source', `x.${grammar}`], { cwd: dir, encoding: 'utf8' });
-  return /error\[E00[12]\]/.test((r.stdout ?? '') + (r.stderr ?? ''));
+  return /error\[E00(0[1-9]|1\d|2[0-5])\]/.test((r.stdout ?? '') + (r.stderr ?? ''));
 }
 
 const bad = new Map();

@@ -11,7 +11,8 @@
 // @ts-check
 
 // Binding power, weakest first (shifted to stay positive).
-// The binary levels are Rust's.
+// The binary levels are Rust's plus `??`, `∘` and `**`. Comparisons are
+// left-assoc here, though rokc rejects a chain.
 // `try?` / `try!` stop at `??`; a range after `in` binds above the
 // comparison; `**` binds tighter than prefix `-` (`-x ** 2` is `-(x ** 2)`).
 const PREC = {

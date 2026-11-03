@@ -834,7 +834,7 @@
           "match": "(?<![\\p{L}\\p{N}_])(?:use|where|throws|rethrows)(?![\\p{L}\\p{N}_])"
         },
         {
-          "comment": "reserved for later syntax: a keyword, never a name outside name positions",
+          "comment": "reserved words (`move` only in `[move x]`): a keyword, never a name outside name positions",
           "name": "keyword.other.reserved.rok",
           "match": "(?<![\\p{L}\\p{N}_])(?:macro|defer|dyn|move|gen|do)(?![\\p{L}\\p{N}_])"
         },

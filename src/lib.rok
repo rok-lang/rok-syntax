@@ -1,4 +1,4 @@
-// Tokenizer and HTML highlighter for rok and ROKON: keywords, types,
+// Tokenizer and HTML highlighter for Rok and ROKON: keywords, types,
 // strings (f-string holes as code, nested; raw strings), chars, numbers,
 // comments, attributes and macros. `r#name` is an identifier, never a
 // keyword. The classes follow grammars/classes.rokon, the table the
@@ -44,8 +44,8 @@ pub struct Token {
     pub text: str;
 }
 
-// Keywords everywhere but in name positions. The last six are reserved
-// for later syntax.
+// Keywords everywhere but in name positions. The last six are reserved;
+// only `move` has syntax yet (`[move x]`).
 const RESERVED: [str; 39] = [
     "let", "fn", "if", "else", "match", "while", "loop", "for", "return", "break", "continue",
     "try", "throw", "async", "await", "yield", "unsafe", "using", "struct", "enum", "trait",
@@ -70,14 +70,14 @@ const TYPES: [str; 20] = [
     "f32", "f64", "bool", "char", "str", "int", "float", "c_char",
 ];
 
-/// Tokens of rok source.
+/// Tokens of Rok source.
 pub fn tokens(src: str) -> List<Token> { lex(src, false) }
 
-/// Tokens of ROKON source: as rok, but only `true` / `false` / `none`
+/// Tokens of ROKON source: as Rok, but only `true` / `false` / `none`
 /// are keywords and a name before `:` is a field.
 pub fn tokens_rokon(src: str) -> List<Token> { lex(src, true) }
 
-/// rok source as HTML: tokens as `<span class="..">` (see
+/// Rok source as HTML: tokens as `<span class="..">` (see
 /// `Kind::class`), `&` / `<` / `>` escaped. Goes inside `<pre><code>`.
 pub fn highlight_rok(src: str) -> str { to_html(tokens(src)) }
 
@@ -492,7 +492,7 @@ impl Lexer {
         after && n > k && (c == '(' || is_ident_start(c))
     }
 
-    /// The kind of the rok word `w` at `i..k`.
+    /// The kind of the Rok word `w` at `i..k`.
     fn word_kind(self, w: str, i: usize, k: usize) -> Kind {
         let reserved = is_reserved(w);
         let contextual = is_contextual(w);
