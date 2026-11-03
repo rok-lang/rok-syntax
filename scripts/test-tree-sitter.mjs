@@ -5,9 +5,9 @@
 //   node scripts/test-tree-sitter.mjs --dump FILE  print each line's captures
 //
 // Each asserted TextMate scope maps to its tree-sitter capture through
-// grammars/classes.rokon. Some capture over the
-// column, in the nest `tree-sitter highlight` gives, must be the
-// capture of one of the assertion's scopes or a refinement of it
+// grammars/classes.rokon. Some capture over the column, in the nest
+// `tree-sitter highlight` gives, must be the capture of one of the
+// assertion's scopes or a refinement of it
 // (`keyword.repeat` for `keyword`); `@property` also stands for
 // `@variable`. Scopes after `-` must not match. Scopes whose capture is
 // "" are not checked, nor are lines below a `// tree-sitter: skip, why`

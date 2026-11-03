@@ -45,7 +45,7 @@ pub struct Token {
 }
 
 // Keywords everywhere but in name positions. The last six are reserved;
-// only `move` has syntax yet (`[move x]`).
+// only `move` has syntax (`[move x]`).
 const RESERVED: [str; 39] = [
     "let", "fn", "if", "else", "match", "while", "loop", "for", "return", "break", "continue",
     "try", "throw", "async", "await", "yield", "unsafe", "using", "struct", "enum", "trait",
@@ -53,8 +53,8 @@ const RESERVED: [str; 39] = [
     "macro", "defer", "dyn", "move", "gen", "do",
 ];
 
-// Keywords only in their positions; `pkg` `sub` `sup`
-// `rok` `some` are handled apart.
+// Keywords only in their positions; `pkg` `sub` `sup` `rok` `some` are
+// handled apart.
 const CONTEXTUAL: [str; 13] = [
     "type", "any", "in", "where", "throws", "rethrows", "catch", "finally", "const", "static",
     "extern", "mut", "union",

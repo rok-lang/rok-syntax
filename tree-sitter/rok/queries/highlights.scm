@@ -4,8 +4,8 @@
 
 (identifier) @variable
 
-; A capitalized word is a type. Latin, Greek and Cyrillic
-; capitals only: Neovim's regex has no \p{Lu}.
+; A capitalized word is a type. Latin, Greek and Cyrillic capitals only:
+; Neovim's regex has no \p{Lu}.
 ((identifier) @type
   (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 

@@ -62,8 +62,8 @@ const BINARY = [
 const COMPOUND_ASSIGN = ['+=', '-=', '*=', '**=', '/=', '%=', '%%=', '&=', '|=', '^=', '<<=', '>>=',
   '.=', '.+=', '.-=', '.*=', './=', '.%=', '.**='];
 
-// Identifier characters: UAX #31 plus `_`, the math profile,
-// primes and emoji.
+// Identifier characters: UAX #31 plus `_`, the math profile, primes
+// and emoji.
 const MATH = '\\u{2202}\\u{2207}\\u{221E}\\u{2211}\\u{220F}\\u{222B}' +
   '\\u{1D6C1}\\u{1D6DB}\\u{1D6FB}\\u{1D715}\\u{1D735}\\u{1D74F}\\u{1D76F}' +
   '\\u{1D789}\\u{1D7A9}\\u{1D7C3}';
@@ -74,8 +74,8 @@ const IDENT_CONTINUE = `\\p{XID_Continue}${MATH}\\p{Extended_Pictographic}` +
   '\\u{1F1E6}-\\u{1F1FF}\\u{E0020}-\\u{E007F}';
 const IDENT = `[${IDENT_START}][${IDENT_CONTINUE}]*`;
 
-// Registered extension operators: runs of math and arrow
-// symbols that are not fixed tokens or identifier characters.
+// Extension operators: runs of math and arrow symbols that are not
+// fixed tokens or identifier characters.
 const EXT_OP = '[\\u{2190}-\\u{21FF}\\u{2200}\\u{2201}\\u{2203}-\\u{2206}' +
   '\\u{220A}-\\u{220E}\\u{2210}\\u{2212}-\\u{2217}\\u{2219}\\u{221B}-\\u{221D}' +
   '\\u{221F}-\\u{2228}\\u{222C}-\\u{225F}\\u{2262}\\u{2263}\\u{2266}-\\u{2281}' +
@@ -89,8 +89,8 @@ const KEYWORDS = [
   'struct', 'enum', 'trait', 'impl', 'pub', 'mod', 'use', 'as', 'is', 'ref',
 ];
 
-// Reserved keywords. Outside token trees and capture lists they
-// parse as identifiers; highlights.scm marks them.
+// Reserved keywords. Outside token trees and capture lists they parse
+// as identifiers; highlights.scm marks them.
 const RESERVED = ['macro', 'defer', 'dyn', 'move', 'gen', 'do'];
 
 // Contextual keywords.
@@ -873,9 +873,8 @@ module.exports = grammar({
       '..',
     )),
 
-    // `try e`, `try? e`, `try! e`: the operand runs to a
-    // `catch` / `finally`, `;`, a closing bracket or a comma; a `??`
-    // also ends the operand of `try?` and `try!`.
+    // `try e`, `try? e`, `try! e`: the operand runs to `catch` / `finally`,
+    // `;`, a closing bracket or a comma; `??` also ends `try?` / `try!`.
     try_expression: $ => choice(
       prec.right(PREC.try, seq('try', field('argument', $._expression))),
       prec.right(PREC.try_opt, seq(

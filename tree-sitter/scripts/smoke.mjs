@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-// Parse smoke test: every ```rok (or ```rokon) block of Markdown docs and
-// every .rok file of a compiler test corpus, counting files with ERROR or
-// MISSING nodes.
+// Parse smoke test: counts files with ERROR or MISSING nodes among the
+// ```rok (or ```rokon) blocks of Markdown docs and a compiler test corpus.
 //
 //   node scripts/smoke.mjs --grammar rok --docs ../docs/learn \
 //       --cases ../rok/compiler/rokc/tests/cases [--rokc path/to/rokc] [-v]
 //
 // A case whose header has `// expect-error:` is skipped when rokc reports
-// a lexical or parse error (E0001 to E0025) for it: such files are meant not
-// to parse. Without --rokc every `expect-error` case is skipped.
+// a lexical or parse error (E0001 to E0025) for it. Without --rokc every `expect-error` case is skipped.
 // --skip-list FILE names the cases to skip instead (one file name a line);
 // --write-skip-list FILE saves the list --rokc found.
 
