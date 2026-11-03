@@ -49,3 +49,16 @@ use rok::std::io;
 yield fn count(n: i32) -> i32 { yield n; }
 // <- keyword.coroutine
 //                              ^ keyword.return
+
+fn split((a, b): (i32, i32), P { x, y: w }: P, it: some Iterator<i32>) -> some Display { a }
+//        ^ variable.parameter
+//                               ^ variable.parameter
+//                                     ^ variable.parameter
+//                                                 ^ keyword
+//                                                                          ^ keyword
+
+#[literal(number "m")]
+//^ attribute
+pub fn meters(v: f64) -> Len { Len(v) }
+// <- keyword.modifier
+//     ^ function

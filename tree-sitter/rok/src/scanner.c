@@ -1,6 +1,6 @@
 // External scanner for Rok: string and f-string text, format specs,
-// raw strings with matching `#` counts, nested block comments and `1.`
-// floats.
+// raw strings with matching `#` counts, nested block comments, `1.`
+// floats and the `!in` operator.
 
 #include "tree_sitter/parser.h"
 
@@ -16,6 +16,7 @@ enum TokenType {
     BLOCK_COMMENT,
     FLOAT_DOT,
     ERROR_SENTINEL,
+    NOT_IN,
 };
 
 void *tree_sitter_rok_external_scanner_create(void) { return NULL; }
@@ -213,6 +214,30 @@ static bool scan_float_dot(TSLexer *lexer) {
     return true;
 }
 
+static inline bool is_word_char(int32_t c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || is_digit(c) || c == '_' ||
+           c >= 0x80;
+}
+
+// `!in` with no name character after it: `!inside` is `!` and a name.
+static bool scan_not_in(TSLexer *lexer) {
+    advance(lexer);
+    if (lexer->lookahead != 'i') {
+        return false;
+    }
+    advance(lexer);
+    if (lexer->lookahead != 'n') {
+        return false;
+    }
+    advance(lexer);
+    if (is_word_char(lexer->lookahead)) {
+        return false;
+    }
+    lexer->mark_end(lexer);
+    lexer->result_symbol = NOT_IN;
+    return true;
+}
+
 bool tree_sitter_rok_external_scanner_scan(void *payload, TSLexer *lexer,
                                            const bool *valid_symbols) {
     (void)payload;
@@ -249,6 +274,9 @@ bool tree_sitter_rok_external_scanner_scan(void *payload, TSLexer *lexer,
     }
     if (valid_symbols[FLOAT_DOT] && is_digit(lexer->lookahead)) {
         return scan_float_dot(lexer);
+    }
+    if (!recovering && valid_symbols[NOT_IN] && lexer->lookahead == '!') {
+        return scan_not_in(lexer);
     }
     return false;
 }

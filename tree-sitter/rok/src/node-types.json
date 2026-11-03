@@ -677,6 +677,10 @@
             "named": false
           },
           {
+            "type": "!in",
+            "named": false
+          },
+          {
             "type": "%",
             "named": false
           },
@@ -694,6 +698,10 @@
           },
           {
             "type": "*",
+            "named": false
+          },
+          {
+            "type": "**",
             "named": false
           },
           {
@@ -726,6 +734,10 @@
           },
           {
             "type": ".*",
+            "named": false
+          },
+          {
+            "type": ".**",
             "named": false
           },
           {
@@ -766,6 +778,10 @@
           },
           {
             "type": ".>>",
+            "named": false
+          },
+          {
+            "type": ".??",
             "named": false
           },
           {
@@ -818,6 +834,10 @@
           },
           {
             "type": "^",
+            "named": false
+          },
+          {
+            "type": "in",
             "named": false
           },
           {
@@ -992,6 +1012,10 @@
         },
         {
           "type": "use_declaration",
+          "named": true
+        },
+        {
+          "type": "using_declaration",
           "named": true
         }
       ]
@@ -1451,6 +1475,14 @@
           {
             "type": "self",
             "named": true
+          },
+          {
+            "type": "struct_pattern",
+            "named": true
+          },
+          {
+            "type": "tuple_pattern",
+            "named": true
           }
         ]
       },
@@ -1564,6 +1596,10 @@
             "named": false
           },
           {
+            "type": "**=",
+            "named": false
+          },
+          {
             "type": "*=",
             "named": false
           },
@@ -1573,6 +1609,34 @@
           },
           {
             "type": "-=",
+            "named": false
+          },
+          {
+            "type": ".%=",
+            "named": false
+          },
+          {
+            "type": ".**=",
+            "named": false
+          },
+          {
+            "type": ".*=",
+            "named": false
+          },
+          {
+            "type": ".+=",
+            "named": false
+          },
+          {
+            "type": ".-=",
+            "named": false
+          },
+          {
+            "type": "./=",
+            "named": false
+          },
+          {
+            "type": ".=",
             "named": false
           },
           {
@@ -1816,6 +1880,10 @@
         },
         {
           "type": "use_declaration",
+          "named": true
+        },
+        {
+          "type": "using_declaration",
           "named": true
         }
       ]
@@ -2384,6 +2452,10 @@
           {
             "type": "_type",
             "named": true
+          },
+          {
+            "type": "some_type",
+            "named": true
           }
         ]
       },
@@ -2457,6 +2529,10 @@
         "types": [
           {
             "type": "_type",
+            "named": true
+          },
+          {
+            "type": "some_type",
             "named": true
           }
         ]
@@ -3343,6 +3419,14 @@
           {
             "type": "identifier",
             "named": true
+          },
+          {
+            "type": "struct_pattern",
+            "named": true
+          },
+          {
+            "type": "tuple_pattern",
+            "named": true
           }
         ]
       },
@@ -3352,6 +3436,10 @@
         "types": [
           {
             "type": "_type",
+            "named": true
+          },
+          {
+            "type": "some_type",
             "named": true
           }
         ]
@@ -3789,6 +3877,34 @@
     }
   },
   {
+    "type": "some_type",
+    "named": true,
+    "fields": {
+      "trait": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "function_type",
+            "named": true
+          },
+          {
+            "type": "generic_type",
+            "named": true
+          },
+          {
+            "type": "scoped_type_identifier",
+            "named": true
+          },
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -3879,6 +3995,10 @@
         },
         {
           "type": "use_declaration",
+          "named": true
+        },
+        {
+          "type": "using_declaration",
           "named": true
         }
       ]
@@ -5055,6 +5175,21 @@
     }
   },
   {
+    "type": "using_declaration",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "using_binding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "using_expression",
     "named": true,
     "fields": {
@@ -5221,6 +5356,10 @@
     "named": false
   },
   {
+    "type": "!in",
+    "named": false
+  },
+  {
     "type": "\"",
     "named": false
   },
@@ -5293,6 +5432,10 @@
     "named": false
   },
   {
+    "type": "**=",
+    "named": false
+  },
+  {
     "type": "*=",
     "named": false
   },
@@ -5337,6 +5480,10 @@
     "named": false
   },
   {
+    "type": ".%=",
+    "named": false
+  },
+  {
     "type": ".&",
     "named": false
   },
@@ -5349,11 +5496,31 @@
     "named": false
   },
   {
+    "type": ".**",
+    "named": false
+  },
+  {
+    "type": ".**=",
+    "named": false
+  },
+  {
+    "type": ".*=",
+    "named": false
+  },
+  {
     "type": ".+",
     "named": false
   },
   {
+    "type": ".+=",
+    "named": false
+  },
+  {
     "type": ".-",
+    "named": false
+  },
+  {
+    "type": ".-=",
     "named": false
   },
   {
@@ -5373,6 +5540,10 @@
     "named": false
   },
   {
+    "type": "./=",
+    "named": false
+  },
+  {
     "type": ".<",
     "named": false
   },
@@ -5382,6 +5553,10 @@
   },
   {
     "type": ".<=",
+    "named": false
+  },
+  {
+    "type": ".=",
     "named": false
   },
   {
@@ -5398,6 +5573,10 @@
   },
   {
     "type": ".>>",
+    "named": false
+  },
+  {
+    "type": ".??",
     "named": false
   },
   {
@@ -5729,6 +5908,10 @@
   {
     "type": "shebang",
     "named": true
+  },
+  {
+    "type": "some",
+    "named": false
   },
   {
     "type": "static",
