@@ -495,7 +495,7 @@
       "patterns": [
         {
           "name": "string.quoted.single.byte.rok",
-          "match": "(?<![\\p{L}\\p{N}_])(c)(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
+          "match": "(?<![\\p{L}\\p{N}_])([cb])(')(\\\\(?:x[0-9A-Fa-f]{2}|u\\{[0-9A-Fa-f_]{1,8}\\}|.)|[^'\\\\\\n])(')",
           "captures": {
             "1": {
               "name": "storage.type.string.rok"
@@ -843,6 +843,16 @@
           "match": "(?<![\\p{L}\\p{N}_])(?:as|is)(?![\\p{L}\\p{N}_])"
         },
         {
+          "comment": "some Tr as a parameter or return type: -> some Tr, x: some Tr",
+          "name": "storage.type.some.rok",
+          "match": "(?<=->\\s|:\\s|->|:)(?:some)(?=\\s+(?:\\(|(?:r#)?[\\p{L}_]))"
+        },
+        {
+          "comment": "x !in xs: one token, the negated in",
+          "name": "keyword.operator.word.rok",
+          "match": "!in(?![\\p{L}\\p{N}_])"
+        },
+        {
           "name": "constant.language.boolean.rok",
           "match": "(?<![\\p{L}\\p{N}_])(?:true|false)(?![\\p{L}\\p{N}_])"
         },
@@ -1013,8 +1023,13 @@
           "match": "\\.\\.=?"
         },
         {
+          "comment": "in-place broadcast: y .= x, y .+= x, y .**= x",
+          "name": "keyword.operator.assignment.compound.rok",
+          "match": "\\.(?:\\*\\*|[+\\-*/%])?=(?!=)"
+        },
+        {
           "name": "keyword.operator.broadcast.rok",
-          "match": "\\.(?:%%|==|!=|<=|>=|<<|>>|&&|\\|\\||[+\\-*/%<>&|^])"
+          "match": "\\.(?:\\*\\*|\\?\\?|%%|==|!=|<=|>=|<<|>>|&&|\\|\\||[+\\-*/%<>&|^])"
         },
         {
           "name": "keyword.operator.optional.rok",
@@ -1026,7 +1041,7 @@
         },
         {
           "name": "keyword.operator.assignment.compound.rok",
-          "match": "%%=|<<=|>>=|[+\\-*/%&|^]="
+          "match": "%%=|<<=|>>=|\\*\\*=|[+\\-*/%&|^]="
         },
         {
           "name": "keyword.operator.bitwise.rok",
@@ -1046,7 +1061,7 @@
         },
         {
           "name": "keyword.operator.arithmetic.rok",
-          "match": "%%|[+\\-*/%]"
+          "match": "%%|\\*\\*|[+\\-*/%]"
         },
         {
           "name": "keyword.operator.assignment.rok",

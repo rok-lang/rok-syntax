@@ -7,6 +7,7 @@
     ("rok", "keyword.control", ["if", "else", "match", "while", "loop", "for", "in", "return", "break", "continue", "try", "throw", "yield", "await", "catch", "finally", "using"]),
     ("rok", "storage.type", ["fn", "let", "struct", "enum", "trait", "impl", "mod", "type", "union"]),
     ("rok", "storage.type.any", ["any"]),
+    ("rok", "storage.type.some", ["some"]),
     ("rok", "storage.modifier", ["pub", "unsafe", "async", "ref", "const", "static", "extern", "mut"]),
     ("rok", "storage.modifier.visibility", ["pkg", "sub"]),
     ("rok", "keyword.other", ["use", "where", "throws", "rethrows"]),
