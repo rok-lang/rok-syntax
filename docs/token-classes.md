@@ -26,7 +26,7 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | f-string | `f"x = {x}"`, `f"""..."""` | `string.interpolated`, `string.interpolated.triple` | `@string` | `string` | `Str` |
 | string prefix | `f` `r` `b` `c` | `storage.type.string` | `@string` | `string` | `Str` |
 | char | `'A'` `'\n'` | `string.quoted.single.char` | `@character` | `string` | `Str` |
-| byte char | `c'A'` | `string.quoted.single.byte` | `@character` | `string` | `Str` |
+| byte char | `c'A'` `b'0'` | `string.quoted.single.byte` | `@character` | `string` | `Str` |
 | escape | `\n` `\u{1F600}` `{{` `$$` | `constant.character.escape` | `@string.escape` | `string` | `Str` |
 | bad escape | `\q` | `invalid.illegal.escape` | `@error` | | (outer) |
 | hole delimiters | `{` `}` `${` | `punctuation.section.interpolation` | `@punctuation.special` | | `Str` |
@@ -39,12 +39,13 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | declaration keyword | `let` `struct` `type` `mod` | `storage.type` | `@keyword` | `keyword` | `Keyword` |
 | `fn` | `fn` | `storage.type.function` | `@keyword.function` | `keyword` | `Keyword` |
 | `any` | `any Error` | `storage.type.any` | `@keyword` | `keyword` | `Keyword` |
+| `some` | `-> some Display`, `x: some Tr` | `storage.type.some` | `@keyword` | `keyword` | `Keyword` |
 | modifier | `pub` `const` `mut` `async` | `storage.modifier` | `@keyword.modifier` | `keyword` | `Keyword` |
 | visibility qualifier | `pkg` in `pub(pkg)` | `storage.modifier.visibility` | `@keyword.modifier` | `keyword` | `Keyword` |
 | other keyword | `use` `where` `throws` | `keyword.other` | `@keyword` | `keyword` | `Keyword` |
 | reserved keyword | `macro` `defer` `dyn` `move` `gen` `do` | `keyword.other.reserved` | `@keyword` | `keyword` | `Keyword` |
 | path root | `pkg::` `sup::` `rok::` | `keyword.other.path` | `@module.builtin` | `keyword` | `Keyword` |
-| word operator | `as` `is` | `keyword.operator.word` | `@keyword.operator` | `keyword` | `Keyword` |
+| word operator | `as` `is` `!in` | `keyword.operator.word` | `@keyword.operator` | `keyword` | `Keyword` |
 | boolean, none | `true` `false` / `none` | `constant.language.boolean` / `.none` | `@boolean` / `@constant.builtin` | `keyword` | `Keyword` |
 | self | `self` `Self` | `variable.language.self` | `@variable.builtin` | `keyword` | `Keyword` |
 | primitive type | `i32` `str` `c_char` | `support.type.primitive` | `@type.builtin` | `type` | `Type` |
@@ -61,7 +62,7 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | ROKON field | `name` in `name: "x"` | `support.type.property-name` | `@property` | `property` | `Text` |
 | label | `'outer`, `@each` in `return@each` | `entity.name.label` (`@`: `punctuation.definition.label`) | `@label` | | `Text` |
 | identifier | `x` `r#match`, Unicode names | `variable.other` | `@variable` | `variable` | `Text` |
-| operator | `+` `==` `..=` `.+` `?.` `->`, Unicode math operators | `keyword.operator.*` | `@operator` | `operator` | `Text` |
+| operator | `+` `**` `==` `..=` `.+` `.=` `.??` `?.` `->`, Unicode math operators | `keyword.operator.*` | `@operator` | `operator` | `Text` |
 | punctuation | `(` `,` `;` `.` `::` `:` | `punctuation.brackets.*`, `punctuation.separator.*`, `punctuation.terminator.*`, `punctuation.accessor` | `@punctuation.bracket`, `@punctuation.delimiter` | | `Text` |
 
 Captures refine the table's where tree-sitter knows more:
@@ -99,9 +100,11 @@ look at the neighbouring characters only:
 5. `type` is a keyword only before a name and `=` `<` `;` or `:`
    (`type Pair = ..`, `type Output;`); `union` only before a name.
 6. `pkg` `sup` `rok` are keywords only right before `::`; `pkg` `sub`
-   only inside `pub( )`.
+   only inside `pub( )`; `some` only after `:` or `->` and before a
+   bound (`-> some Display`, `x: some (A + B)`).
 7. `name!` is a macro unless `name` is a reserved keyword (`try!` is
-   `try` and `!`); `!=` is never a macro.
+   `try` and `!`); `!=` is never a macro. `!in` not followed by a name
+   character is one word operator: `x !in xs`, but `!inside`.
 8. `r#name` is always a name.
 9. `'` starts a char literal when an escape or one character and a
    closing `'` follow; otherwise `'name` is a label.

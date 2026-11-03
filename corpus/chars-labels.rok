@@ -32,6 +32,14 @@
 //                                                                      ^^^^^^ keyword.control.rok
 //                                                                             ^^^^^ entity.name.label.rok
 //                                                                                                   ^^ keyword.other.template.rok
+    f(b'0', b'\n', b'\xFF'); match c { b'a'..=b'z' => 1, _ => 0 };
+//    ^ string.quoted.single.byte.rok storage.type.string.rok
+//     ^^^ string.quoted.single.byte.rok
+//            ^^ string.quoted.single.byte.rok constant.character.escape.rok
+//                 ^^^^^^^ string.quoted.single.byte.rok
+//                                     ^^^^ string.quoted.single.byte.rok
+//                                         ^^^ keyword.operator.range.rok
+//                                            ^^^^ string.quoted.single.byte.rok
 // tree-sitter: skip, `'ab` is neither a char nor a label
     let c = 'x'; let d = 'ab;
 //          ^^^ string.quoted.single.char.rok

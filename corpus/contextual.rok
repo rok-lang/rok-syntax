@@ -25,6 +25,13 @@
 //                 ^^ punctuation.separator.namespace.rok
 //                   ^^^^^ entity.name.type.rok
 //                                ^^^^^ variable.other.rok
+    fn f(it: some Iterator<i32>, g: some (A + B)) -> some Display { let some = 1; some }
+//           ^^^^ storage.type.some.rok
+//                                  ^^^^ storage.type.some.rok
+//                                                   ^^^^ storage.type.some.rok
+//                                                                      ^^^^ variable.other.rok - storage.type.some.rok
+//                                                                                ^^^^ variable.other.rok - storage.type.some.rok
+//                                                        ^^^^^^^ entity.name.type.rok
 // tree-sitter: skip, `self` and `none` are not field names
     let s = Point { self: 1, none: 2 };
 //                  ^^^^ variable.language.self.rok

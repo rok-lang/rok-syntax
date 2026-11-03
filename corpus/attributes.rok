@@ -39,6 +39,11 @@
 //                                                     ^^^^^^^^^^^ entity.name.function.attribute.rok
 //                                                                                        ^^^^^^^^^^^^^^ entity.name.function.attribute.rok
 //                                                                                                        ^^^^^^ storage.type.rok - meta.attribute.rok
+    #[literal(number "m")] pub fn meters(v: f64) -> Len { Len(v) }
+//    ^^^^^^^ meta.attribute.rok entity.name.function.attribute.rok
+//                   ^^^ meta.attribute.rok string.quoted.double.rok
+//                         ^^^ storage.modifier.rok
+//                                ^^^^^^ entity.name.function.rok
 // tree-sitter: skip, `# [x]` is not an attribute
     # [x] #x
 //  ^ - meta.attribute.rok
