@@ -387,3 +387,90 @@ if x > 0 { print("pos"); }
             (arguments
               (string_literal
                 (string_content)))))))))
+
+==================
+Pattern parameters and some types
+==================
+
+fn f((a, b): (i32, i32), P { x, y }: P, it: some Iterator<i32>) -> some Display { a }
+fn g(f: some fn(i32) -> i32) -> some (Clone + Debug) { f }
+
+---
+
+(source_file
+  (function_item
+    (identifier)
+    (parameters
+      (parameter
+        (tuple_pattern
+          (identifier)
+          (identifier))
+        (tuple_type
+          (type_identifier)
+          (type_identifier)))
+      (parameter
+        (struct_pattern
+          (identifier)
+          (field_pattern
+            (field_identifier))
+          (field_pattern
+            (field_identifier)))
+        (type_identifier))
+      (parameter
+        (identifier)
+        (some_type
+          (generic_type
+            (type_identifier)
+            (type_arguments
+              (type_identifier))))))
+    (some_type
+      (type_identifier))
+    (block
+      (identifier)))
+  (function_item
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (some_type
+          (function_type
+            (parameters
+              (type_identifier))
+            (type_identifier)))))
+    (some_type
+      (type_identifier)
+      (type_identifier))
+    (block
+      (identifier))))
+
+==================
+Exported literal suffix
+==================
+
+#[literal(number "m")]
+pub fn meters(v: f64) -> Len { Len(v) }
+
+---
+
+(source_file
+  (attribute_item
+    (attribute
+      (identifier)
+      (attribute_arguments
+        (attribute
+          (identifier))
+        (string_literal
+          (string_content)))))
+  (function_item
+    (visibility_modifier)
+    (identifier)
+    (parameters
+      (parameter
+        (identifier)
+        (type_identifier)))
+    (type_identifier)
+    (block
+      (call_expression
+        (identifier)
+        (arguments
+          (identifier))))))

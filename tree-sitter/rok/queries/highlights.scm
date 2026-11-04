@@ -4,8 +4,8 @@
 
 (identifier) @variable
 
-; A capitalized word is a type (docs/token-classes.md, rule 10). Latin,
-; Greek and Cyrillic capitals: Neovim's regex has no \p{Lu}.
+; A capitalized word is a type. Latin, Greek and Cyrillic capitals only:
+; Neovim's regex has no \p{Lu}.
 ((identifier) @type
   (#match? @type "^[A-ZÀ-ÖØ-ÞΑ-ΩА-Я]"))
 
@@ -14,9 +14,9 @@
 [
   "+" "-" "*" "/" "%" "%%" "==" "!=" "<" ">" "<=" ">=" "&&" "||" "!" "&" "|" "^"
   "~" "<<" ">>" "=" "+=" "-=" "*=" "/=" "%=" "%%=" "&=" "|=" "^=" "<<=" ">>="
-  ".." "..=" "?" "?." "??" "->" "=>" "..." "**"
+  ".." "..=" "?" "?." "??" "->" "=>" "..." "**" "**="
   ".+" ".-" ".*" "./" ".%" ".%%" ".==" ".!=" ".<" ".>" ".<=" ".>=" ".&&" ".||"
-  ".&" ".|" ".^" ".<<" ".>>"
+  ".&" ".|" ".^" ".<<" ".>>" ".**" ".??" ".=" ".+=" ".-=" ".*=" "./=" ".%=" ".**="
   "×" "⋅" "÷" "∘" "√" "≡" "≠" "≤" "≥" "∈" "∉" "⊂" "⊆" "∪" "∩"
   (operator)
 ] @operator
@@ -65,12 +65,14 @@
   "let"
   "using"
   "any"
+  "some"
 ] @keyword
 
 [
   "as"
   "is"
   "in"
+  "!in"
   "where"
 ] @keyword.operator
 
@@ -132,6 +134,23 @@
 ] @keyword.modifier
 
 "await" @keyword.coroutine
+
+; Reserved keywords. They parse as names; outside the name
+; positions, which have their own nodes, they are keywords.
+[
+  "macro"
+  "defer"
+  "dyn"
+  "move"
+  "gen"
+  "do"
+] @keyword
+
+((identifier) @keyword
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
+(capture_list
+  "move" @keyword.modifier)
 
 (closure_modifiers) @keyword.modifier
 
@@ -295,8 +314,7 @@
 
 (field_identifier) @property
 
-; `true` `false` `none` `self` `Self` stay keywords before `:`
-; (docs/token-classes.md, rule 3).
+; `true` `false` `none` `self` `Self` stay keywords before `:`.
 ((field_identifier) @boolean
   (#match? @boolean "^(true|false)$"))
 
@@ -314,6 +332,37 @@
 
 (closure_parameter
   pattern: (identifier) @variable.parameter)
+
+; `(a, b): (i32, i32)`, `P { x, y }: P`, `|(k, v)|`: the names bound.
+(parameter
+  pattern: (tuple_pattern
+    (identifier) @variable.parameter))
+
+(closure_parameter
+  pattern: (tuple_pattern
+    (identifier) @variable.parameter))
+
+(parameter
+  pattern: (struct_pattern
+    (field_pattern
+      name: (field_identifier) @variable.parameter
+      !pattern)))
+
+(closure_parameter
+  pattern: (struct_pattern
+    (field_pattern
+      name: (field_identifier) @variable.parameter
+      !pattern)))
+
+(parameter
+  pattern: (struct_pattern
+    (field_pattern
+      pattern: (identifier) @variable.parameter)))
+
+(closure_parameter
+  pattern: (struct_pattern
+    (field_pattern
+      pattern: (identifier) @variable.parameter)))
 
 (named_argument
   name: (field_identifier) @variable.parameter)
@@ -418,6 +467,15 @@
   .
   (token_tree
     "("))
+
+; A reserved keyword before `(` or `!` is still the keyword.
+((call_expression
+  function: (identifier) @keyword)
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
+
+((macro_invocation
+  macro: (identifier) @keyword)
+  (#match? @keyword "^(macro|defer|dyn|move|gen|do)$"))
 
 ; Comments
 

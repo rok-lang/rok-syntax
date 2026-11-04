@@ -2,8 +2,8 @@
  * @file ROKON grammar for tree-sitter
  * @license MIT OR Apache-2.0
  *
- * ROKON (stdlib 3.9) is a subset of Rok's literal syntax: one value per
- * file, no operators but unary `-` before a number.
+ * ROKON is a subset of Rok's literal syntax: one value per file, no
+ * operators but unary `-` before a number.
  */
 
 /// <reference types="tree-sitter-cli/dsl" />

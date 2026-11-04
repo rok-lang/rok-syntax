@@ -1,4 +1,4 @@
-// Tokenize and highlight a large rok source (spec 9.9.11).
+// Tokenize and highlight a large Rok source.
 
 use rok::core::bench::Bench;
 use rok::core::hint::black_box;
@@ -20,13 +20,13 @@ fn bench_src() -> str {
 #[bench]
 fn highlight(b: Bench) {
     let s = bench_src();
-    b.bytes(s.len() as i64);
+    b.set_bytes(s.len() as i64);
     b.iter(|| highlight_rok(black_box(s)));
 }
 
 #[bench]
 fn tokenize(b: Bench) {
     let s = bench_src();
-    b.bytes(s.len() as i64);
+    b.set_bytes(s.len() as i64);
     b.iter(|| tokens(black_box(s)));
 }

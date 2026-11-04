@@ -24,6 +24,8 @@ fn main() -> i32 {
     //         ^ operator
     //           ^ function.call
     //                    ^ keyword.exception
+    let m = [move xs] || xs.len();
+    //       ^ keyword.modifier
     xs.iter().for_each |x| { print(x); }
     // ^ function.call
     //                  ^ variable.parameter
@@ -45,5 +47,24 @@ fn main() -> i32 {
     // <- keyword.conditional
     // ^ boolean
     //        ^ keyword.coroutine
+    let i = x !in 0..n && y in ys;
+    //        ^ keyword.operator
+    //             ^ operator
+    //                      ^ keyword.operator
+    let p = -x ** 2 .?? d;
+    //         ^ operator
+    //              ^ operator
+    y .**= x; y .= x;
+    //^ operator
+    //          ^ operator
+    let e = try? f() ?? d;
+    //               ^ operator
+    let b = b'0';
+    //      ^ character
+    for ref q in qs { q = 0; }
+    //  ^ keyword.modifier
+    let f = |(k, v)| k;
+    //        ^ variable.parameter
+    //           ^ variable.parameter
     return 0;
 }

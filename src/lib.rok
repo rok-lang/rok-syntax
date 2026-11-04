@@ -1,4 +1,4 @@
-// Tokenizer and HTML highlighter for rok and ROKON: keywords, types,
+// Tokenizer and HTML highlighter for Rok and ROKON: keywords, types,
 // strings (f-string holes as code, nested; raw strings), chars, numbers,
 // comments, attributes and macros. `r#name` is an identifier, never a
 // keyword. The classes follow grammars/classes.rokon, the table the
@@ -44,15 +44,17 @@ pub struct Token {
     pub text: str;
 }
 
-// Keywords everywhere but in name positions (spec 1.5.1).
-const RESERVED: [str; 33] = [
+// Keywords everywhere but in name positions. The last six are reserved;
+// only `move` has syntax (`[move x]`).
+const RESERVED: [str; 39] = [
     "let", "fn", "if", "else", "match", "while", "loop", "for", "return", "break", "continue",
     "try", "throw", "async", "await", "yield", "unsafe", "using", "struct", "enum", "trait",
     "impl", "pub", "mod", "use", "as", "is", "ref", "true", "false", "none", "self", "Self",
+    "macro", "defer", "dyn", "move", "gen", "do",
 ];
 
-// Keywords only in their positions (spec 1.5.4); `pkg` `sub` `sup`
-// `rok` are handled apart.
+// Keywords only in their positions; `pkg` `sub` `sup` `rok` `some` are
+// handled apart.
 const CONTEXTUAL: [str; 13] = [
     "type", "any", "in", "where", "throws", "rethrows", "catch", "finally", "const", "static",
     "extern", "mut", "union",
@@ -68,14 +70,14 @@ const TYPES: [str; 20] = [
     "f32", "f64", "bool", "char", "str", "int", "float", "c_char",
 ];
 
-/// Tokens of rok source.
+/// Tokens of Rok source.
 pub fn tokens(src: str) -> List<Token> { lex(src, false) }
 
-/// Tokens of ROKON source: as rok, but only `true` / `false` / `none`
+/// Tokens of ROKON source: as Rok, but only `true` / `false` / `none`
 /// are keywords and a name before `:` is a field.
 pub fn tokens_rokon(src: str) -> List<Token> { lex(src, true) }
 
-/// rok source as HTML: tokens as `<span class="..">` (see
+/// Rok source as HTML: tokens as `<span class="..">` (see
 /// `Kind::class`), `&` / `<` / `>` escaped. Goes inside `<pre><code>`.
 pub fn highlight_rok(src: str) -> str { to_html(tokens(src)) }
 
@@ -158,7 +160,7 @@ fn lex(src: str, rokon: bool) -> List<Token> {
     for c in src.chars() { cs.push(c); }
     let lx = Lexer { cs: cs, rokon: rokon, toks: List::new(), text: StrBuf::new() };
     let start = lx.shebang();
-    lx.code(start, false);
+    _ = lx.code(start, false);
     lx.flush();
     lx.toks
 }
@@ -427,6 +429,18 @@ impl Lexer {
         !(p > 0 && is_ident(self.cs[p - 1]))
     }
 
+    /// Whether the word `return` ends right at `i`: `return@name`.
+    fn after_return(self, i: usize) -> bool {
+        if i < 6 { return false; }
+        let p = i - 6;
+        let m = 0usize;
+        for c in "return".chars() {
+            if self.cs[p + m] != c { return false; }
+            m += 1;
+        }
+        !(p > 0 && is_ident(self.cs[p - 1]))
+    }
+
     /// Whether `pub(` (spaces allowed) comes right before `i`.
     fn after_pub_paren(self, i: usize) -> bool {
         let j = i;
@@ -465,7 +479,20 @@ impl Lexer {
         c == '=' || c == '<' || c == ';' || c == ':'
     }
 
-    /// The kind of the rok word `w` at `i..k` (spec 1.5.4, 1.5.5).
+    /// Whether `some` at `i..k` is a parameter or return type: after `:`
+    /// or `->`, before a bound (`-> some Tr`, `x: some (A + B)`).
+    fn some_type_at(self, i: usize, k: usize) -> bool {
+        let j = i;
+        while j > 0 && is_space(self.cs[j - 1]) { j -= 1; }
+        let p = if j > 0 { self.cs[j - 1] } else { ' ' };
+        let after = (p == ':' && !(j > 1 && self.cs[j - 2] == ':'))
+            || (p == '>' && j > 1 && self.cs[j - 2] == '-');
+        let n = self.skip_space(k);
+        let c = self.at(n);
+        after && n > k && (c == '(' || is_ident_start(c))
+    }
+
+    /// The kind of the Rok word `w` at `i..k`.
     fn word_kind(self, w: str, i: usize, k: usize) -> Kind {
         let reserved = is_reserved(w);
         let contextual = is_contextual(w);
@@ -473,6 +500,9 @@ impl Lexer {
         if contextual && self.value_end_ahead(k) { return Kind::Text; }
         if w == "type" {
             return if self.alias_ahead(k) { Kind::Keyword } else { Kind::Text };
+        }
+        if w == "some" {
+            return if self.some_type_at(i, k) { Kind::Keyword } else { Kind::Text };
         }
         if w == "union" {
             let j = self.skip_space(k);
@@ -571,9 +601,15 @@ impl Lexer {
                 let k = self.attribute_end(i);
                 self.emit(Kind::Attribute, i, k);
                 i = k;
+            } else if !self.rokon && c == '!' && nx == 'i' && self.at(i + 2) == 'n' && !is_ident(self.at(i + 3)) {
+                // `x !in xs`: one keyword, the negated `in`.
+                self.emit(Kind::Keyword, i, i + 3);
+                i += 3;
             } else if !self.rokon && c == '@' && is_ident_start(nx) {
+                // `return@each` names a closure's callee; `@x` is a template token.
                 let k = self.ident_end(i + 1);
-                self.emit(Kind::Macro, i, k);
+                let kind = if self.after_return(i) { Kind::Text } else { Kind::Macro };
+                self.emit(kind, i, k);
                 i = k;
             } else if c.is_ascii_digit() {
                 let k = self.number_end(i);
@@ -602,7 +638,7 @@ impl Lexer {
                     let e = self.quote_end(k, '"');
                     self.emit(Kind::Str, i, e);
                     i = e;
-                } else if k == i + 1 && c == 'c' && self.at(k) == '\'' && self.char_end(k) > 0 {
+                } else if k == i + 1 && (c == 'c' || c == 'b') && self.at(k) == '\'' && self.char_end(k) > 0 {
                     let e = self.char_end(k);
                     self.emit(Kind::Str, i, e);
                     i = e;

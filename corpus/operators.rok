@@ -65,3 +65,32 @@
 //               ^ punctuation.brackets.curly.rok
 //                       ^ punctuation.separator.colon.rok
 //                          ^ punctuation.accessor.rok
+    x ** 2; x **= 2; a .** b; a .?? b; -x**2;
+//    ^^ keyword.operator.arithmetic.rok
+//            ^^^ keyword.operator.assignment.compound.rok
+//                     ^^^ keyword.operator.broadcast.rok
+//                              ^^^ keyword.operator.broadcast.rok
+//                                       ^^ keyword.operator.arithmetic.rok
+    y .= x; y .+= x; y .-= x; y .*= x; y ./= x; y .%= x; y .**= x; y .== x;
+//    ^^ keyword.operator.assignment.compound.rok
+//            ^^^ keyword.operator.assignment.compound.rok
+//                     ^^^ keyword.operator.assignment.compound.rok
+//                              ^^^ keyword.operator.assignment.compound.rok
+//                                       ^^^ keyword.operator.assignment.compound.rok
+//                                                ^^^ keyword.operator.assignment.compound.rok
+//                                                         ^^^^ keyword.operator.assignment.compound.rok
+//                                                                   ^^^ keyword.operator.broadcast.rok
+    f(x in xs, x !in 0..n, a < b <= c); (a, b) = (b, a); let e = try? f() ?? d;
+//      ^^ keyword.control.rok
+//               ^^^ keyword.operator.word.rok
+//                    ^^ keyword.operator.range.rok
+//                               ^^ keyword.operator.comparison.rok
+//                                             ^ keyword.operator.assignment.rok
+//                                                               ^^^ keyword.control.rok
+//                                                                        ^^ keyword.operator.optional.rok
+    a[1:, ::2, .., 0] = b[:, none]; let m = [[1.0, 2.0], [3.0, 4.0]];
+//     ^ punctuation.separator.colon.rok
+//        ^^ punctuation.separator.namespace.rok
+//             ^^ keyword.operator.range.rok
+//                           ^^^^ constant.language.none.rok
+//                                          ^^ punctuation.brackets.square.rok

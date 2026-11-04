@@ -14,16 +14,45 @@ let a = 1 + 2 * 3 << 1 == x && y || z ?? w;
         (binary_expression
           (binary_expression
             (binary_expression
-              (integer_literal)
               (binary_expression
                 (integer_literal)
                 (binary_expression
                   (integer_literal)
-                  (integer_literal))))
+                  (integer_literal)))
+              (integer_literal))
             (identifier))
           (identifier))
         (identifier))
       (identifier))))
+
+==================
+Bitwise precedence
+==================
+
+let m = a | b ^ c & d << 2;
+let z = x & mask == 0;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (binary_expression
+        (identifier)
+        (binary_expression
+          (identifier)
+          (binary_expression
+            (identifier)
+            (integer_literal))))))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (identifier))
+      (integer_literal))))
 
 ==================
 Broadcast and unicode operators
@@ -348,6 +377,41 @@ let k = yield |x| { yield x; };
             (identifier)))))))
 
 ==================
+Move captures
+==================
+
+let a = [move xs] || xs.len();
+let b = [ref total, move self, n] |v| total += v;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (capture_list
+        (identifier))
+      (closure_parameters)
+      (call_expression
+        (field_expression
+          (identifier)
+          (field_identifier))
+        (arguments))))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (capture_list
+        (identifier)
+        (self)
+        (identifier))
+      (closure_parameters
+        (closure_parameter
+          (identifier)))
+      (compound_assignment_expr
+        (identifier)
+        (identifier)))))
+
+==================
 Trailing closures
 ==================
 
@@ -423,10 +487,101 @@ let y = a | b;
       (identifier))))
 
 ==================
+Labeled return
+==================
+
+each(xs) |x| {
+    if x == 2 { return@each; }
+}
+let n = first(xs) |x| { return@first x > 1 };
+return @x;
+
+---
+
+(source_file
+  (expression_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (identifier))
+      (closure_expression
+        (closure_parameters
+          (closure_parameter
+            (identifier)))
+        (block
+          (expression_statement
+            (if_expression
+              (binary_expression
+                (identifier)
+                (integer_literal))
+              (block
+                (expression_statement
+                  (return_expression
+                    (label))))))))))
+  (let_declaration
+    (identifier)
+    (call_expression
+      (identifier)
+      (arguments
+        (identifier))
+      (closure_expression
+        (closure_parameters
+          (closure_parameter
+            (identifier)))
+        (block
+          (return_expression
+            (label)
+            (binary_expression
+              (identifier)
+              (integer_literal)))))))
+  (expression_statement
+    (return_expression
+      (metavariable))))
+
+==================
+Reserved keywords in name positions
+==================
+
+let s = Step { move: 1, gen: 2 };
+let m = s.move + r#do;
+s.defer(dyn: 1);
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (struct_expression
+      (identifier)
+      (field_initializer_list
+        (field_initializer
+          (field_identifier)
+          (integer_literal))
+        (field_initializer
+          (field_identifier)
+          (integer_literal)))))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (field_expression
+        (identifier)
+        (field_identifier))
+      (identifier)))
+  (expression_statement
+    (call_expression
+      (field_expression
+        (identifier)
+        (field_identifier))
+      (arguments
+        (named_argument
+          (field_identifier)
+          (integer_literal))))))
+
+==================
 Try, catch and await
 ==================
 
-let v = try? parse(s) ?? 0;
+let v = (try? parse(s)) ?? 0;
 let w = try parse(s) catch e: ParseError { 0 } catch { 1 } finally { done(); };
 let x = await fetch(url);
 try {
@@ -441,13 +596,14 @@ throw Bad { code: 1 };
 (source_file
   (let_declaration
     (identifier)
-    (try_expression
-      (binary_expression
-        (call_expression
-          (identifier)
-          (arguments
-            (identifier)))
-        (integer_literal))))
+    (binary_expression
+      (parenthesized_expression
+        (try_expression
+          (call_expression
+            (identifier)
+            (arguments
+              (identifier)))))
+      (integer_literal)))
   (let_declaration
     (identifier)
     (catch_expression
@@ -502,3 +658,214 @@ throw Bad { code: 1 };
           (field_initializer
             (field_identifier)
             (integer_literal)))))))
+
+==================
+Membership with in and !in
+==================
+
+let a = x in xs;
+let b = x !in 0..n && y;
+let c = i in ..=m;
+let d = !inside;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (range_expression
+          (integer_literal)
+          (identifier)))
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (range_expression
+        (identifier))))
+  (let_declaration
+    (identifier)
+    (unary_expression
+      (identifier))))
+
+==================
+Chained comparisons
+==================
+
+let a = lo <= x < hi;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (identifier))
+      (identifier))))
+
+==================
+Power and in-place broadcast
+==================
+
+let a = -x ** 2 ** y;
+let b = a .** b .?? c;
+x **= 2;
+y .= x;
+y .+= x;
+y .**= x;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (unary_expression
+      (binary_expression
+        (identifier)
+        (binary_expression
+          (integer_literal)
+          (identifier)))))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (binary_expression
+        (identifier)
+        (identifier))
+      (identifier)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (integer_literal)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (identifier)))
+  (expression_statement
+    (compound_assignment_expr
+      (identifier)
+      (identifier))))
+
+==================
+try? before ??
+==================
+
+let a = try? f() ?? d;
+let b = try f() ?? d;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (try_expression
+        (call_expression
+          (identifier)
+          (arguments)))
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (try_expression
+      (binary_expression
+        (call_expression
+          (identifier)
+          (arguments))
+        (identifier)))))
+
+==================
+Multi-axis indexing and slice assignment
+==================
+
+let a = m[1:, ::2, .., 0];
+m[:, none] = 0.0;
+xs[1:3] = ys;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (index_expression
+      (identifier)
+      (slice
+        (integer_literal))
+      (slice
+        (integer_literal))
+      (range_expression)
+      (integer_literal)))
+  (expression_statement
+    (assignment_expression
+      (index_expression
+        (identifier)
+        (slice)
+        (none))
+      (float_literal)))
+  (expression_statement
+    (assignment_expression
+      (index_expression
+        (identifier)
+        (slice
+          (integer_literal)
+          (integer_literal)))
+      (identifier))))
+
+==================
+Nested array literals
+==================
+
+let m = [[1.0, 2.0], [3.0, 4.0]];
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (array_expression
+      (array_expression
+        (float_literal)
+        (float_literal))
+      (array_expression
+        (float_literal)
+        (float_literal)))))
+
+==================
+Pattern parameters in closures
+==================
+
+let f = |(k, v), P { x, y }| k + x;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (closure_parameters
+        (closure_parameter
+          (tuple_pattern
+            (identifier)
+            (identifier)))
+        (closure_parameter
+          (struct_pattern
+            (identifier)
+            (field_pattern
+              (field_identifier))
+            (field_pattern
+              (field_identifier)))))
+      (binary_expression
+        (identifier)
+        (identifier)))))

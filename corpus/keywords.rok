@@ -63,9 +63,29 @@
 //                                                 ^^^ keyword.control.rok
 //                                                    ^ keyword.operator.optional.rok
     macro + defer + dyn + move + gen + do;
-//  ^^^^^ variable.other.rok - keyword.control.rok
-//          ^^^^^ variable.other.rok
-//                  ^^^ variable.other.rok
-//                        ^^^^ variable.other.rok
-//                               ^^^ variable.other.rok
-//                                     ^^ variable.other.rok
+//  ^^^^^ keyword.other.reserved.rok - variable.other.rok
+//          ^^^^^ keyword.other.reserved.rok
+//                  ^^^ keyword.other.reserved.rok
+//                        ^^^^ keyword.other.reserved.rok
+//                               ^^^ keyword.other.reserved.rok
+//                                     ^^ keyword.other.reserved.rok
+    let m = s.move(gen: 1) + Step { move: 1, do: 2 }.dyn + r#defer; move!(x); gen(1);
+//            ^^^^ entity.name.function.call.rok - keyword.other.reserved.rok
+//                 ^^^ variable.other.rok - keyword.other.reserved.rok
+//                                  ^^^^ variable.other.rok - keyword.other.reserved.rok
+//                                           ^^ variable.other.rok - keyword.other.reserved.rok
+//                                                   ^^^ variable.other.member.rok
+//                                                         ^^^^^^^ variable.other.rok - keyword.other.reserved.rok
+//                                                                  ^^^^ keyword.other.reserved.rok - entity.name.function.macro.rok
+//                                                                            ^^^ keyword.other.reserved.rok - entity.name.function.call.rok
+    using f = open(p); using r = R { x: 1 }; for ref x in xs { x = 0; }
+//  ^^^^^ keyword.control.rok
+//                     ^^^^^ keyword.control.rok
+//                               ^ entity.name.type.rok
+//                                           ^^^ keyword.control.rok
+//                                               ^^^ storage.modifier.rok
+    fn g((a, b): (i32, i32), P { x, y }: P) { } xs.map(|(k, v)| k);
+//        ^ variable.other.rok
+//                           ^ entity.name.type.rok
+//                                  ^ variable.other.rok
+//                                                       ^ variable.other.rok

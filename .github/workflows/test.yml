@@ -1,5 +1,5 @@
-# The TextMate grammars, the tree-sitter grammars and the Rok library
-# against the shared corpus.
+# TextMate grammars, tree-sitter grammars and the Rok library against
+# the shared corpus.
 name: test
 
 on:
@@ -20,8 +20,7 @@ jobs:
       - run: npm ci
       - run: npm run test:textmate
 
-  # The parsers in src/ are generated and checked in: test them as they
-  # are, then the highlights against the corpus.
+  # src/ parsers are generated and checked in; test them as committed.
   tree-sitter:
     runs-on: ubuntu-latest
     steps:

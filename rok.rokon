@@ -1,8 +1,11 @@
 Package {
     name: "rok-syntax",
-    version: "0.1.0",
+    version: "0.2.0",
+    toolchain: "0.2",
     description: "Tokenizer and HTML highlighter for rok and ROKON",
     license: "MIT OR Apache-2.0",
     repository: "https://github.com/rok-lang/rok-syntax",
+    keywords: ["rok", "syntax", "highlighting", "tokenizer"],
+    categories: ["text-processing", "development-tools"],
     deps: {},
 }

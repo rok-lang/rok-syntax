@@ -5,9 +5,9 @@
 //   node scripts/test-tree-sitter.mjs --dump FILE  print each line's captures
 //
 // Each asserted TextMate scope maps to its tree-sitter capture through
-// grammars/classes.rokon (docs/token-classes.md). Some capture over the
-// column, in the nest `tree-sitter highlight` gives, must be the
-// capture of one of the assertion's scopes or a refinement of it
+// grammars/classes.rokon. Some capture over the column, in the nest
+// `tree-sitter highlight` gives, must be the capture of one of the
+// assertion's scopes or a refinement of it
 // (`keyword.repeat` for `keyword`); `@property` also stands for
 // `@variable`. Scopes after `-` must not match. Scopes whose capture is
 // "" are not checked, nor are lines below a `// tree-sitter: skip, why`
@@ -125,9 +125,7 @@ function checkKeywords() {
     const named = (w) => hl.includes(`"${w}"`) || (nodes[w] ?? []).some((n) => hl.includes(n)) ||
       [...hl.matchAll(/#match\? @[\w.]+\s+"([^"]*)"/g)].some((m) => new RegExp(`[(|^]${w}[|)$]`).test(m[1]));
     for (const { scope: s, words } of keywords.filter((k) => k.lang === lang)) {
-      if (s === "variable.other") {
-        for (const w of words) if (strings.has(w)) fails.push(`${lang}/grammar.js: ${w} is a name, not a keyword`);
-      } else if (s === "support.type.primitive") {
+      if (s === "support.type.primitive") {
         const m = hl.match(/@type\.builtin\s+"\^\(([\w|]+)\)\$"/);
         const have = m ? m[1].split("|") : [];
         if (have.join(" ") !== words.join(" ")) fails.push(`${lang}/queries/highlights.scm: primitive types are not keywords.rokon's`);

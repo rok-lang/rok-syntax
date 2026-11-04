@@ -189,3 +189,26 @@ let 변수 = 1;
   (let_declaration
     (identifier)
     (integer_literal)))
+
+==================
+Byte chars and user suffixes
+==================
+
+let a = b'0';
+let b = b'\n';
+let c = 9.81m + 3km;
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (char_literal))
+  (let_declaration
+    (identifier)
+    (char_literal))
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (float_literal)
+      (integer_literal))))
