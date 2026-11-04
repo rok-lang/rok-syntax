@@ -130,6 +130,8 @@ Package {
 }
 ```
 
+Needs Rok 0.2 or later; Rok 0.1 is no longer supported and cannot read the stone index.
+
 ```rok
 let html = rok_syntax::highlight_rok("let x: i32 = f\"{y:>8}\";");
 println(f"<pre><code>{html}</code></pre>");
