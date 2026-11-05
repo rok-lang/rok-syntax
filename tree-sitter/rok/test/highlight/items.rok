@@ -34,7 +34,7 @@ const LIMIT: usize = 3;
 // <- keyword.modifier
 //    ^ type
 
-use rok::std::io;
+use rok::std::fs;
 // <- keyword.import
 //  ^ module.builtin
 //       ^ module
